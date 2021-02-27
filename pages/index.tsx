@@ -6,20 +6,22 @@ import Link from 'next/link';
 import ListItem from '@material-ui/core/ListItem/ListItem';
 import ListItemText from '@material-ui/core/ListItemText/ListItemText';
 
-export default function Index() {
-  return (
-    <Container maxWidth="sm">
-      <Box my={4}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Index
-        </Typography>
+export default class Index extends React.Component {
+  render(): React.ReactNode {
+    return (
+      <Container maxWidth="sm">
+        <Box my={4}>
+          <Typography variant="h4" component="h1" gutterBottom>
+            Index
+          </Typography>
 
-        <Link href="/about" passHref>
-          <ListItem button component="a">
-            <ListItemText>Go to the about page</ListItemText>
-          </ListItem>
-        </Link>
-      </Box>
-    </Container>
-  );
+          <Link href="/about" passHref>
+            <ListItem button component="a">
+              <ListItemText>Go to the about page</ListItemText>
+            </ListItem>
+          </Link>
+        </Box>
+      </Container>
+    );
+  }
 }
