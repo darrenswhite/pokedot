@@ -20,9 +20,6 @@ import {Routes} from './Routes';
 const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    display: 'flex',
-  },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
   },
@@ -62,7 +59,7 @@ export const Header: FC = () => {
   const router = useRouter();
 
   return (
-    <header className={classes.root}>
+    <React.Fragment>
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar variant="dense">
           <IconButton
@@ -113,6 +110,6 @@ export const Header: FC = () => {
           ))}
         </List>
       </Drawer>
-    </header>
+    </React.Fragment>
   );
 };
