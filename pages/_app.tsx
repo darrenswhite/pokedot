@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Head from 'next/head';
 import {AppProps} from 'next/app';
 import {CssBaseline, ThemeProvider} from '@material-ui/core';
@@ -8,7 +8,7 @@ import {PageContainer} from '../src/PageContainer';
 export default function App(props: AppProps): React.ReactNode {
   const {Component, pageProps} = props;
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector('#jss-server-side');
 
