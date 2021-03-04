@@ -15,7 +15,7 @@ import {
 import {Menu} from '@material-ui/icons';
 import Link from 'next/link';
 import {useRouter} from 'next/router';
-import {Routes} from './Routes';
+import {Routes} from '../Routes';
 
 const drawerWidth = 240;
 

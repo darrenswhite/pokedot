@@ -1,13 +1,13 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Container, Typography} from '@material-ui/core';
 import {Icons} from '@pkmn/img';
 import {
-  ResultsTable,
-  ResultsTableHeader,
-  ResultsTableRow,
-} from '../src/ResultsTable';
-import {TeamInfo} from '../src/TeamInfo';
-import {PokeInfo} from '../src/PokeInfo';
+  SortableTable,
+  SortableTableRow,
+} from '../src/components/table/SortableTable';
+import {SortableTableHeadCell} from '../src/components/table/SortableTableHead';
+import {PokeInfo} from '../src/info/PokeInfo';
+import {TeamInfo} from '../src/info/TeamInfo';
 
 const str = `Clefairy @ Eviolite  
 Ability: Friend Guard  
@@ -75,13 +75,13 @@ Modest Nature
 
 `;
 
-const getHeaders = (teamInfo: TeamInfo): ResultsTableHeader[] => {
-  const typeHeader: ResultsTableHeader = {
+const getHeaders = (teamInfo: TeamInfo): SortableTableHeadCell[] => {
+  const typeHeader: SortableTableHeadCell = {
     id: 'type',
     label: 'Type',
     align: 'left',
   };
-  const totalHeaders: ResultsTableHeader[] = [
+  const totalHeaders: SortableTableHeadCell[] = [
     {
       id: 'totalWeak',
       label: 'Total Weak',
@@ -125,7 +125,7 @@ const getTypeResistance = (value: number): React.ReactNode => {
   }
 };
 
-const getRows = (teamInfo: TeamInfo): ResultsTableRow[] => {
+const getRows = (teamInfo: TeamInfo): SortableTableRow[] => {
   return PokeInfo.types().map(type => {
     const typeName = type.name;
     const typeUrl = Icons.getType(typeName).url;
@@ -165,7 +165,7 @@ const getRows = (teamInfo: TeamInfo): ResultsTableRow[] => {
   });
 };
 
-const TeamAnalysis: FC = () => {
+const TeamAnalysis: React.FC = () => {
   const [teamInfo, setTeamInfo] = useState<TeamInfo>();
 
   useEffect(() => {
@@ -182,7 +182,7 @@ const TeamAnalysis: FC = () => {
           Resistance Chart
         </Typography>
 
-        <ResultsTable headers={headers} rows={rows} />
+        <SortableTable headers={headers} rows={rows} />
       </Container>
     );
   } else {

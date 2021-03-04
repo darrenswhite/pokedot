@@ -1,9 +1,9 @@
 import React, {FC} from 'react';
 import {useRouter} from 'next/router';
 import {Box, Container, makeStyles, Typography} from '@material-ui/core';
-import {Header} from '../src/Header';
-import {Footer} from '../src/Footer';
-import {getCurrentRoute} from '../src/Routes';
+import {Header} from './Header';
+import {Footer} from './Footer';
+import {getCurrentRoute} from '../Routes';
 
 type Props = {
   children: React.ReactNode;
