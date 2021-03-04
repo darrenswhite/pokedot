@@ -8,14 +8,14 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  makeStyles,
   Toolbar,
   Typography,
+  makeStyles,
 } from '@material-ui/core';
 import {Menu} from '@material-ui/icons';
 import Link from 'next/link';
 import {useRouter} from 'next/router';
-import {Routes} from '../Routes';
+import {Routes} from 'src/router/Routes';
 
 const drawerWidth = 240;
 

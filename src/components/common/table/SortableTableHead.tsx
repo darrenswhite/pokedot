@@ -1,11 +1,11 @@
 import React from 'react';
 import {
-  makeStyles,
   TableCell,
   TableCellProps,
   TableHead,
   TableRow,
   TableSortLabel,
+  makeStyles,
 } from '@material-ui/core';
 import {Order} from './Sort';
 import {SortableTableRow} from './SortableTable';

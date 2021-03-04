@@ -2,8 +2,8 @@ import React, {useEffect} from 'react';
 import Head from 'next/head';
 import {AppProps} from 'next/app';
 import {CssBaseline, ThemeProvider} from '@material-ui/core';
-import {Theme} from '../src/Theme';
-import {PageContainer} from '../src/layout/PageContainer';
+import {Theme} from 'src/theme/Theme';
+import {PageContainer} from 'src/layout/PageContainer';
 
 export default function App(props: AppProps): React.ReactNode {
   const {Component, pageProps} = props;

@@ -1,13 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {Container, Typography} from '@material-ui/core';
-import {Icons} from '@pkmn/img';
-import {
-  SortableTable,
-  SortableTableRow,
-} from '../src/components/table/SortableTable';
-import {SortableTableHeadCell} from '../src/components/table/SortableTableHead';
-import {PokeInfo} from '../src/info/PokeInfo';
-import {TeamInfo} from '../src/info/TeamInfo';
+import {TypeResistanceTable} from 'src/components/team/TypeResistanceTable';
+import {TeamInfo} from 'src/info/TeamInfo';
 
 const str = `Clefairy @ Eviolite  
 Ability: Friend Guard  
@@ -75,96 +68,6 @@ Modest Nature
 
 `;
 
-const getHeaders = (teamInfo: TeamInfo): SortableTableHeadCell[] => {
-  const typeHeader: SortableTableHeadCell = {
-    id: 'type',
-    label: 'Type',
-    align: 'left',
-  };
-  const totalHeaders: SortableTableHeadCell[] = [
-    {
-      id: 'totalWeak',
-      label: 'Total Weak',
-      align: 'right',
-    },
-    {
-      id: 'totalResist',
-      label: 'Total Resist',
-      align: 'right',
-    },
-  ];
-
-  return [typeHeader]
-    .concat(
-      teamInfo.pokeInfo.map(info => ({
-        id: info.num,
-        label: info.name,
-        align: 'right',
-        before: <span style={Icons.getPokemon(info.name).css} />,
-      }))
-    )
-    .concat(totalHeaders);
-};
-
-const getTypeResistance = (value: number): React.ReactNode => {
-  switch (value) {
-    case 0:
-      return 'Immune';
-    case 0.25:
-      return '1/4x';
-    case 0.5:
-      return '1/2x';
-    case 1:
-      return null;
-    case 2:
-      return '2x';
-    case 4:
-      return '4x';
-    default:
-      throw new Error(`Invalid type resistance value: ${value}.`);
-  }
-};
-
-const getRows = (teamInfo: TeamInfo): SortableTableRow[] => {
-  return PokeInfo.types().map(type => {
-    const typeName = type.name;
-    const typeUrl = Icons.getType(typeName).url;
-    const typeResistances = teamInfo.pokeInfo
-      .map(info => ({
-        [info.num]: info.resistances[typeName] || 1,
-      }))
-      .reduce((prev, curr) => Object.assign(prev, curr), {});
-    const totalWeak = Object.values(typeResistances).filter(val => val > 1)
-      .length;
-    const totalResist = Object.values(typeResistances).filter(val => val < 1)
-      .length;
-
-    return {
-      type: {
-        value: <img src={typeUrl} />,
-        sortValue: typeName,
-      },
-      ...Object.fromEntries(
-        Object.entries(typeResistances).map(([num, value]) => [
-          num,
-          {
-            value: getTypeResistance(value),
-            sortValue: value,
-          },
-        ])
-      ),
-      totalWeak: {
-        value: totalWeak,
-        sortValue: totalWeak,
-      },
-      totalResist: {
-        value: totalResist,
-        sortValue: totalResist,
-      },
-    };
-  });
-};
-
 const TeamAnalysis: React.FC = () => {
   const [teamInfo, setTeamInfo] = useState<TeamInfo>();
 
@@ -173,18 +76,7 @@ const TeamAnalysis: React.FC = () => {
   }, [str]);
 
   if (teamInfo) {
-    const headers = getHeaders(teamInfo);
-    const rows = getRows(teamInfo);
-
-    return (
-      <Container>
-        <Typography variant="h5" component="h2" gutterBottom>
-          Resistance Chart
-        </Typography>
-
-        <SortableTable headers={headers} rows={rows} />
-      </Container>
-    );
+    return <TypeResistanceTable teamInfo={teamInfo} />;
   } else {
     return null;
   }
