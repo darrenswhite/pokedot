@@ -1,85 +1,48 @@
-import React, {useEffect, useState} from 'react';
-import {TypeResistanceTable} from 'src/components/team/TypeResistanceTable';
+import React, {useState} from 'react';
+import {Grid} from '@material-ui/core';
+import {Alert} from '@material-ui/lab';
+import {DefensiveCoverageTable} from 'src/components/team/DefensiveCoverageTable';
+import {TeamParser} from 'src/components/team/TeamParser';
 import {TeamInfo} from 'src/info/TeamInfo';
 
-const str = `Clefairy @ Eviolite  
-Ability: Friend Guard  
-Level: 50  
-EVs: 252 HP / 220 Def / 36 SpD  
-Calm Nature  
-IVs: 0 Atk  
-- Follow Me  
-- Helping Hand  
-- Moonblast  
-- Protect  
-
-Conkeldurr @ Flame Orb  
-Ability: Guts  
-Shiny: Yes  
-EVs: 212 HP / 156 Atk / 140 SpD  
-Adamant Nature  
-- Drain Punch  
-- Ice Punch  
-- Mach Punch  
-- Protect  
-
-Corviknight @ Lum Berry  
-Ability: Mirror Armor  
-Level: 50  
-EVs: 252 HP / 20 Atk / 60 Def / 140 SpD / 36 Spe  
-Careful Nature  
-- Brave Bird  
-- Bulk Up  
-- Iron Head  
-- Roost  
-
-Duraludon @ Assault Vest  
-Ability: Stalwart  
-Level: 50  
-Gigantamax: Yes  
-EVs: 252 HP / 252 SpA / 4 Spe  
-Modest Nature  
-IVs: 0 Atk  
-- Body Press  
-- Draco Meteor  
-- Flash Cannon  
-- Thunderbolt  
-
-Porygon-Z @ Life Orb  
-Ability: Adaptability  
-Level: 50  
-EVs: 4 HP / 252 SpA / 252 Spe  
-Modest Nature  
-IVs: 0 Atk  
-- Dark Pulse  
-- Hyper Beam  
-- Protect  
-- Thunderbolt  
-
-Sylveon @ Pixie Plate  
-Ability: Pixilate  
-Shiny: Yes  
-EVs: 4 HP / 252 Def / 252 SpA  
-Modest Nature  
-- Hyper Voice  
-- Protect  
-- Quick Attack  
-- Yawn  
-
-`;
-
 const TeamAnalysis: React.FC = () => {
-  const [teamInfo, setTeamInfo] = useState<TeamInfo>();
+  const [teamInfo, setTeamInfo] = useState<TeamInfo | null>(null);
+  const [teamParserError, setTeamParserError] = useState<unknown>(null);
+  let results;
 
-  useEffect(() => {
-    TeamInfo.fromString(str).then(setTeamInfo);
-  }, [str]);
+  const parserSuccess = (teamInfo: TeamInfo) => {
+    setTeamInfo(teamInfo);
+    setTeamParserError(null);
+  };
 
-  if (teamInfo) {
-    return <TypeResistanceTable teamInfo={teamInfo} />;
-  } else {
-    return null;
+  const parserError = (err: unknown) => {
+    setTeamInfo(null);
+    setTeamParserError(err);
+  };
+
+  if (teamParserError) {
+    results = <Alert severity="error">Failed to parse team.</Alert>;
+  } else if (teamInfo) {
+    results = (
+      <React.Fragment>
+        <DefensiveCoverageTable teamInfo={teamInfo} />
+      </React.Fragment>
+    );
   }
+
+  return (
+    <React.Fragment>
+      <Grid container justify="center" spacing={2}>
+        <Grid item xs={6}>
+          <TeamParser onParse={parserSuccess} onError={parserError} />
+        </Grid>
+
+        <Grid item xs={12}>
+          {results}
+        </Grid>
+      </Grid>
+    </React.Fragment>
+  );
 };
 
 export default TeamAnalysis;

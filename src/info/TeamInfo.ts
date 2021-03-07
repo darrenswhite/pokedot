@@ -23,4 +23,8 @@ export class TeamInfo {
       throw new Error('Failed to parse team.');
     }
   }
+
+  toString(): string {
+    return this.team.toString();
+  }
 }

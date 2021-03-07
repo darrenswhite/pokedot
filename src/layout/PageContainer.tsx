@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import {useRouter} from 'next/router';
-import {Box, Container, Typography, makeStyles} from '@material-ui/core';
+import {Box, Container, makeStyles, Typography} from '@material-ui/core';
 import {Header} from './Header';
 import {Footer} from './Footer';
 import {getCurrentRoute} from 'src/router/Routes';

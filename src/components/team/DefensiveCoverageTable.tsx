@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  Chip,
-  Container,
-  Paper,
-  Typography,
-  colors,
-  makeStyles,
-} from '@material-ui/core';
+import {Chip, colors, makeStyles, Paper, Typography} from '@material-ui/core';
 import {Icons} from '@pkmn/img';
 import {
   SortableTable,
@@ -67,6 +60,23 @@ const useStyles = makeStyles(() => ({
     backgroundColor: colors.red[800],
     color: colors.grey[100],
     fontWeight: 'bold',
+  },
+  scoreNegative: {
+    backgroundColor: colors.grey[900],
+    color: colors.grey[100],
+    fontWeight: 'bold',
+  },
+  scoreLow: {
+    backgroundColor: colors.red[900],
+    color: colors.grey[100],
+  },
+  scoreMedium: {
+    backgroundColor: colors.amber[900],
+    color: colors.grey[100],
+  },
+  scoreHigh: {
+    backgroundColor: colors.green[900],
+    color: colors.grey[100],
   },
 }));
 
@@ -159,6 +169,25 @@ const getTotalWeak = (
   return <Paper className={className}>{value}</Paper>;
 };
 
+const getScore = (
+  value: number,
+  classes: ReturnType<typeof useStyles>
+): React.ReactNode => {
+  let className;
+
+  if (value < 0) {
+    className = classes.scoreNegative;
+  } else if (value >= 0 && value < 5) {
+    className = classes.scoreLow;
+  } else if (value >= 5 && value < 10) {
+    className = classes.scoreMedium;
+  } else if (value >= 10) {
+    className = classes.scoreHigh;
+  }
+
+  return <Paper className={className}>{value}</Paper>;
+};
+
 const getHeaders = (teamInfo: TeamInfo): SortableTableHeadCell[] => {
   const typeHeader: SortableTableHeadCell = {
     id: 'type',
@@ -174,6 +203,11 @@ const getHeaders = (teamInfo: TeamInfo): SortableTableHeadCell[] => {
     {
       id: 'totalWeak',
       label: 'Total Weak',
+      align: 'center',
+    },
+    {
+      id: 'score',
+      label: 'Score',
       align: 'center',
     },
   ];
@@ -206,6 +240,26 @@ const getRows = (
       .length;
     const totalWeak = Object.values(typeResistances).filter(val => val > 1)
       .length;
+    const score = Object.values(typeResistances)
+      .map(val => {
+        switch (val) {
+          case 0.0:
+            return 8;
+          case 0.25:
+            return 4;
+          case 0.5:
+            return 2;
+          case 1.0:
+            return 1;
+          case 2.0:
+            return -2;
+          case 4.0:
+            return -5;
+          default:
+            throw new Error(`Unknown resistance value: ${val}`);
+        }
+      })
+      .reduce((prev, curr) => prev + curr, 0);
 
     return {
       type: {
@@ -229,28 +283,32 @@ const getRows = (
         value: getTotalWeak(totalWeak, classes),
         sortValue: totalWeak,
       },
+      score: {
+        value: getScore(score, classes),
+        sortValue: score,
+      },
     };
   });
 };
 
-export interface TypeResistanceTableProps {
+export interface DefensiveCoverageTableProps {
   teamInfo: TeamInfo;
 }
 
-export const TypeResistanceTable: React.FC<TypeResistanceTableProps> = ({
+export const DefensiveCoverageTable: React.FC<DefensiveCoverageTableProps> = ({
   teamInfo,
-}: TypeResistanceTableProps) => {
+}: DefensiveCoverageTableProps) => {
   const classes = useStyles();
   const headers = getHeaders(teamInfo);
   const rows = getRows(teamInfo, classes);
 
   return (
-    <Container>
+    <React.Fragment>
       <Typography variant="h5" component="h2" gutterBottom>
-        Resistance Chart
+        Defensive Coverage
       </Typography>
 
       <SortableTable headers={headers} rows={rows} />
-    </Container>
+    </React.Fragment>
   );
 };

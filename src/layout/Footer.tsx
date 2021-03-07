@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {Grid, Paper, Typography, makeStyles} from '@material-ui/core';
+import {Grid, makeStyles, Paper, Typography} from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   footer: {
