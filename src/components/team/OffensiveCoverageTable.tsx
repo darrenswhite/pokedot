@@ -11,52 +11,46 @@ import {TeamInfo} from 'src/info/TeamInfo';
 
 const useStyles = makeStyles(() => ({
   chipValueZero: {
-    backgroundColor: colors.green[500],
-  },
-  chipValueQuarter: {
-    backgroundColor: colors.teal[500],
-  },
-  chipValueHalf: {
-    color: colors.green[500],
-  },
-  chipValueDouble: {
-    color: colors.red[500],
-  },
-  chipValueQuadruple: {
     backgroundColor: colors.red[500],
   },
-  totalResistZero: {
+  chipValueHalf: {
+    color: colors.red[500],
+  },
+  chipValueDouble: {
+    color: colors.green[500],
+  },
+  totalSuperEffectiveZero: {
     backgroundColor: colors.green[200],
     color: colors.grey[900],
   },
-  totalResistOne: {
+  totalSuperEffectiveOne: {
     backgroundColor: colors.green[400],
     color: colors.grey[900],
   },
-  totalResistTwo: {
+  totalSuperEffectiveTwo: {
     backgroundColor: colors.green[600],
     color: colors.grey[900],
     fontWeight: 'bold',
   },
-  totalResistThree: {
+  totalSuperEffectiveThree: {
     backgroundColor: colors.green[800],
     color: colors.grey[100],
     fontWeight: 'bold',
   },
-  totalWeakZero: {
+  totalIneffectiveZero: {
     backgroundColor: colors.red[200],
     color: colors.grey[900],
   },
-  totalWeakOne: {
+  totalIneffectiveOne: {
     backgroundColor: colors.red[400],
     color: colors.grey[900],
   },
-  totalWeakTwo: {
+  totalIneffectiveTwo: {
     backgroundColor: colors.red[600],
     color: colors.grey[100],
     fontWeight: 'bold',
   },
-  totalWeakThree: {
+  totalIneffectiveThree: {
     backgroundColor: colors.red[800],
     color: colors.grey[100],
     fontWeight: 'bold',
@@ -80,7 +74,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const getTypeResistance = (
+const getTypeCoverage = (
   value: number,
   classes: ReturnType<typeof useStyles>
 ): React.ReactNode => {
@@ -92,10 +86,6 @@ const getTypeResistance = (
       label = <>0&times;</>;
       className = classes.chipValueZero;
       break;
-    case 0.25:
-      label = <>&frac14;&times;</>;
-      className = classes.chipValueQuarter;
-      break;
     case 0.5:
       label = <>&frac12;&times;</>;
       className = classes.chipValueHalf;
@@ -106,12 +96,8 @@ const getTypeResistance = (
       label = <>2&times;</>;
       className = classes.chipValueDouble;
       break;
-    case 4:
-      label = <>4&times;</>;
-      className = classes.chipValueQuadruple;
-      break;
     default:
-      throw new Error(`Invalid type resistance value: ${value}.`);
+      throw new Error(`Invalid type coverage value: ${value}.`);
   }
 
   return label ? (
@@ -119,7 +105,7 @@ const getTypeResistance = (
   ) : null;
 };
 
-const getTotalResist = (
+const getTotalSuperEffective = (
   value: number,
   classes: ReturnType<typeof useStyles>
 ): React.ReactNode => {
@@ -127,24 +113,24 @@ const getTotalResist = (
 
   switch (value) {
     case 0:
-      className = classes.totalResistZero;
+      className = classes.totalSuperEffectiveZero;
       break;
     case 1:
-      className = classes.totalResistOne;
+      className = classes.totalSuperEffectiveOne;
       break;
     case 2:
-      className = classes.totalResistTwo;
+      className = classes.totalSuperEffectiveTwo;
       break;
     case 3:
     default:
-      className = classes.totalResistThree;
+      className = classes.totalSuperEffectiveThree;
       break;
   }
 
   return <Paper className={className}>{value}</Paper>;
 };
 
-const getTotalWeak = (
+const getTotalIneffective = (
   value: number,
   classes: ReturnType<typeof useStyles>
 ): React.ReactNode => {
@@ -152,17 +138,17 @@ const getTotalWeak = (
 
   switch (value) {
     case 0:
-      className = classes.totalWeakZero;
+      className = classes.totalIneffectiveZero;
       break;
     case 1:
-      className = classes.totalWeakOne;
+      className = classes.totalIneffectiveOne;
       break;
     case 2:
-      className = classes.totalWeakTwo;
+      className = classes.totalIneffectiveTwo;
       break;
     case 3:
     default:
-      className = classes.totalWeakThree;
+      className = classes.totalIneffectiveThree;
       break;
   }
 
@@ -188,22 +174,20 @@ const getScore = (
   return <Paper className={className}>{value}</Paper>;
 };
 
-const scoreResistanceValue = (value: number): number => {
+const scoreCoverageValue = (value: number): number => {
   switch (value) {
     case 0.0:
-      return 8;
+      return -4;
     case 0.25:
-      return 4;
+      return -2;
     case 0.5:
-      return 2;
+      return -1;
     case 1.0:
       return 1;
     case 2.0:
-      return -2;
-    case 4.0:
-      return -4;
+      return 2;
     default:
-      throw new Error(`Unknown resistance value: ${value}`);
+      throw new Error(`Unknown coverage value: ${value}`);
   }
 };
 
@@ -215,13 +199,13 @@ const getHeaders = (teamInfo: TeamInfo): SortableTableHeadCell[] => {
   };
   const totalHeaders: SortableTableHeadCell[] = [
     {
-      id: 'totalResist',
-      label: 'Total Resist',
+      id: 'totalSuperEffective',
+      label: 'Total Super Effective',
       align: 'center',
     },
     {
-      id: 'totalWeak',
-      label: 'Total Weak',
+      id: 'totalIneffective',
+      label: 'Total Ineffective',
       align: 'center',
     },
     {
@@ -250,17 +234,18 @@ const getRows = (
   return PokeInfo.types().map(type => {
     const typeName = type.name;
     const typeUrl = Icons.getType(typeName).url;
-    const typeResistances = teamInfo.team
+    const typeCoverages = teamInfo.team
       .map(pokemon => ({
-        [pokemon.info.num]: pokemon.info.resistances[typeName] ?? 1,
+        [pokemon.info.num]: pokemon.info.coverage(pokemon.moves)[typeName] ?? 1,
       }))
       .reduce((prev, curr) => Object.assign(prev, curr), {});
-    const totalResist = Object.values(typeResistances).filter(val => val < 1)
+    const totalSuperEffective = Object.values(typeCoverages).filter(
+      val => val > 1
+    ).length;
+    const totalIneffective = Object.values(typeCoverages).filter(val => val < 1)
       .length;
-    const totalWeak = Object.values(typeResistances).filter(val => val > 1)
-      .length;
-    const score = Object.values(typeResistances)
-      .map(scoreResistanceValue)
+    const score = Object.values(typeCoverages)
+      .map(scoreCoverageValue)
       .reduce((prev, curr) => prev + curr, 0);
 
     return {
@@ -269,21 +254,21 @@ const getRows = (
         sortValue: typeName,
       },
       ...Object.fromEntries(
-        Object.entries(typeResistances).map(([num, value]) => [
+        Object.entries(typeCoverages).map(([num, value]) => [
           num,
           {
-            value: getTypeResistance(value, classes),
+            value: getTypeCoverage(value, classes),
             sortValue: value,
           },
         ])
       ),
-      totalResist: {
-        value: getTotalResist(totalResist, classes),
-        sortValue: totalResist,
+      totalSuperEffective: {
+        value: getTotalSuperEffective(totalSuperEffective, classes),
+        sortValue: totalSuperEffective,
       },
-      totalWeak: {
-        value: getTotalWeak(totalWeak, classes),
-        sortValue: totalWeak,
+      totalIneffective: {
+        value: getTotalIneffective(totalIneffective, classes),
+        sortValue: totalIneffective,
       },
       score: {
         value: getScore(score, classes),
@@ -293,13 +278,13 @@ const getRows = (
   });
 };
 
-export interface DefensiveCoverageTableProps {
+export interface OffensiveCoverageTableProps {
   teamInfo: TeamInfo;
 }
 
-export const DefensiveCoverageTable: React.FC<DefensiveCoverageTableProps> = ({
+export const OffensiveCoverageTable: React.FC<OffensiveCoverageTableProps> = ({
   teamInfo,
-}: DefensiveCoverageTableProps) => {
+}: OffensiveCoverageTableProps) => {
   const classes = useStyles();
   const headers = getHeaders(teamInfo);
   const rows = getRows(teamInfo, classes);
@@ -307,7 +292,7 @@ export const DefensiveCoverageTable: React.FC<DefensiveCoverageTableProps> = ({
   return (
     <React.Fragment>
       <Typography variant="h5" component="h2" gutterBottom>
-        Defensive Coverage
+        Offensive Coverage
       </Typography>
 
       <SortableTable headers={headers} rows={rows} />

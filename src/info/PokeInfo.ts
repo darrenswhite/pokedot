@@ -15,20 +15,23 @@ export interface Moves {
   [key: string]: Move | undefined;
 }
 
-export type ResistanceTypeChart = Partial<Record<TypeName, number>>;
+export type TypeChart = Partial<Record<TypeName, number>>;
 
 export class PokeInfo {
+  private readonly generation: Generation;
   private readonly species: Species;
   readonly moves: Moves;
-  readonly resistances: ResistanceTypeChart;
+  readonly resistances: TypeChart;
   readonly types: Type[];
 
   private constructor(
+    generation: Generation,
     species: Species,
     moves: Moves,
-    resistances: ResistanceTypeChart,
+    resistances: TypeChart,
     types: Type[]
   ) {
+    this.generation = generation;
     this.species = species;
     this.moves = moves;
     this.resistances = resistances;
@@ -60,7 +63,7 @@ export class PokeInfo {
         moves = {};
       }
 
-      return new PokeInfo(specie, moves, resistances, types);
+      return new PokeInfo(generation, specie, moves, resistances, types);
     } else {
       throw new Error(`Unknown species: ${name}`);
     }
@@ -92,11 +95,38 @@ export class PokeInfo {
     return this.species.eggGroups;
   }
 
+  coverage(moves: string[]): TypeChart {
+    const coverage = {} as TypeChart;
+    const damageMoves = moves
+      .map(move => this.generation.moves.get(move))
+      .filter(
+        move => move !== undefined && move.category !== 'Status'
+      ) as Move[];
+
+    damageMoves.forEach(move => {
+      Array.from(this.generation.types).forEach(type => {
+        const effectiveness = this.generation.types
+          .get(move.type)
+          ?.totalEffectiveness(type.name);
+
+        if (effectiveness !== undefined) {
+          const curr = coverage[type.name];
+
+          if (curr === undefined || effectiveness > curr) {
+            coverage[type.name] = effectiveness;
+          }
+        }
+      });
+    });
+
+    return coverage;
+  }
+
   private static createResistanceTypeChart(
     generation: Generation,
     types: Type[]
-  ): ResistanceTypeChart {
-    const resistances = {} as ResistanceTypeChart;
+  ): TypeChart {
+    const resistances = {} as TypeChart;
 
     Array.from(generation.types).forEach(type => {
       const values: number[] = types.map(targetType =>

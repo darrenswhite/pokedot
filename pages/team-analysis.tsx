@@ -1,31 +1,26 @@
 import React, {useState} from 'react';
 import {Grid} from '@material-ui/core';
-import {Alert} from '@material-ui/lab';
 import {DefensiveCoverageTable} from 'src/components/team/DefensiveCoverageTable';
+import {OffensiveCoverageTable} from 'src/components/team/OffensiveCoverageTable';
 import {TeamParser} from 'src/components/team/TeamParser';
 import {TeamInfo} from 'src/info/TeamInfo';
 
 const TeamAnalysis: React.FC = () => {
   const [teamInfo, setTeamInfo] = useState<TeamInfo | null>(null);
-  const [teamParserError, setTeamParserError] = useState<unknown>(null);
   let results;
 
-  const parserSuccess = (teamInfo: TeamInfo) => {
-    setTeamInfo(teamInfo);
-    setTeamParserError(null);
-  };
-
-  const parserError = (err: unknown) => {
-    setTeamInfo(null);
-    setTeamParserError(err);
-  };
-
-  if (teamParserError) {
-    results = <Alert severity="error">Failed to parse team.</Alert>;
-  } else if (teamInfo) {
+  if (teamInfo) {
     results = (
       <React.Fragment>
-        <DefensiveCoverageTable teamInfo={teamInfo} />
+        <Grid container spacing={4}>
+          <Grid item xs={12}>
+            <DefensiveCoverageTable teamInfo={teamInfo} />
+          </Grid>
+
+          <Grid item xs={12}>
+            <OffensiveCoverageTable teamInfo={teamInfo} />
+          </Grid>
+        </Grid>
       </React.Fragment>
     );
   }
@@ -34,7 +29,7 @@ const TeamAnalysis: React.FC = () => {
     <React.Fragment>
       <Grid container justify="center" spacing={2}>
         <Grid item xs={6}>
-          <TeamParser onParse={parserSuccess} onError={parserError} />
+          <TeamParser onParse={setTeamInfo} />
         </Grid>
 
         <Grid item xs={12}>

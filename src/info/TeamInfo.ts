@@ -1,30 +1,33 @@
-import {Team} from '@pkmn/sets';
+import {PokemonSet, Team} from '@pkmn/sets';
 import {PokeInfo} from './PokeInfo';
 
-export class TeamInfo {
-  readonly team: Team;
-  readonly pokeInfo: PokeInfo[];
+export interface PokemonSetInfo extends PokemonSet {
+  info: PokeInfo;
+}
 
-  private constructor(team: Team, pokeInfo: PokeInfo[]) {
+export class TeamInfo {
+  readonly team: PokemonSetInfo[];
+
+  private constructor(team: PokemonSetInfo[]) {
     this.team = team;
-    this.pokeInfo = pokeInfo;
   }
 
   static async fromString(str: string): Promise<TeamInfo> {
-    const team = Team.fromString(str);
+    const parsedTeam = Team.fromString(str);
 
-    if (team) {
-      const pokeInfo = await Promise.all(
-        team.team.map(pokemon => PokeInfo.forSpecies(pokemon.species))
+    if (parsedTeam) {
+      const team = await Promise.all(
+        parsedTeam.team.map(async pokemon => {
+          return {
+            ...pokemon,
+            info: await PokeInfo.forSpecies(pokemon.species),
+          };
+        })
       );
 
-      return new TeamInfo(team, pokeInfo);
+      return new TeamInfo(team);
     } else {
       throw new Error('Failed to parse team.');
     }
-  }
-
-  toString(): string {
-    return this.team.toString();
   }
 }

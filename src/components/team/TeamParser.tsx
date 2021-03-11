@@ -14,7 +14,6 @@ import {TeamInfo} from 'src/info/TeamInfo';
 
 export interface TeamParserProps {
   onParse: (teamInfo: TeamInfo) => void;
-  onError: (err: unknown) => void;
 }
 
 export const TeamParser: React.FC<TeamParserProps> = ({
