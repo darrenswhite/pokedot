@@ -16,8 +16,6 @@ jobs:
     deploy:
         name: Deploy to Google Cloud Run
         runs-on: ubuntu-20.04
-        env:
-          
         steps:
         - uses: actions/checkout@v2
         - name: Setup Cloud SDK
