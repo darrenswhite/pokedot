@@ -251,12 +251,12 @@ const getRows = (
     const typeResistances = pokemonSets
       .map(pokemon => ({
         [pokemon.species]:
-          PokeInfo.forSpecies(pokemon.species).resistances[typeName] ?? 1,
+          PokeInfo.forSpecies(pokemon.species).resistances[typeName] ?? 1.0,
       }))
       .reduce((prev, curr) => Object.assign(prev, curr), {});
-    const totalResist = Object.values(typeResistances).filter(val => val < 1)
+    const totalResist = Object.values(typeResistances).filter(val => val < 1.0)
       .length;
-    const totalWeak = Object.values(typeResistances).filter(val => val > 1)
+    const totalWeak = Object.values(typeResistances).filter(val => val > 1.0)
       .length;
     const score = Object.values(typeResistances)
       .map(scoreResistanceValue)
@@ -293,7 +293,7 @@ const getRows = (
 };
 
 export interface DefensiveCoverageTableProps {
-  pokemonSets: Readonly<PartialPokemonSet[]>;
+  pokemonSets: PartialPokemonSet[];
 }
 
 export const DefensiveCoverageTable: React.FC<DefensiveCoverageTableProps> = ({

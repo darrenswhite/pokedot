@@ -13,6 +13,11 @@ export const Routes = {
     path: '/',
     icon: dynamic(() => import('@material-ui/icons/Home')),
   },
+  SPECIES_INFO: {
+    displayName: 'Species Info',
+    path: '/species-info',
+    icon: dynamic(() => import('@material-ui/icons/Search')),
+  },
   TEAM_ANALYSIS: {
     displayName: 'Team Analysis',
     path: '/team-analysis',

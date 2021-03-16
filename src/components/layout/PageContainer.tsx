@@ -13,21 +13,19 @@ const useStyles = makeStyles(theme => ({
   },
   wrapper: {
     flex: '1 1 auto',
+    backfaceVisibility: 'hidden',
+    WebkitBackfaceVisibility: 'hidden',
     display: 'flex',
+    flexDirection: 'column',
     minHeight: '100vh',
     maxWidth: '100%',
     position: 'relative',
   },
-  content: {
-    display: 'flex',
-    flexDirection: 'column',
-    flexGrow: 1,
-    paddingTop: theme.spacing(12),
-  },
   main: {
     display: 'flex',
-    flexGrow: 1,
+    flex: '1 0 auto',
     maxWidth: '100%',
+    paddingTop: theme.spacing(12),
   },
   container: {
     padding: theme.spacing(2),
@@ -40,17 +38,15 @@ export const PageContainer: React.FC<Props> = ({children}: Props) => {
   return (
     <div className={classes.root}>
       <div className={classes.wrapper}>
-        <Header />
+        {<Header />}
 
-        <div className={classes.content}>
-          <main className={classes.main}>
-            <Container maxWidth={false} className={classes.container}>
-              <React.Fragment>{children}</React.Fragment>
-            </Container>
-          </main>
+        <main className={classes.main}>
+          <Container maxWidth={false} className={classes.container}>
+            <React.Fragment>{children}</React.Fragment>
+          </Container>
+        </main>
 
-          <Footer />
-        </div>
+        <Footer />
       </div>
     </div>
   );

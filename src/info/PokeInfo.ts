@@ -15,7 +15,7 @@ export interface Moves {
   [key: string]: Move | undefined;
 }
 
-export type TypeChart = Partial<Record<TypeName, number>>;
+export type TypeChart = Record<TypeName, number>;
 
 type PartialExcept<T, K extends keyof T> = Pick<T, K> & Partial<Omit<T, K>>;
 
@@ -55,6 +55,12 @@ export class PokeInfo {
     } else {
       throw new Error(`Unknown species: ${name}`);
     }
+  }
+
+  static names(gen: GenerationNum = 8): string[] {
+    const generation = new Generations(Dex).get(gen);
+
+    return Array.from(generation.species).map(specie => specie.name);
   }
 
   static types(gen: GenerationNum = 8): Type[] {

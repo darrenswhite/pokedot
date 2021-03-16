@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  makeStyles,
+  Grid,
   TableCell,
   TableCellProps,
   TableHead,
@@ -27,22 +27,38 @@ export interface SortableTableHeadProps {
   orderBy: keyof SortableTableRow;
 }
 
-const useStyles = makeStyles(() => ({
-  label: {
-    flexDirection: 'column',
-  },
-}));
-
 export const SortableTableHead: React.FC<SortableTableHeadProps> = ({
   cells,
   onRequestSort,
   order,
   orderBy,
 }: SortableTableHeadProps) => {
-  const classes = useStyles();
   const createSortHandler = (property: keyof SortableTableRow) => (
     event: React.MouseEvent<unknown>
   ) => onRequestSort(event, property);
+
+  const getCellLabel = (cell: SortableTableHeadCell): React.ReactNode => {
+    let result;
+
+    if (cell.label) {
+      if (cell.before) {
+        result = (
+          <Grid container justify="center">
+            <Grid item>{cell.before}</Grid>
+            <Grid item>
+              <span>{cell.label}</span>
+            </Grid>
+          </Grid>
+        );
+      } else {
+        result = <span>{cell.label}</span>;
+      }
+    } else {
+      result = cell.before;
+    }
+
+    return result;
+  };
 
   return (
     <TableHead>
@@ -58,10 +74,8 @@ export const SortableTableHead: React.FC<SortableTableHeadProps> = ({
                 active={orderBy === cell.id}
                 direction={orderBy === cell.id ? order : Order.ASCENDING}
                 onClick={createSortHandler(cell.id)}
-                className={classes.label}
               >
-                {cell.before}
-                <span>{cell.label}</span>
+                {getCellLabel(cell)}
               </TableSortLabel>
             </TableCell>
           );

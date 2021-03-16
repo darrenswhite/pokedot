@@ -239,14 +239,15 @@ const getRows = (
             PokeInfo.forSpecies(pokemon.species).coverage(pokemon.moves)[
               typeName
             ]) ??
-          1,
+          1.0,
       }))
       .reduce((prev, curr) => Object.assign(prev, curr), {});
     const totalSuperEffective = Object.values(typeCoverages).filter(
       val => val > 1
     ).length;
-    const totalIneffective = Object.values(typeCoverages).filter(val => val < 1)
-      .length;
+    const totalIneffective = Object.values(typeCoverages).filter(
+      val => val < 1.0
+    ).length;
     const score = Object.values(typeCoverages)
       .map(scoreCoverageValue)
       .reduce((prev, curr) => prev + curr, 0);
@@ -282,7 +283,7 @@ const getRows = (
 };
 
 export interface OffensiveCoverageTableProps {
-  pokemonSets: Readonly<PartialPokemonSet[]>;
+  pokemonSets: PartialPokemonSet[];
 }
 
 export const OffensiveCoverageTable: React.FC<OffensiveCoverageTableProps> = ({

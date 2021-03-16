@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {
   Button,
   Dialog,
@@ -11,9 +11,10 @@ import {
 } from '@material-ui/core';
 import {Add} from '@material-ui/icons';
 import {Team} from '@pkmn/sets';
+import {PartialPokemonSet} from '../../info/PokeInfo';
 
 export interface TeamParserProps {
-  onParse: (team: Team) => void;
+  onParse: (pokemonSets: PartialPokemonSet[]) => void;
 }
 
 export const TeamParser: React.FC<TeamParserProps> = ({
@@ -21,17 +22,25 @@ export const TeamParser: React.FC<TeamParserProps> = ({
 }: TeamParserProps) => {
   const [team, setTeam] = useState<string>();
   const [parseError, setParseError] = useState<string>();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const teamInputRef = useRef<HTMLInputElement>(null);
 
-  const openDialog = () => setOpen(true);
+  const openDialog = () => {
+    setOpen(true);
+  };
+  const focusTeamInput = () => {
+    if (teamInputRef.current) {
+      teamInputRef.current.focus();
+    }
+  };
   const closeDialog = () => setOpen(false);
   const parseTeam = () => {
     if (team) {
-      const teamInfo = Team.fromString(team);
+      const parsedTeam = Team.fromString(team);
 
-      if (teamInfo) {
+      if (parsedTeam) {
         setParseError('');
-        onParse(teamInfo);
+        onParse(parsedTeam.team as PartialPokemonSet[]);
         closeDialog();
       } else {
         console.error(`Failed to parse team.`);
@@ -44,7 +53,7 @@ export const TeamParser: React.FC<TeamParserProps> = ({
 
   return (
     <React.Fragment>
-      <Dialog open={open} onClose={closeDialog}>
+      <Dialog open={open} onClose={closeDialog} onEntered={focusTeamInput}>
         <DialogTitle>Import team</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -59,6 +68,7 @@ export const TeamParser: React.FC<TeamParserProps> = ({
             helperText={parseError}
             error={!!parseError}
             rowsMax={10}
+            inputRef={teamInputRef}
             multiline
             fullWidth
           />

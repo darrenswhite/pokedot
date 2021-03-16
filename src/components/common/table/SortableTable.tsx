@@ -33,7 +33,7 @@ export const SortableTable: React.FC<SortableTableProps> = ({
   );
 
   const handleRequestSort = (
-    event: React.MouseEvent<unknown>,
+    _: React.MouseEvent<unknown>,
     property: keyof SortableTableRow
   ) => {
     const isAsc = orderBy === property && order === Order.ASCENDING;
