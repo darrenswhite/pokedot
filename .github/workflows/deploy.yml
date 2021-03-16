@@ -7,14 +7,17 @@ on:
     paths-ignore:
       - '**.md'
 env:
-  PROJECT_ID: ${{ secrets.GCP_PROJECT }}
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   SERVICE: ${{ secrets.GCP_APP_NAME }}
+  IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}:${{  github.sha }}
   REGION: europe-west1
 
 jobs:
     deploy:
         name: Deploy to Google Cloud Run
         runs-on: ubuntu-20.04
+        env:
+          
         steps:
         - uses: actions/checkout@v2
         - name: Setup Cloud SDK
@@ -27,14 +30,14 @@ jobs:
           run: gcloud auth configure-docker
         - name: Build and Push Container
           run: |-
-            docker build -t gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }} .
-            docker push gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }}
+            docker build -t ${{ env.IMAGE_NAME }} .
+            docker push ${{ env.IMAGE_NAME }}
         - name: Deploy to Cloud Run
           id: deploy
           uses: google-github-actions/deploy-cloudrun@v0.4.0
           with:
             service: ${{ env.SERVICE }}
-            image: gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }}
+            image: ${{ env.IMAGE_NAME }}
             region: ${{ env.REGION }}
         - name: Show Output
           run: echo ${{ steps.deploy.outputs.url }}
