@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {useState} from 'react';
 import clsx from 'clsx';
 import {
   AppBar,
@@ -52,8 +52,8 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export const Header: FC = () => {
-  const [open, setOpen] = React.useState(true);
+export const Header: React.FC = () => {
+  const [open, setOpen] = useState(true);
   const toggle = () => setOpen(!open);
   const classes = useStyles();
   const router = useRouter();
