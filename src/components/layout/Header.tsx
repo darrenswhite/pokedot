@@ -1,18 +1,19 @@
 import React, {useState} from 'react';
-import clsx from 'clsx';
 import {
   AppBar,
-  Drawer,
   IconButton,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
   makeStyles,
+  SwipeableDrawer,
+  Tab,
+  Tabs,
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import {Menu} from '@material-ui/icons';
+import {Email, GitHub, Menu, MonetizationOn} from '@material-ui/icons';
 import Link from 'next/link';
 import {useRouter} from 'next/router';
 import {Routes} from 'src/router/Routes';
@@ -26,90 +27,98 @@ const useStyles = makeStyles(theme => ({
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
-    whiteSpace: 'nowrap',
   },
-  drawerOpen: {
+  drawerPaper: {
     width: drawerWidth,
-    overflowX: 'hidden',
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
   },
-  drawerClose: {
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    overflowX: 'hidden',
-    width: theme.spacing(5),
-    [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(7),
-    },
-  },
-  drawerList: {
-    marginTop: theme.spacing(6),
+  menuButton: {
+    marginRight: theme.spacing(2),
   },
 }));
 
+const GITHUB_URL = 'https://github.com/darrenswhite/pokedot';
+const PAYPAL_URL =
+  'https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ZJZ94RDWF6GU4&item_name=Pokédot&currency_code=GBP&source=url';
+const EMAIL_URL = 'mailto:pokedot@darrenswhite.com';
+
+const items = [
+  {title: 'GitHub', icon: GitHub, link: GITHUB_URL},
+  {title: 'Donate', icon: MonetizationOn, link: PAYPAL_URL},
+  {title: 'Email', icon: Email, link: EMAIL_URL},
+];
+
 export const Header: React.FC = () => {
-  const [open, setOpen] = useState(true);
-  const toggle = () => setOpen(!open);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const toggleDrawer = () => setDrawerOpen(!drawerOpen);
   const classes = useStyles();
   const router = useRouter();
 
+  const handleTabChange = (_, value: string) => {
+    router.push(value);
+  };
+
   return (
     <React.Fragment>
-      <AppBar position="fixed" className={classes.appBar}>
+      <AppBar color="inherit" className={classes.appBar}>
         <Toolbar variant="dense">
           <IconButton
             edge="start"
-            color="inherit"
-            aria-label="Open drawer"
-            onClick={toggle}
+            onClick={toggleDrawer}
+            className={classes.menuButton}
           >
             <Menu />
           </IconButton>
 
-          <Typography variant="h6">Pokédot</Typography>
+          <Typography variant="h6" noWrap>
+            Pokédot
+          </Typography>
         </Toolbar>
+
+        <Tabs
+          value={router.pathname}
+          onChange={handleTabChange}
+          indicatorColor="primary"
+          textColor="primary"
+          variant="scrollable"
+          scrollButtons="auto"
+          aria-label="scrollable auto tabs example"
+        >
+          {Object.values(Routes).map(route => (
+            <Tab
+              key={route.path}
+              label={route.displayName}
+              value={route.path}
+            />
+          ))}
+        </Tabs>
       </AppBar>
 
-      <Drawer
-        variant="permanent"
-        className={clsx(classes.drawer, {
-          [classes.drawerOpen]: open,
-          [classes.drawerClose]: !open,
-        })}
+      <SwipeableDrawer
+        open={drawerOpen}
+        onClose={toggleDrawer}
+        onOpen={toggleDrawer}
+        className={classes.drawer}
         classes={{
-          paper: clsx({
-            [classes.drawerOpen]: open,
-            [classes.drawerClose]: !open,
-          }),
+          paper: classes.drawerPaper,
         }}
+        variant="temporary"
       >
-        <List className={classes.drawerList}>
-          {Object.values(Routes).map(route => (
-            <Link href={route.path} passHref key={route.displayName}>
+        <List dense>
+          {items.map(item => (
+            <Link href={item.link} passHref key={item.title}>
               <ListItem
                 button
                 component="a"
-                dense
-                selected={router.pathname === route.path}
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <ListItemIcon>{<route.icon />}</ListItemIcon>
-                <ListItemText
-                  primary={
-                    <Typography variant="caption">
-                      {route.displayName}
-                    </Typography>
-                  }
-                />
+                <ListItemIcon>{<item.icon />}</ListItemIcon>
+                <ListItemText primary={item.title} />
               </ListItem>
             </Link>
           ))}
         </List>
-      </Drawer>
+      </SwipeableDrawer>
     </React.Fragment>
   );
 };

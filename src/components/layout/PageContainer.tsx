@@ -1,9 +1,7 @@
-import React, {FC} from 'react';
-import {useRouter} from 'next/router';
-import {Box, Container, makeStyles, Typography} from '@material-ui/core';
+import React from 'react';
+import {Container, makeStyles} from '@material-ui/core';
 import {Header} from './Header';
 import {Footer} from './Footer';
-import {getCurrentRoute} from 'src/router/Routes';
 
 type Props = {
   children: React.ReactNode;
@@ -24,23 +22,20 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
+    paddingTop: theme.spacing(12),
   },
   main: {
     display: 'flex',
     flexGrow: 1,
     maxWidth: '100%',
   },
-  appBarSpacer: theme.mixins.toolbar,
   container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
+    padding: theme.spacing(2),
   },
 }));
 
-export const PageContainer: FC<Props> = ({children}: Props) => {
+export const PageContainer: React.FC<Props> = ({children}: Props) => {
   const classes = useStyles();
-  const router = useRouter();
-  const currentRoute = getCurrentRoute(router);
 
   return (
     <div className={classes.root}>
@@ -49,16 +44,8 @@ export const PageContainer: FC<Props> = ({children}: Props) => {
 
         <div className={classes.content}>
           <main className={classes.main}>
-            <div className={classes.appBarSpacer} />
-
-            <Container maxWidth="lg" className={classes.container}>
-              <Box my={4}>
-                <Typography variant="h4" component="h1" gutterBottom>
-                  {currentRoute?.displayName}
-                </Typography>
-              </Box>
-
-              {children}
+            <Container maxWidth={false} className={classes.container}>
+              <React.Fragment>{children}</React.Fragment>
             </Container>
           </main>
 
