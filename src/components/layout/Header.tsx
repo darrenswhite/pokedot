@@ -53,9 +53,8 @@ export const Header: React.FC = () => {
   const classes = useStyles();
   const router = useRouter();
 
-  const handleTabChange = (_, value: string) => {
+  const handleTabChange = (event: React.SyntheticEvent, value: string) =>
     router.push(value);
-  };
 
   return (
     <React.Fragment>
