@@ -42,9 +42,7 @@ export const SortableTableHead: React.FC<SortableTableHeadProps> = ({
   const classes = useStyles();
   const createSortHandler = (property: keyof SortableTableRow) => (
     event: React.MouseEvent<unknown>
-  ) => {
-    onRequestSort(event, property);
-  };
+  ) => onRequestSort(event, property);
 
   return (
     <TableHead>
