@@ -10,10 +10,10 @@ import {
   TextField,
 } from '@material-ui/core';
 import {Add} from '@material-ui/icons';
-import {TeamInfo} from 'src/info/TeamInfo';
+import {Team} from '@pkmn/sets';
 
 export interface TeamParserProps {
-  onParse: (teamInfo: TeamInfo) => void;
+  onParse: (team: Team) => void;
 }
 
 export const TeamParser: React.FC<TeamParserProps> = ({
@@ -27,16 +27,16 @@ export const TeamParser: React.FC<TeamParserProps> = ({
   const closeDialog = () => setOpen(false);
   const parseTeam = () => {
     if (team) {
-      TeamInfo.fromString(team)
-        .then(teamInfo => {
-          setParseError('');
-          onParse(teamInfo);
-          closeDialog();
-        })
-        .catch(err => {
-          console.error(`Failed to parse team: ${team}`, err);
-          setParseError('Invalid team.');
-        });
+      const teamInfo = Team.fromString(team);
+
+      if (teamInfo) {
+        setParseError('');
+        onParse(teamInfo);
+        closeDialog();
+      } else {
+        console.error(`Failed to parse team.`);
+        setParseError('Invalid team.');
+      }
     } else {
       setParseError('Team is required');
     }

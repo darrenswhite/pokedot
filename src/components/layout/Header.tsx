@@ -16,7 +16,7 @@ import {
 import {Email, GitHub, Menu, MonetizationOn} from '@material-ui/icons';
 import Link from 'next/link';
 import {useRouter} from 'next/router';
-import {Routes} from 'src/router/Routes';
+import {Routes} from '../../router/Routes';
 
 const drawerWidth = 240;
 

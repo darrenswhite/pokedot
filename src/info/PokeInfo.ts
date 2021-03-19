@@ -1,4 +1,4 @@
-import {Dex} from '@pkmn/dex';
+import {Dex, PokemonSet} from '@pkmn/dex';
 import {
   AbilityName,
   EggGroup,
@@ -17,53 +17,41 @@ export interface Moves {
 
 export type TypeChart = Partial<Record<TypeName, number>>;
 
+type PartialExcept<T, K extends keyof T> = Pick<T, K> & Partial<Omit<T, K>>;
+
+export type PartialPokemonSet = PartialExcept<PokemonSet, 'species'>;
+
 export class PokeInfo {
   private readonly generation: Generation;
   private readonly species: Species;
-  readonly moves: Moves;
   readonly resistances: TypeChart;
   readonly types: Type[];
 
   private constructor(
     generation: Generation,
     species: Species,
-    moves: Moves,
     resistances: TypeChart,
     types: Type[]
   ) {
     this.generation = generation;
     this.species = species;
-    this.moves = moves;
     this.resistances = resistances;
     this.types = types;
   }
 
-  static async forSpecies(
-    name: string,
-    gen: GenerationNum = 8
-  ): Promise<PokeInfo> {
+  static forSpecies(name: string, gen: GenerationNum = 8): PokeInfo {
     const generation = new Generations(Dex).get(gen);
     const specie = generation.species.get(
       name.replace('[\\W_]+', '').toLowerCase()
     );
 
     if (specie) {
-      const learnset = (await generation.learnsets.get(specie.name))?.learnset;
       const types = specie.types
         .map(type => generation.types.get(type))
         .filter(type => !!type) as Type[];
       const resistances = PokeInfo.createResistanceTypeChart(generation, types);
-      let moves;
 
-      if (learnset) {
-        moves = Object.fromEntries(
-          Object.keys(learnset).map(name => [name, generation.moves.get(name)])
-        );
-      } else {
-        moves = {};
-      }
-
-      return new PokeInfo(generation, specie, moves, resistances, types);
+      return new PokeInfo(generation, specie, resistances, types);
     } else {
       throw new Error(`Unknown species: ${name}`);
     }
@@ -93,6 +81,24 @@ export class PokeInfo {
 
   get eggGroups(): EggGroup[] {
     return this.species.eggGroups;
+  }
+
+  async moves(): Promise<Moves> {
+    const learnset = (await this.generation.learnsets.get(this.name))?.learnset;
+    let moves;
+
+    if (learnset) {
+      moves = Object.fromEntries(
+        Object.keys(learnset).map(name => [
+          name,
+          this.generation.moves.get(name),
+        ])
+      );
+    } else {
+      moves = {};
+    }
+
+    return moves;
   }
 
   coverage(moves: string[]): TypeChart {

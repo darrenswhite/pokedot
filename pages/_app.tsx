@@ -3,9 +3,9 @@ import Head from 'next/head';
 import {AppProps} from 'next/app';
 import {NextRouter, useRouter} from 'next/router';
 import {CssBaseline, ThemeProvider} from '@material-ui/core';
-import {Theme} from 'src/theme/Theme';
-import {PageContainer} from 'src/components/layout/PageContainer';
-import {getCurrentRoute} from 'src/router/Routes';
+import {Theme} from '../src/theme/Theme';
+import {PageContainer} from '../src/components/layout/PageContainer';
+import {getCurrentRoute} from '../src/router/Routes';
 
 const getTitle = (router: NextRouter): string => {
   const route = getCurrentRoute(router);

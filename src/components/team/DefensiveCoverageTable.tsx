@@ -1,13 +1,9 @@
 import React from 'react';
 import {Chip, colors, makeStyles, Paper, Typography} from '@material-ui/core';
 import {Icons} from '@pkmn/img';
-import {
-  SortableTable,
-  SortableTableRow,
-} from 'src/components/common/table/SortableTable';
-import {SortableTableHeadCell} from 'src/components/common/table/SortableTableHead';
-import {PokeInfo} from 'src/info/PokeInfo';
-import {TeamInfo} from 'src/info/TeamInfo';
+import {SortableTable, SortableTableRow} from '../common/table/SortableTable';
+import {SortableTableHeadCell} from '../common/table/SortableTableHead';
+import {PartialPokemonSet, PokeInfo} from '../../info/PokeInfo';
 
 const useStyles = makeStyles(() => ({
   chipValueZero: {
@@ -207,7 +203,9 @@ const scoreResistanceValue = (value: number): number => {
   }
 };
 
-const getHeaders = (teamInfo: TeamInfo): SortableTableHeadCell[] => {
+const getHeaders = (
+  pokemonSets: PartialPokemonSet[]
+): SortableTableHeadCell[] => {
   const typeHeader: SortableTableHeadCell = {
     id: 'type',
     label: 'Type',
@@ -233,26 +231,27 @@ const getHeaders = (teamInfo: TeamInfo): SortableTableHeadCell[] => {
 
   return [typeHeader]
     .concat(
-      teamInfo.team.map(pokemon => ({
-        id: pokemon.info.num,
-        label: pokemon.info.name,
+      pokemonSets.map(pokemon => ({
+        id: pokemon.species,
+        label: pokemon.species,
         align: 'center',
-        before: <span style={Icons.getPokemon(pokemon.info.name).css} />,
+        before: <span style={Icons.getPokemon(pokemon.species).css} />,
       }))
     )
     .concat(totalHeaders);
 };
 
 const getRows = (
-  teamInfo: TeamInfo,
+  pokemonSets: PartialPokemonSet[],
   classes: ReturnType<typeof useStyles>
 ): SortableTableRow[] => {
   return PokeInfo.types().map(type => {
     const typeName = type.name;
     const typeUrl = Icons.getType(typeName).url;
-    const typeResistances = teamInfo.team
+    const typeResistances = pokemonSets
       .map(pokemon => ({
-        [pokemon.info.num]: pokemon.info.resistances[typeName] ?? 1,
+        [pokemon.species]:
+          PokeInfo.forSpecies(pokemon.species).resistances[typeName] ?? 1,
       }))
       .reduce((prev, curr) => Object.assign(prev, curr), {});
     const totalResist = Object.values(typeResistances).filter(val => val < 1)
@@ -294,15 +293,15 @@ const getRows = (
 };
 
 export interface DefensiveCoverageTableProps {
-  teamInfo: TeamInfo;
+  pokemonSets: Readonly<PartialPokemonSet[]>;
 }
 
 export const DefensiveCoverageTable: React.FC<DefensiveCoverageTableProps> = ({
-  teamInfo,
+  pokemonSets,
 }: DefensiveCoverageTableProps) => {
   const classes = useStyles();
-  const headers = getHeaders(teamInfo);
-  const rows = getRows(teamInfo, classes);
+  const headers = getHeaders(pokemonSets);
+  const rows = getRows(pokemonSets, classes);
 
   return (
     <React.Fragment>

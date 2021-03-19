@@ -1,24 +1,24 @@
 import React, {useState} from 'react';
 import {Grid} from '@material-ui/core';
-import {DefensiveCoverageTable} from 'src/components/team/DefensiveCoverageTable';
-import {OffensiveCoverageTable} from 'src/components/team/OffensiveCoverageTable';
-import {TeamParser} from 'src/components/team/TeamParser';
-import {TeamInfo} from 'src/info/TeamInfo';
+import {Team} from '@pkmn/sets';
+import {DefensiveCoverageTable} from '../src/components/team/DefensiveCoverageTable';
+import {OffensiveCoverageTable} from '../src/components/team/OffensiveCoverageTable';
+import {TeamParser} from '../src/components/team/TeamParser';
 
 const TeamAnalysis: React.FC = () => {
-  const [teamInfo, setTeamInfo] = useState<TeamInfo | null>(null);
+  const [team, setTeam] = useState<Team | undefined>();
   let results;
 
-  if (teamInfo) {
+  if (team) {
     results = (
       <React.Fragment>
         <Grid container spacing={4}>
           <Grid item xs={12}>
-            <DefensiveCoverageTable teamInfo={teamInfo} />
+            <DefensiveCoverageTable pokemonSets={team.team} />
           </Grid>
 
           <Grid item xs={12}>
-            <OffensiveCoverageTable teamInfo={teamInfo} />
+            <OffensiveCoverageTable pokemonSets={team.team} />
           </Grid>
         </Grid>
       </React.Fragment>
@@ -29,7 +29,7 @@ const TeamAnalysis: React.FC = () => {
     <React.Fragment>
       <Grid container justify="center" spacing={2}>
         <Grid item xs={6}>
-          <TeamParser onParse={setTeamInfo} />
+          <TeamParser onParse={setTeam} />
         </Grid>
 
         <Grid item xs={12}>

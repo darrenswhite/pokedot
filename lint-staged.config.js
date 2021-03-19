@@ -1,3 +1,3 @@
 module.exports = {
-  '*.{js,jsx,ts,tsx}': 'npm run lint',
+  '*.{js,jsx,ts,tsx}': 'eslint --cache --fix --max-warnings 0',
 };
