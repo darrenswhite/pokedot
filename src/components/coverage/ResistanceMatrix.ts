@@ -1,6 +1,6 @@
 import {TypeName} from '@pkmn/dex-types';
 import {PartialPokemonSet, PokeInfo} from '../../info/PokeInfo';
-import {flow, groupBy, identity, mapValues} from 'lodash/fp';
+import {flow, groupBy, identity, map, mapValues} from 'lodash/fp';
 
 export interface SpeciesTypeResistance {
   species: string;
@@ -65,10 +65,27 @@ export class ResistanceMatrix {
     });
   }
 
+  get values(): SpeciesTypeResistance[] {
+    return this.matrix;
+  }
+
   transform(
     func: (matrix: SpeciesTypeResistance[]) => SpeciesTypeResistance[]
   ): ResistanceMatrix {
     return new ResistanceMatrix(func(this.matrix));
+  }
+
+  scoreTypes(
+    scoringFunction: (values: number[]) => number
+  ): [TypeName, number][] {
+    return Object.entries(this.groupBy('type')).map(([type, values]) => {
+      const score = flow(
+        map((val: SpeciesTypeResistance) => val.resistance),
+        scoringFunction
+      )(values);
+
+      return [type, score];
+    }) as [TypeName, number][];
   }
 
   groupBy<
@@ -79,12 +96,12 @@ export class ResistanceMatrix {
     k2: K2
   ): GroupedSpeciesTypeResistance<
     K1,
-    GroupedSpeciesTypeResistance<K2, SpeciesTypeResistance>
+    GroupedSpeciesTypeResistance<K2, SpeciesTypeResistance[]>
   >;
 
   groupBy<K1 extends keyof SpeciesTypeResistance>(
     k1: K1
-  ): GroupedSpeciesTypeResistance<K1, SpeciesTypeResistance>;
+  ): GroupedSpeciesTypeResistance<K1, SpeciesTypeResistance[]>;
 
   groupBy(...keys: (keyof SpeciesTypeResistance)[]): unknown {
     return this.groupMultiple(

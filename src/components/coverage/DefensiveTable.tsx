@@ -1,6 +1,5 @@
 import React, {ReactElement} from 'react';
-import {Grid, makeStyles, Tooltip, Typography} from '@material-ui/core';
-import {Icons} from '@pkmn/img';
+import {Grid, makeStyles, Typography} from '@material-ui/core';
 import {flow, map, toLower, upperFirst} from 'lodash/fp';
 import {PartialPokemonSet} from '../../info/PokeInfo';
 import {ResistanceChip} from './ResistanceChip';
@@ -8,6 +7,9 @@ import {ResistanceMatrix, SpeciesTypeResistance} from './ResistanceMatrix';
 import {PRow, PValue} from '../common/table/model/PRow';
 import {PCol} from '../common/table/model/PCol';
 import {PTable} from '../common/table/PTable';
+import {TypeImage} from './TypeImage';
+import {TypeName} from '@pkmn/types';
+import {SpeciesImage} from './SpeciesImage';
 
 const getFieldRenderFunction = (
   key: keyof SpeciesTypeResistance
@@ -54,7 +56,7 @@ const renderMultiValue = (
   if (value) {
     if (value instanceof Array) {
       return (
-        <Grid container spacing={0}>
+        <Grid container spacing={1}>
           {value.map((val, i) => (
             <Grid item key={i}>
               {render(val)}
@@ -75,19 +77,11 @@ const renderResistance = (value: PValue): ReactElement => {
 };
 
 const renderSpecies = (value: PValue): ReactElement => {
-  return (
-    <Tooltip title={value as string}>
-      <span style={Icons.getPokemon(value as string).css} />
-    </Tooltip>
-  );
+  return <SpeciesImage name={value as string} />;
 };
 
 const renderType = (value: PValue): ReactElement => {
-  return (
-    <Tooltip title={value as string}>
-      <img src={Icons.getType(value as string).url} />
-    </Tooltip>
-  );
+  return <TypeImage type={value as TypeName} />;
 };
 
 const getColumns = (
