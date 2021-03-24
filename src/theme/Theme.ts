@@ -5,7 +5,10 @@ export const Theme = createMuiTheme({
   palette: {
     type: 'dark',
     primary: {
-      main: colors.amber[800],
+      main: colors.amber[700],
     },
+  },
+  typography: {
+    fontFamily: 'Inter',
   },
 });

@@ -61,6 +61,7 @@ export const Header: React.FC = () => {
       <AppBar color="inherit" className={classes.appBar}>
         <Toolbar variant="dense">
           <IconButton
+            aria-label="Open drawer"
             edge="start"
             onClick={toggleDrawer}
             className={classes.menuButton}

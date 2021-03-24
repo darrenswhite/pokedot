@@ -1,5 +1,5 @@
 import React from 'react';
-import {Box, Container, makeStyles} from '@material-ui/core';
+import {Container, makeStyles} from '@material-ui/core';
 import {Header} from './Header';
 import {Footer} from './Footer';
 
@@ -27,6 +27,9 @@ const useStyles = makeStyles(theme => ({
     maxWidth: '100%',
     paddingTop: theme.spacing(12),
   },
+  container: {
+    padding: theme.spacing(2),
+  },
 }));
 
 export const PageContainer: React.FC<Props> = ({children}: Props) => {
@@ -35,13 +38,11 @@ export const PageContainer: React.FC<Props> = ({children}: Props) => {
   return (
     <div className={classes.root}>
       <div className={classes.wrapper}>
-        {<Header />}
+        <Header />
 
         <main className={classes.main}>
-          <Container maxWidth={false}>
-            <Box my={4}>
-              <React.Fragment>{children}</React.Fragment>
-            </Box>
+          <Container maxWidth={false} className={classes.container}>
+            <React.Fragment>{children}</React.Fragment>
           </Container>
         </main>
 
