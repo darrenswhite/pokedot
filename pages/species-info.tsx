@@ -1,21 +1,21 @@
 import React, {useState} from 'react';
 import {Grid} from '@material-ui/core';
-import {DefensiveTable} from '../src/components/coverage/DefensiveTable';
+import {DefensiveMatrixTable} from '../src/components/coverage/DefensiveMatrixTable';
 import {SpeciesSearch} from '../src/components/species/SpeciesSearch';
 import {PartialPokemonSet} from '../src/info/PokeInfo';
 import {SummaryCard} from '../src/components/coverage/SummaryCard';
 
 const SpeciesInfo: React.FC = () => {
   const [pokemonSets, setPokemonSets] = useState<PartialPokemonSet[]>([]);
-  let defensiveTable;
+  let defensiveMatrixTable;
   let summaryCard;
 
   if (pokemonSets.length > 0) {
-    defensiveTable = (
-      <DefensiveTable
+    defensiveMatrixTable = (
+      <DefensiveMatrixTable
         pokemonSets={pokemonSets}
         columnField="species"
-        rowField="resistance"
+        idField="resistance"
         valueField="type"
       />
     );
@@ -40,7 +40,7 @@ const SpeciesInfo: React.FC = () => {
         </Grid>
 
         <Grid item xs={12}>
-          {defensiveTable}
+          {defensiveMatrixTable}
         </Grid>
 
         <Grid item xs={12} sm={6}>

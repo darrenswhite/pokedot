@@ -1,9 +1,9 @@
 import React from 'react';
 import {Story} from '@storybook/react';
 import {
-  DefensiveTable,
-  DefensiveTableProps,
-} from '../components/coverage/DefensiveTable';
+  DefensiveMatrixTable,
+  DefensiveMatrixTableProps,
+} from '../components/coverage/DefensiveMatrixTable';
 import {
   DefensiveCoverageTable,
   DefensiveCoverageTableProps,
@@ -35,7 +35,7 @@ export default {
       },
     ],
     columnField: 'species',
-    rowField: 'resistance',
+    idField: 'resistance',
     valueField: 'type',
   },
   argTypes: {
@@ -45,7 +45,7 @@ export default {
         options: ['species', 'type', 'resistance'],
       },
     },
-    rowField: {
+    idField: {
       control: {
         type: 'select',
         options: ['species', 'type', 'resistance'],
@@ -60,13 +60,13 @@ export default {
   },
 };
 
-const TheDefensiveTable: Story<DefensiveTableProps> = args => {
-  return <DefensiveTable {...args} />;
+const TheDefensiveMatrixTable: Story<DefensiveMatrixTableProps> = args => {
+  return <DefensiveMatrixTable {...args} />;
 };
 
 const TheDefensiveCoverageTable: Story<DefensiveCoverageTableProps> = args => {
   return <DefensiveCoverageTable {...args} />;
 };
 
-export const Main = TheDefensiveTable.bind({});
+export const Main = TheDefensiveMatrixTable.bind({});
 export const Old = TheDefensiveCoverageTable.bind({});

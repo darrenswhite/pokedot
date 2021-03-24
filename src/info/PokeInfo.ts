@@ -10,6 +10,7 @@ import {
   TypeName,
 } from '@pkmn/dex-types';
 import {Generation, Generations, Type} from '@pkmn/data';
+import {map} from 'lodash/fp';
 
 export interface Moves {
   [key: string]: Move | undefined;
@@ -67,6 +68,10 @@ export class PokeInfo {
     const generation = new Generations(Dex).get(gen);
 
     return Array.from(generation.types);
+  }
+
+  static typeNames(gen: GenerationNum = 8): TypeName[] {
+    return map(type => type.name, PokeInfo.types(gen));
   }
 
   get name(): string {

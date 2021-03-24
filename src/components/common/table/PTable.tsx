@@ -7,13 +7,6 @@ import {PCell} from './PCell';
 import {PHeader} from './PHeader';
 import {sortRows} from './PRowSorter';
 
-export interface PTableProps {
-  columns: PCol[];
-  rows: PRow[];
-  className?: string;
-  style?: React.CSSProperties;
-}
-
 const getCellValue = (col: PCol, row: PRow): ReactElement => {
   let result;
   const rawValue = row[col.field];
@@ -49,6 +42,13 @@ const getNextSortForItem = (
 
   return sort;
 };
+
+export interface PTableProps {
+  columns: PCol[];
+  rows: PRow[];
+  className?: string;
+  style?: React.CSSProperties;
+}
 
 export const PTable: React.FC<PTableProps> = ({
   columns,
