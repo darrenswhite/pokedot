@@ -12,12 +12,13 @@ export type GroupedMatrixValue<
 export class Matrix<T extends MatrixValue> {
   values: T[];
 
-  constructor(values: T[]) {
+  constructor(values: T[] = []) {
     this.values = values;
   }
 
-  transform(func: (values: T[]) => T[]): Matrix<T> {
-    return new Matrix(func(this.values));
+  transform(func: (values: T[]) => T[]): this {
+    this.values = func(this.values);
+    return this;
   }
 
   groupBy<K1 extends keyof T, K2 extends keyof T>(

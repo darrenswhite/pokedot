@@ -1,7 +1,7 @@
 import React from 'react';
 import {Tooltip} from '@material-ui/core';
 import {Icons} from '@pkmn/img';
-import {TypeName} from '@pkmn/data';
+import {TypeName} from '@pkmn/types';
 
 export interface TypeImageProps {
   type: TypeName;

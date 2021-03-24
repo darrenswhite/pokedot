@@ -1,4 +1,4 @@
-import {TypeName} from '@pkmn/dex-types';
+import {TypeName} from '@pkmn/types';
 import {PartialPokemonSet, PokeInfo} from '../info/PokeInfo';
 import {flow, map} from 'lodash/fp';
 import {Matrix} from './Matrix';
@@ -10,21 +10,28 @@ export interface ResistanceMatrixProps {
 }
 
 export class ResistanceMatrix extends Matrix<ResistanceMatrixProps> {
-  constructor(pokemonSets: PartialPokemonSet[]) {
-    super(ResistanceMatrix.buildMatrix(pokemonSets));
+  static async forPokemonSets(
+    pokemonSets: PartialPokemonSet[]
+  ): Promise<ResistanceMatrix> {
+    return new ResistanceMatrix(
+      await ResistanceMatrix.buildMatrix(pokemonSets)
+    );
   }
 
-  private static buildMatrix(
+  private static async buildMatrix(
     pokemonSets: PartialPokemonSet[]
-  ): ResistanceMatrixProps[] {
-    const types = PokeInfo.types().map(type => type.name);
+  ): Promise<ResistanceMatrixProps[]> {
+    const types = await PokeInfo.types();
+    const infos = await Promise.all(
+      pokemonSets.map(pokemon => PokeInfo.forPokemonSet(pokemon))
+    );
 
-    return pokemonSets.flatMap(pokemon => {
-      const {species} = pokemon;
-      const resistances = PokeInfo.forSpecies(species).resistances;
+    return infos.flatMap(info => {
+      const species = info.species;
+      const resistances = info.resistances;
 
       return types.map(type => {
-        const resistance = resistances[type];
+        const resistance = resistances[type] ?? 1.0;
 
         return {
           species,

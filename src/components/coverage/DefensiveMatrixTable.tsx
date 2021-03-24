@@ -1,7 +1,7 @@
-import React, {ReactElement} from 'react';
+import React, {ReactElement, useEffect, useState} from 'react';
 import {Grid, makeStyles, Typography} from '@material-ui/core';
+import {TypeName} from '@pkmn/types';
 import {PartialPokemonSet} from '../../info/PokeInfo';
-import {ResistanceChip} from './ResistanceChip';
 import {
   ResistanceMatrix,
   ResistanceMatrixProps,
@@ -9,9 +9,9 @@ import {
 import {PCol} from '../common/table/model/PCol';
 import {PValue} from '../common/table/model/PRow';
 import {PMatrixTable} from '../common/table/PMatrixTable';
-import {TypeImage} from './TypeImage';
-import {TypeName} from '@pkmn/types';
+import {ResistanceChip} from './ResistanceChip';
 import {SpeciesImage} from './SpeciesImage';
+import {TypeImage} from './TypeImage';
 
 const renderCell = (
   key: keyof ResistanceMatrixProps
@@ -106,9 +106,17 @@ export const DefensiveMatrixTable: React.FC<DefensiveMatrixTableProps> = ({
   valueField,
 }: DefensiveMatrixTableProps) => {
   const classes = useStyles();
-  const matrix = new ResistanceMatrix(pokemonSets).transform(matrix =>
-    matrix.filter(val => val.resistance !== 1.0)
+  const [matrix, setMatrix] = useState<ResistanceMatrix>(
+    new ResistanceMatrix()
   );
+  const filteredMatrix = matrix.transform(values =>
+    values.filter(val => val.resistance !== 1.0)
+  );
+
+  useEffect(() => {
+    ResistanceMatrix.forPokemonSets(pokemonSets).then(setMatrix);
+  }, [pokemonSets]);
+
   const columnFieldOverrides: Partial<PCol> = {
     renderCell: renderCell(columnField),
   };
@@ -124,7 +132,7 @@ export const DefensiveMatrixTable: React.FC<DefensiveMatrixTableProps> = ({
       </Typography>
 
       <PMatrixTable
-        matrix={matrix}
+        matrix={filteredMatrix}
         columnField={columnField}
         idField={idField}
         valueField={valueField}

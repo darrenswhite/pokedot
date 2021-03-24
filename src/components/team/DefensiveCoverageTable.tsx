@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Chip, colors, makeStyles, Paper, Typography} from '@material-ui/core';
 import {Icons} from '@pkmn/img';
+import {TypeName} from '@pkmn/types';
 import {SortableTable, SortableTableRow} from '../common/table/SortableTable';
 import {SortableTableHeadCell} from '../common/table/SortableTableHead';
 import {PartialPokemonSet, PokeInfo} from '../../info/PokeInfo';
@@ -245,13 +246,24 @@ const getRows = (
   pokemonSets: PartialPokemonSet[],
   classes: ReturnType<typeof useStyles>
 ): SortableTableRow[] => {
-  return PokeInfo.types().map(type => {
-    const typeName = type.name;
-    const typeUrl = Icons.getType(typeName).url;
-    const typeResistances = pokemonSets
-      .map(pokemon => ({
-        [pokemon.species]:
-          PokeInfo.forSpecies(pokemon.species).resistances[typeName] ?? 1.0,
+  const [infos, setInfos] = useState<PokeInfo[]>([]);
+  const [types, setTypes] = useState<TypeName[]>([]);
+
+  useEffect(() => {
+    Promise.all(
+      pokemonSets.map(pokemon => PokeInfo.forSpecies(pokemon.species))
+    ).then(setInfos);
+  }, [pokemonSets]);
+
+  useEffect(() => {
+    PokeInfo.types().then(setTypes);
+  }, []);
+
+  return types.map(type => {
+    const typeUrl = Icons.getType(type).url;
+    const typeResistances = infos
+      .map(info => ({
+        [info.species]: info.resistances[type] ?? 1.0,
       }))
       .reduce((prev, curr) => Object.assign(prev, curr), {});
     const totalResist = Object.values(typeResistances).filter(val => val < 1.0)
@@ -265,7 +277,7 @@ const getRows = (
     return {
       type: {
         value: <img src={typeUrl} />,
-        sortValue: typeName,
+        sortValue: type,
       },
       ...Object.fromEntries(
         Object.entries(typeResistances).map(([num, value]) => [

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Chip, colors, makeStyles, Paper, Typography} from '@material-ui/core';
 import {Icons} from '@pkmn/img';
+import {TypeName} from '@pkmn/types';
 import {SortableTable, SortableTableRow} from '../common/table/SortableTable';
 import {SortableTableHeadCell} from '../common/table/SortableTableHead';
 import {PartialPokemonSet, PokeInfo} from '../../info/PokeInfo';
@@ -229,17 +230,24 @@ const getRows = (
   pokemonSets: PartialPokemonSet[],
   classes: ReturnType<typeof useStyles>
 ): SortableTableRow[] => {
-  return PokeInfo.types().map(type => {
-    const typeName = type.name;
-    const typeUrl = Icons.getType(typeName).url;
-    const typeCoverages = pokemonSets
-      .map(pokemon => ({
-        [pokemon.species]:
-          (pokemon.moves &&
-            PokeInfo.forSpecies(pokemon.species).coverage(pokemon.moves)[
-              typeName
-            ]) ??
-          1.0,
+  const [infos, setInfos] = useState<PokeInfo[]>([]);
+  const [types, setTypes] = useState<TypeName[]>([]);
+
+  useEffect(() => {
+    Promise.all(
+      pokemonSets.map(pokemon => PokeInfo.forPokemonSet(pokemon))
+    ).then(setInfos);
+  }, [pokemonSets]);
+
+  useEffect(() => {
+    PokeInfo.types().then(setTypes);
+  }, []);
+
+  return types.map(type => {
+    const typeUrl = Icons.getType(type).url;
+    const typeCoverages = infos
+      .map(info => ({
+        [info.species]: info.coverage[type] ?? 1.0,
       }))
       .reduce((prev, curr) => Object.assign(prev, curr), {});
     const totalSuperEffective = Object.values(typeCoverages).filter(
@@ -255,7 +263,7 @@ const getRows = (
     return {
       type: {
         value: <img src={typeUrl} />,
-        sortValue: typeName,
+        sortValue: type,
       },
       ...Object.fromEntries(
         Object.entries(typeCoverages).map(([num, value]) => [

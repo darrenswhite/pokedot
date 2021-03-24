@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {TextField} from '@material-ui/core';
 import {Autocomplete} from '@material-ui/lab';
 import {PartialPokemonSet, PokeInfo} from '../../info/PokeInfo';
@@ -7,14 +7,18 @@ export interface SpeciesSearchProps {
   onSelect: (pokemonSets: PartialPokemonSet[]) => void;
 }
 
-const options = PokeInfo.names();
-
 export const SpeciesSearch: React.FC<SpeciesSearchProps> = ({
   onSelect,
 }: SpeciesSearchProps) => {
+  const [species, setSpecies] = useState<string[]>([]);
+
+  useEffect(() => {
+    PokeInfo.species().then(setSpecies);
+  }, []);
+
   return (
     <Autocomplete
-      options={options}
+      options={species}
       size="small"
       renderInput={params => (
         <TextField

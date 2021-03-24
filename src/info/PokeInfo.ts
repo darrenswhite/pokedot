@@ -1,153 +1,151 @@
-import {Dex, PokemonSet} from '@pkmn/dex';
 import {
   AbilityName,
   EggGroup,
   GenerationNum,
   Move,
-  Species,
-  SpeciesAbility,
+  PokemonSet,
   StatsTable,
   TypeName,
 } from '@pkmn/dex-types';
-import {Generation, Generations, Type} from '@pkmn/data';
+import {Generation, Generations, Specie} from '@pkmn/data';
 import {map} from 'lodash/fp';
 
 export interface Moves {
   [key: string]: Move | undefined;
 }
 
-export type TypeChart = Record<TypeName, number>;
+export type TypeChart = Partial<Record<TypeName, number>>;
 
 type PartialExcept<T, K extends keyof T> = Pick<T, K> & Partial<Omit<T, K>>;
 
 export type PartialPokemonSet = PartialExcept<PokemonSet, 'species'>;
 
 export class PokeInfo {
-  private readonly generation: Generation;
-  private readonly species: Species;
-  readonly resistances: TypeChart;
-  readonly types: Type[];
+  private generation: Generation;
+  private specie: Specie;
+  resistances: TypeChart;
+  coverage: TypeChart;
 
   private constructor(
     generation: Generation,
-    species: Species,
+    specie: Specie,
     resistances: TypeChart,
-    types: Type[]
+    coverage: TypeChart
   ) {
     this.generation = generation;
-    this.species = species;
+    this.specie = specie;
     this.resistances = resistances;
-    this.types = types;
+    this.coverage = coverage;
   }
 
-  static forSpecies(name: string, gen: GenerationNum = 8): PokeInfo {
-    const generation = new Generations(Dex).get(gen);
-    const specie = generation.species.get(
-      name.replace('[\\W_]+', '').toLowerCase()
-    );
+  static async forSpecies(
+    species: string,
+    gen: GenerationNum = 8
+  ): Promise<PokeInfo> {
+    return PokeInfo.forPokemonSet({species}, gen);
+  }
+
+  static async forPokemonSet(
+    set: PartialPokemonSet,
+    gen: GenerationNum = 8
+  ): Promise<PokeInfo> {
+    const generation = await PokeInfo.getGeneration(gen);
+    const species = set.species.replace('[\\W_]+', '').toLowerCase();
+    const specie = generation.species.get(species);
 
     if (specie) {
-      const types = specie.types
-        .map(type => generation.types.get(type))
-        .filter(type => !!type) as Type[];
+      const types = specie.types;
       const resistances = PokeInfo.createResistanceTypeChart(generation, types);
+      const coverage = PokeInfo.createCoverageTypeChart(generation, set.moves);
 
-      return new PokeInfo(generation, specie, resistances, types);
+      return new PokeInfo(generation, specie, resistances, coverage);
     } else {
       throw new Error(`Unknown species: ${name}`);
     }
   }
 
-  static names(gen: GenerationNum = 8): string[] {
-    const generation = new Generations(Dex).get(gen);
+  static async species(gen: GenerationNum = 8): Promise<string[]> {
+    const generation = await PokeInfo.getGeneration(gen);
 
     return Array.from(generation.species).map(specie => specie.name);
   }
 
-  static types(gen: GenerationNum = 8): Type[] {
-    const generation = new Generations(Dex).get(gen);
+  static async types(gen: GenerationNum = 8): Promise<TypeName[]> {
+    const generation = await PokeInfo.getGeneration(gen);
 
-    return Array.from(generation.types);
+    return map(type => type.name, Array.from(generation.types));
   }
 
-  static typeNames(gen: GenerationNum = 8): TypeName[] {
-    return map(type => type.name, PokeInfo.types(gen));
+  private static async getGeneration(
+    gen: GenerationNum = 8
+  ): Promise<Generation> {
+    const {Dex} = await import('@pkmn/dex');
+
+    return new Generations(Dex).get(gen);
   }
 
-  get name(): string {
-    return this.species.name;
+  get species(): string {
+    return this.specie.name;
   }
 
   get num(): number {
-    return this.species.num;
+    return this.specie.num;
   }
 
   get baseStats(): StatsTable<number> {
-    return this.species.baseStats;
+    return this.specie.baseStats;
   }
 
-  get abilities(): SpeciesAbility<'' | AbilityName> {
-    return this.species.abilities;
+  get abilities(): AbilityName[] {
+    return Object.values(this.specie.abilities);
   }
 
   get eggGroups(): EggGroup[] {
-    return this.species.eggGroups;
+    return this.specie.eggGroups;
   }
 
-  async moves(): Promise<Moves> {
-    const learnset = (await this.generation.learnsets.get(this.name))?.learnset;
-    let moves;
+  private static createCoverageTypeChart(
+    generation: Generation,
+    moves: string[] | undefined
+  ): TypeChart {
+    const coverage: TypeChart = {};
 
-    if (learnset) {
-      moves = Object.fromEntries(
-        Object.keys(learnset).map(name => [
-          name,
-          this.generation.moves.get(name),
-        ])
-      );
-    } else {
-      moves = {};
-    }
+    if (moves) {
+      const damageMoves = moves
+        .map(move => generation.moves.get(move))
+        .filter(
+          move => move !== undefined && move.category !== 'Status'
+        ) as Move[];
 
-    return moves;
-  }
+      damageMoves.forEach(move => {
+        Array.from(generation.types).forEach(type => {
+          const effectiveness = generation.types
+            .get(move.type)
+            ?.totalEffectiveness(type.name);
 
-  coverage(moves: string[]): TypeChart {
-    const coverage = {} as TypeChart;
-    const damageMoves = moves
-      .map(move => this.generation.moves.get(move))
-      .filter(
-        move => move !== undefined && move.category !== 'Status'
-      ) as Move[];
+          if (effectiveness !== undefined) {
+            const curr = coverage[type.name];
 
-    damageMoves.forEach(move => {
-      Array.from(this.generation.types).forEach(type => {
-        const effectiveness = this.generation.types
-          .get(move.type)
-          ?.totalEffectiveness(type.name);
-
-        if (effectiveness !== undefined) {
-          const curr = coverage[type.name];
-
-          if (curr === undefined || effectiveness > curr) {
-            coverage[type.name] = effectiveness;
+            if (curr === undefined || effectiveness > curr) {
+              coverage[type.name] = effectiveness;
+            }
           }
-        }
+        });
       });
-    });
+    }
 
     return coverage;
   }
 
   private static createResistanceTypeChart(
     generation: Generation,
-    types: Type[]
+    types: TypeName[]
   ): TypeChart {
-    const resistances = {} as TypeChart;
+    const resistances: TypeChart = {};
 
     Array.from(generation.types).forEach(type => {
       const values: number[] = types.map(targetType =>
-        type.totalEffectiveness(targetType.name)
+        type.totalEffectiveness(targetType)
       );
       const total = values.reduce((prev, curr) => prev * curr, 1);
 
