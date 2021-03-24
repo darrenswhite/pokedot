@@ -29,7 +29,9 @@ const TeamAnalysis: React.FC = () => {
         valueField="type"
       />
     );
-    summaryCard = <SummaryCard pokemonSets={pokemonSets} />;
+    summaryCard = (
+      <SummaryCard pokemonSets={pokemonSets} showOffensiveSummary />
+    );
   }
 
   return (

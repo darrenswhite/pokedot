@@ -34,6 +34,14 @@ export default {
         moves: ['Air Slash', 'Dazzling Gleam', 'Heat Wave', 'Protect'],
       },
     ],
+    showOffensiveSummary: true,
+  },
+  argTypes: {
+    pokemonSets: {
+      control: {
+        type: 'object',
+      },
+    },
   },
 };
 

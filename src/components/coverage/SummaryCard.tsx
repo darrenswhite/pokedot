@@ -75,10 +75,12 @@ const renderTypeList = (title: string, types: TypeName[]): ReactElement => {
 
 export interface SummaryCardProps {
   pokemonSets: PartialPokemonSet[];
+  showOffensiveSummary?: boolean;
 }
 
 export const SummaryCard: React.FC<SummaryCardProps> = ({
   pokemonSets,
+  showOffensiveSummary,
 }: SummaryCardProps) => {
   const [resistanceMatrix, setResistanceMatrix] = useState<ResistanceMatrix>(
     new ResistanceMatrix([])
@@ -98,6 +100,15 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
     types,
     EFFECTIVENESS_SUPER
   );
+  let offensiveSummary;
+
+  if (showOffensiveSummary) {
+    offensiveSummary = (
+      <CardContent>
+        {renderTypeList('Missing Offensive Coverage', offensiveMissingTypes)}{' '}
+      </CardContent>
+    );
+  }
 
   useEffect(() => {
     ResistanceMatrix.forPokemonSets(pokemonSets).then(setResistanceMatrix);
@@ -120,9 +131,7 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
         {renderTypeList('Weak Defensive Coverage', defensiveWeaknesses)}
       </CardContent>
 
-      <CardContent>
-        {renderTypeList('Missing Offensive Coverage', offensiveMissingTypes)}{' '}
-      </CardContent>
+      {offensiveSummary}
     </Card>
   );
 };

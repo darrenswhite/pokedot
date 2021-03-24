@@ -35,6 +35,11 @@ export default {
     valueField: 'type',
   },
   argTypes: {
+    pokemonSets: {
+      control: {
+        type: 'object',
+      },
+    },
     columnField: {
       control: {
         type: 'select',
