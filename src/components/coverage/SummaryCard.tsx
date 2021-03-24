@@ -7,7 +7,7 @@ import {
   Grid,
   Typography,
 } from '@material-ui/core';
-import {filter, flow, map, reduce, reject, slice} from 'lodash/fp';
+import {filter, flow, map, reduce, reject} from 'lodash/fp';
 import {PartialPokemonSet, PokeInfo} from '../../info/PokeInfo';
 import {
   ResistanceMatrix,
@@ -18,8 +18,6 @@ import {TypeImage} from './TypeImage';
 export interface SummaryCardProps {
   pokemonSets: PartialPokemonSet[];
 }
-
-const NUMBER_OF_WEAKNESSES = 3;
 
 export const SummaryCard: React.FC<SummaryCardProps> = ({
   pokemonSets,
@@ -38,7 +36,7 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
   const typeScores = matrix
     .scoreTypes(reduce((total, curr) => total * curr, 1))
     .sort((left, right) => (right[1] as number) - (left[1] as number));
-  const weaknesses = slice(0, NUMBER_OF_WEAKNESSES, typeScores);
+  const weaknesses = filter(typeScore => typeScore[1] > 1.0, typeScores);
 
   return (
     <Card>
