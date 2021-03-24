@@ -4,7 +4,7 @@ import {Header} from './Header';
 import {Footer} from './Footer';
 
 type Props = {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 };
 
 const useStyles = makeStyles(theme => ({

@@ -1,12 +1,12 @@
 import React from 'react';
 import {Story} from '@storybook/react';
 import {
-  OffensiveMatrixTable,
-  OffensiveMatrixTableProps,
-} from '../components/coverage/OffensiveMatrixTable';
+  SummaryCard,
+  SummaryCardProps,
+} from '../components/coverage/SummaryCard';
 
 export default {
-  title: 'OffensiveCoverageTable',
+  title: 'SummaryCard',
   args: {
     pokemonSets: [
       {
@@ -34,34 +34,11 @@ export default {
         moves: ['Air Slash', 'Dazzling Gleam', 'Heat Wave', 'Protect'],
       },
     ],
-    columnField: 'species',
-    idField: 'effectiveness',
-    valueField: 'type',
-  },
-  argTypes: {
-    columnField: {
-      control: {
-        type: 'select',
-        options: ['species', 'type', 'effectiveness'],
-      },
-    },
-    idField: {
-      control: {
-        type: 'select',
-        options: ['species', 'type', 'effectiveness'],
-      },
-    },
-    valueField: {
-      control: {
-        type: 'select',
-        options: ['species', 'type', 'effectiveness'],
-      },
-    },
   },
 };
 
-const TheOffensiveMatrixTable: Story<OffensiveMatrixTableProps> = args => {
-  return <OffensiveMatrixTable {...args} />;
+const TheSummaryCard: Story<SummaryCardProps> = args => {
+  return <SummaryCard {...args} />;
 };
 
-export const Main = TheOffensiveMatrixTable.bind({});
+export const Main = TheSummaryCard.bind({});

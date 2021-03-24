@@ -20,13 +20,13 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export interface ResistanceChipProps {
+export interface EffectivenessChipProps {
   value: number;
 }
 
-export const ResistanceChip: React.FC<ResistanceChipProps> = ({
+export const EffectivenessChip: React.FC<EffectivenessChipProps> = ({
   value,
-}: ResistanceChipProps) => {
+}: EffectivenessChipProps) => {
   const classes = useStyles();
   let label;
 

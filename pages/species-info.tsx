@@ -15,7 +15,7 @@ const SpeciesInfo: React.FC = () => {
       <DefensiveMatrixTable
         pokemonSets={pokemonSets}
         columnField="species"
-        idField="resistance"
+        idField="effectiveness"
         valueField="type"
       />
     );

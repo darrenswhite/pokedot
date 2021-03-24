@@ -4,10 +4,6 @@ import {
   DefensiveMatrixTable,
   DefensiveMatrixTableProps,
 } from '../components/coverage/DefensiveMatrixTable';
-import {
-  DefensiveCoverageTable,
-  DefensiveCoverageTableProps,
-} from '../components/team/DefensiveCoverageTable';
 
 export default {
   title: 'DefensiveCoverageTable',
@@ -35,26 +31,26 @@ export default {
       },
     ],
     columnField: 'species',
-    idField: 'resistance',
+    idField: 'effectiveness',
     valueField: 'type',
   },
   argTypes: {
     columnField: {
       control: {
         type: 'select',
-        options: ['species', 'type', 'resistance'],
+        options: ['species', 'type', 'effectiveness'],
       },
     },
     idField: {
       control: {
         type: 'select',
-        options: ['species', 'type', 'resistance'],
+        options: ['species', 'type', 'effectiveness'],
       },
     },
     valueField: {
       control: {
         type: 'select',
-        options: ['species', 'type', 'resistance'],
+        options: ['species', 'type', 'effectiveness'],
       },
     },
   },
@@ -64,9 +60,4 @@ const TheDefensiveMatrixTable: Story<DefensiveMatrixTableProps> = args => {
   return <DefensiveMatrixTable {...args} />;
 };
 
-const TheDefensiveCoverageTable: Story<DefensiveCoverageTableProps> = args => {
-  return <DefensiveCoverageTable {...args} />;
-};
-
 export const Main = TheDefensiveMatrixTable.bind({});
-export const Old = TheDefensiveCoverageTable.bind({});

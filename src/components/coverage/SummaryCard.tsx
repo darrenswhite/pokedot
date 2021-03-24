@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {ReactElement, useEffect, useState} from 'react';
 import {
   Box,
   Card,
@@ -7,14 +7,71 @@ import {
   Grid,
   Typography,
 } from '@material-ui/core';
+import {TypeName} from '@pkmn/types';
 import {filter, flow, map, reduce, reject} from 'lodash/fp';
 import {PartialPokemonSet, PokeInfo} from '../../info/PokeInfo';
+import {CoverageMatrix} from '../../matrix/CoverageMatrix';
+import {ResistanceMatrix} from '../../matrix/ResistanceMatrix';
 import {
-  ResistanceMatrix,
-  ResistanceMatrixProps,
-} from '../../matrix/ResistanceMatrix';
+  TypeChartMatrix,
+  TypeChartMatrixProps,
+} from '../../matrix/TypeChartMatrix';
 import {TypeImage} from './TypeImage';
-import {TypeName} from '@pkmn/types';
+
+const EFFECTIVENESS_RESIST = [0.0, 0.25, 0.5];
+const EFFECTIVENESS_SUPER = [2.0, 4.0];
+
+const getMissingTypes = (
+  matrix: TypeChartMatrix,
+  types: TypeName[],
+  effectiveness: number[]
+): TypeName[] => {
+  const resistedTypes = flow(
+    filter((value: TypeChartMatrixProps) =>
+      effectiveness.includes(value.effectiveness)
+    ),
+    map(value => value.type)
+  )(matrix.values);
+
+  return reject(type => resistedTypes.includes(type), types);
+};
+
+const getWeaknesses = (matrix: TypeChartMatrix): TypeName[] => {
+  const typeScores = matrix
+    .scoreTypes(reduce((total, curr) => total * curr, 1))
+    .sort((left, right) => (right[1] as number) - (left[1] as number));
+
+  return flow(
+    filter((typeScore: [TypeName, number]) => typeScore[1] > 1.0),
+    map(typeScore => typeScore[0])
+  )(typeScores);
+};
+
+const renderTypeList = (title: string, types: TypeName[]): ReactElement => {
+  let result;
+
+  if (types.length > 0) {
+    result = (
+      <Grid container spacing={1}>
+        {types.map(type => (
+          <Grid item key={type}>
+            <TypeImage type={type} />
+          </Grid>
+        ))}
+      </Grid>
+    );
+  } else {
+    result = <span>None &#x1F44D;</span>;
+  }
+
+  return (
+    <React.Fragment>
+      <Typography variant="subtitle1">{title}</Typography>
+
+      <Box my={1}>{result}</Box>
+    </React.Fragment>
+  );
+};
 
 export interface SummaryCardProps {
   pokemonSets: PartialPokemonSet[];
@@ -23,24 +80,28 @@ export interface SummaryCardProps {
 export const SummaryCard: React.FC<SummaryCardProps> = ({
   pokemonSets,
 }: SummaryCardProps) => {
-  const [matrix, setMatrix] = useState<ResistanceMatrix>(
+  const [resistanceMatrix, setResistanceMatrix] = useState<ResistanceMatrix>(
     new ResistanceMatrix([])
   );
+  const [coverageMatrix, setCoverageMatrix] = useState<CoverageMatrix>(
+    new CoverageMatrix([])
+  );
   const [types, setTypes] = useState<TypeName[]>([]);
-  const resistedTypes = flow(
-    filter((value: ResistanceMatrixProps) =>
-      [0.0, 0.25, 0.5].includes(value.resistance)
-    ),
-    map(value => value.type)
-  )(matrix.values);
-  const unresistedTypes = reject(type => resistedTypes.includes(type), types);
-  const typeScores = matrix
-    .scoreTypes(reduce((total, curr) => total * curr, 1))
-    .sort((left, right) => (right[1] as number) - (left[1] as number));
-  const weaknesses = filter(typeScore => typeScore[1] > 1.0, typeScores);
+  const defensiveMissingTypes = getMissingTypes(
+    resistanceMatrix,
+    types,
+    EFFECTIVENESS_RESIST
+  );
+  const defensiveWeaknesses = getWeaknesses(resistanceMatrix);
+  const offensiveMissingTypes = getMissingTypes(
+    coverageMatrix,
+    types,
+    EFFECTIVENESS_SUPER
+  );
 
   useEffect(() => {
-    ResistanceMatrix.forPokemonSets(pokemonSets).then(setMatrix);
+    ResistanceMatrix.forPokemonSets(pokemonSets).then(setResistanceMatrix);
+    CoverageMatrix.forPokemonSets(pokemonSets).then(setCoverageMatrix);
   }, [pokemonSets]);
 
   useEffect(() => {
@@ -52,31 +113,15 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
       <CardHeader title="Summary" />
 
       <CardContent>
-        <Typography variant="subtitle1">Unresisted Types</Typography>
-
-        <Box my={1}>
-          <Grid container spacing={1}>
-            {unresistedTypes.map(type => (
-              <Grid item key={type}>
-                <TypeImage type={type} />
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
+        {renderTypeList('Missing Defensive Coverage', defensiveMissingTypes)}{' '}
       </CardContent>
 
       <CardContent>
-        <Typography variant="subtitle1">Weaknesses</Typography>
+        {renderTypeList('Weak Defensive Coverage', defensiveWeaknesses)}
+      </CardContent>
 
-        <Box my={1}>
-          <Grid container spacing={1}>
-            {weaknesses.map(([type]) => (
-              <Grid item key={type}>
-                <TypeImage type={type} />
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
+      <CardContent>
+        {renderTypeList('Missing Offensive Coverage', offensiveMissingTypes)}{' '}
       </CardContent>
     </Card>
   );
