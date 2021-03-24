@@ -88,7 +88,7 @@ export const TeamParser: React.FC<TeamParserProps> = ({
         <Grid item>
           <Button variant="contained" onClick={openDialog} color="primary">
             <Add />
-            Import team
+            Import from showdown
           </Button>
         </Grid>
       </Grid>
