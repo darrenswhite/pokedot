@@ -9,6 +9,6 @@ export const Theme = createMuiTheme({
     },
   },
   typography: {
-    fontFamily: 'Inter',
+    fontFamily: 'Inter,Sans-Serif',
   },
 });

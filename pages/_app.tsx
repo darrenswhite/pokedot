@@ -7,8 +7,6 @@ import {Theme} from '../src/theme/Theme';
 import {PageContainer} from '../src/components/layout/PageContainer';
 import {getCurrentRoute} from '../src/router/Routes';
 
-import '../styles/globals.css';
-
 const getTitle = (router: NextRouter): string => {
   const route = getCurrentRoute(router);
   let title = 'Pokédot | darrenswhite';
@@ -49,14 +47,6 @@ const App: React.FC<AppProps> = (props: AppProps) => {
         <meta
           name="description"
           content="Pokédot is a collection of Pokémon related apps."
-        />
-
-        <link
-          rel="preload"
-          href="/fonts/inter-latin-variable-wghtOnly-normal.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
         />
       </Head>
 

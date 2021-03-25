@@ -65,6 +65,10 @@ export default class MyDocument extends Document {
         <Head>
           {/* PWA primary color */}
           <meta name="theme-color" content={Theme.palette.primary.main} />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap"
+            rel="stylesheet"
+          />
         </Head>
 
         <body>
