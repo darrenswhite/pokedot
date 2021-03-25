@@ -63,7 +63,7 @@ export const Header: React.FC = () => {
           textColor="primary"
           variant="scrollable"
           scrollButtons="auto"
-          aria-label="scrollable auto tabs example"
+          aria-label="Navigation tabs"
         >
           {Object.values(Routes).map(route => (
             <Tab
