@@ -4,8 +4,6 @@ import {addDecorator} from '@storybook/react';
 import {ThemeProvider} from '@material-ui/core/styles';
 import {Theme} from '../src/theme/Theme';
 
-import '../styles/globals.css';
-
 export const parameters = {
   actions: {argTypesRegex: '^on[A-Z].*'},
   docs: {

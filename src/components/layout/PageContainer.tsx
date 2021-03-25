@@ -4,7 +4,7 @@ import {Header} from './Header';
 import {Footer} from './Footer';
 
 type Props = {
-  children?: React.ReactNode;
+  children: NonNullable<React.ReactNode>;
 };
 
 const useStyles = makeStyles(theme => ({
@@ -42,7 +42,7 @@ export const PageContainer: React.FC<Props> = ({children}: Props) => {
 
         <main className={classes.main}>
           <Container maxWidth={false} className={classes.container}>
-            <React.Fragment>{children}</React.Fragment>
+            {children}
           </Container>
         </main>
 

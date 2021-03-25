@@ -1,10 +1,29 @@
 import React, {useState} from 'react';
+import dynamic from 'next/dynamic';
 import {Grid} from '@material-ui/core';
-import {DefensiveMatrixTable} from '../src/components/coverage/DefensiveMatrixTable';
-import {OffensiveMatrixTable} from '../src/components/coverage/OffensiveMatrixTable';
+import {DefensiveMatrixTableProps} from '../src/components/coverage/DefensiveMatrixTable';
+import {OffensiveMatrixTableProps} from '../src/components/coverage/OffensiveMatrixTable';
+import {SummaryCardProps} from '../src/components/coverage/SummaryCard';
 import {PartialPokemonSet} from '../src/info/PokeInfo';
-import {SummaryCard} from '../src/components/coverage/SummaryCard';
 import {TeamParser} from '../src/components/team/TeamParser';
+
+const DefensiveMatrixTable = dynamic<DefensiveMatrixTableProps>(() =>
+  import('../src/components/coverage/DefensiveMatrixTable').then(
+    module => module.DefensiveMatrixTable
+  )
+);
+
+const OffensiveMatrixTable = dynamic<OffensiveMatrixTableProps>(() =>
+  import('../src/components/coverage/OffensiveMatrixTable').then(
+    module => module.OffensiveMatrixTable
+  )
+);
+
+const SummaryCard = dynamic<SummaryCardProps>(() =>
+  import('../src/components/coverage/SummaryCard').then(
+    module => module.SummaryCard
+  )
+);
 
 const TeamAnalysis: React.FC = () => {
   const [pokemonSets, setPokemonSets] = useState<PartialPokemonSet[]>([]);

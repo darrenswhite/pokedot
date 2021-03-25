@@ -10,10 +10,6 @@ import {
 import {Generation, Generations, Specie} from '@pkmn/data';
 import {map} from 'lodash/fp';
 
-export interface Moves {
-  [key: string]: Move | undefined;
-}
-
 export type TypeChart = Partial<Record<TypeName, number>>;
 
 type PartialExcept<T, K extends keyof T> = Pick<T, K> & Partial<Omit<T, K>>;

@@ -8,7 +8,7 @@
     "build-storybook": "build-storybook",
     "lint": "eslint --cache --fix --ext .js,.jsx,.ts,.tsx .",
     "start": "next start",
-    "storybook": "start-storybook -p 6006 -s ./public"
+    "storybook": "start-storybook -p 6006"
   },
   "husky": {
     "hooks": {
