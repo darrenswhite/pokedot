@@ -15,7 +15,7 @@ import {getCurrentRoute, Routes} from '../../router/Routes';
 import {DrawerProps} from './Drawer';
 
 const Drawer = dynamic<DrawerProps>(() =>
-  import('./Drawer').then(module => module.Drawer)
+  import('./Drawer').then(m => m.Drawer)
 );
 
 const useStyles = makeStyles(theme => ({
@@ -39,7 +39,7 @@ export const Header: React.FC = () => {
     router.push(value);
 
   return (
-    <React.Fragment>
+    <>
       <AppBar color="inherit" className={classes.appBar}>
         <Toolbar variant="dense">
           <IconButton
@@ -76,6 +76,6 @@ export const Header: React.FC = () => {
       </AppBar>
 
       <Drawer open={drawerOpen} onClose={toggleDrawer} onOpen={toggleDrawer} />
-    </React.Fragment>
+    </>
   );
 };

@@ -6,7 +6,7 @@ import {PartialPokemonSet} from '../../info/PokeInfo';
 import {TeamParserDialogProps} from './TeamParserDialog';
 
 const TeamParserDialog = dynamic<TeamParserDialogProps>(() =>
-  import('./TeamParserDialog').then(module => module.TeamParserDialog)
+  import('./TeamParserDialog').then(m => m.TeamParserDialog)
 );
 
 export interface TeamParserProps {
@@ -22,7 +22,7 @@ export const TeamParser: React.FC<TeamParserProps> = ({
   const closeDialog = () => setOpen(false);
 
   return (
-    <React.Fragment>
+    <>
       <TeamParserDialog open={open} onClose={closeDialog} onParse={onParse} />
 
       <Grid container justify="center">
@@ -33,6 +33,6 @@ export const TeamParser: React.FC<TeamParserProps> = ({
           </Button>
         </Grid>
       </Grid>
-    </React.Fragment>
+    </>
   );
 };

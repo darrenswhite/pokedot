@@ -65,11 +65,11 @@ const renderTypeList = (title: string, types: TypeName[]): ReactElement => {
   }
 
   return (
-    <React.Fragment>
+    <>
       <Typography variant="subtitle1">{title}</Typography>
 
       <Box my={1}>{result}</Box>
-    </React.Fragment>
+    </>
   );
 };
 

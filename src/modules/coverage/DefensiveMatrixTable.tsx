@@ -1,27 +1,27 @@
 import React from 'react';
 import {Typography} from '@material-ui/core';
 import {PartialPokemonSet} from '../../info/PokeInfo';
-import {CoverageMatrix} from '../../matrix/CoverageMatrix';
+import {ResistanceMatrix} from '../../matrix/ResistanceMatrix';
 import {TypeChartMatrixProps} from '../../matrix/TypeChartMatrix';
 import {TypeChartMatrixTable} from './TypeChartMatrixTable';
 
-export interface OffensiveMatrixTableProps {
+export interface DefensiveMatrixTableProps {
   pokemonSets: PartialPokemonSet[];
   columnField: keyof TypeChartMatrixProps;
   idField: keyof TypeChartMatrixProps;
   valueField: keyof TypeChartMatrixProps;
 }
 
-export const OffensiveMatrixTable: React.FC<OffensiveMatrixTableProps> = ({
+export const DefensiveMatrixTable: React.FC<DefensiveMatrixTableProps> = ({
   pokemonSets,
   columnField,
   idField,
   valueField,
-}: OffensiveMatrixTableProps) => {
+}: DefensiveMatrixTableProps) => {
   return (
-    <React.Fragment>
+    <>
       <Typography variant="h5" component="h2" gutterBottom>
-        Offensive Coverage
+        Defensive Coverage
       </Typography>
 
       <TypeChartMatrixTable
@@ -29,8 +29,8 @@ export const OffensiveMatrixTable: React.FC<OffensiveMatrixTableProps> = ({
         columnField={columnField}
         idField={idField}
         valueField={valueField}
-        matrixConstructor={CoverageMatrix.forPokemonSets}
+        matrixConstructor={ResistanceMatrix.forPokemonSets}
       />
-    </React.Fragment>
+    </>
   );
 };

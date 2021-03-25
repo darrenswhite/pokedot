@@ -1,6 +1,6 @@
 import React from 'react';
 import {NextPage, NextPageContext} from 'next';
-import Error from '../src/components/layout/Error';
+import Error from '../modules/layout/Error';
 
 interface ErrorProps {
   statusCode: number;

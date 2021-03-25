@@ -1,7 +1,7 @@
 import React from 'react';
 import {Grid, Typography} from '@material-ui/core';
 
-const Home: React.FC = () => {
+export const LandingPage: React.FC = () => {
   return (
     <Grid container justify="center">
       <Grid item xs={12}>
@@ -13,5 +13,3 @@ const Home: React.FC = () => {
     </Grid>
   );
 };
-
-export default Home;

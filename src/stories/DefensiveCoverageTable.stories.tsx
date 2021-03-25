@@ -3,7 +3,7 @@ import {Story} from '@storybook/react';
 import {
   DefensiveMatrixTable,
   DefensiveMatrixTableProps,
-} from '../components/coverage/DefensiveMatrixTable';
+} from '../modules/coverage/DefensiveMatrixTable';
 
 export default {
   title: 'DefensiveCoverageTable',

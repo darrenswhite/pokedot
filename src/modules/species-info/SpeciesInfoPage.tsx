@@ -1,24 +1,20 @@
 import React, {useState} from 'react';
 import dynamic from 'next/dynamic';
 import {Grid} from '@material-ui/core';
-import {DefensiveMatrixTableProps} from '../src/components/coverage/DefensiveMatrixTable';
-import {SummaryCardProps} from '../src/components/coverage/SummaryCard';
-import {SpeciesSearch} from '../src/components/species/SpeciesSearch';
-import {PartialPokemonSet} from '../src/info/PokeInfo';
+import {DefensiveMatrixTableProps} from '../coverage/DefensiveMatrixTable';
+import {SummaryCardProps} from '../coverage/SummaryCard';
+import {SpeciesSearch} from './SpeciesSearch';
+import {PartialPokemonSet} from '../../info/PokeInfo';
 
 const DefensiveMatrixTable = dynamic<DefensiveMatrixTableProps>(() =>
-  import('../src/components/coverage/DefensiveMatrixTable').then(
-    module => module.DefensiveMatrixTable
-  )
+  import('../coverage/DefensiveMatrixTable').then(m => m.DefensiveMatrixTable)
 );
 
 const SummaryCard = dynamic<SummaryCardProps>(() =>
-  import('../src/components/coverage/SummaryCard').then(
-    module => module.SummaryCard
-  )
+  import('../coverage/SummaryCard').then(m => m.SummaryCard)
 );
 
-const SpeciesInfo: React.FC = () => {
+export const SpeciesInfoPage: React.FC = () => {
   const [pokemonSets, setPokemonSets] = useState<PartialPokemonSet[]>([]);
   let defensiveMatrixTable;
   let summaryCard;
@@ -63,5 +59,3 @@ const SpeciesInfo: React.FC = () => {
     </Grid>
   );
 };
-
-export default SpeciesInfo;

@@ -1,28 +1,22 @@
 import React, {useState} from 'react';
 import dynamic from 'next/dynamic';
 import {Grid} from '@material-ui/core';
-import {DefensiveMatrixTableProps} from '../src/components/coverage/DefensiveMatrixTable';
-import {OffensiveMatrixTableProps} from '../src/components/coverage/OffensiveMatrixTable';
-import {SummaryCardProps} from '../src/components/coverage/SummaryCard';
-import {PartialPokemonSet} from '../src/info/PokeInfo';
-import {TeamParser} from '../src/components/team/TeamParser';
+import {DefensiveMatrixTableProps} from '../coverage/DefensiveMatrixTable';
+import {OffensiveMatrixTableProps} from '../coverage/OffensiveMatrixTable';
+import {SummaryCardProps} from '../coverage/SummaryCard';
+import {PartialPokemonSet} from '../../info/PokeInfo';
+import {TeamParser} from './TeamParser';
 
 const DefensiveMatrixTable = dynamic<DefensiveMatrixTableProps>(() =>
-  import('../src/components/coverage/DefensiveMatrixTable').then(
-    module => module.DefensiveMatrixTable
-  )
+  import('../coverage/DefensiveMatrixTable').then(m => m.DefensiveMatrixTable)
 );
 
 const OffensiveMatrixTable = dynamic<OffensiveMatrixTableProps>(() =>
-  import('../src/components/coverage/OffensiveMatrixTable').then(
-    module => module.OffensiveMatrixTable
-  )
+  import('../coverage/OffensiveMatrixTable').then(m => m.OffensiveMatrixTable)
 );
 
 const SummaryCard = dynamic<SummaryCardProps>(() =>
-  import('../src/components/coverage/SummaryCard').then(
-    module => module.SummaryCard
-  )
+  import('../coverage/SummaryCard').then(m => m.SummaryCard)
 );
 
 const TeamAnalysis: React.FC = () => {

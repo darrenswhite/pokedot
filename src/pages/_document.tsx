@@ -8,7 +8,7 @@ import Document, {
   DocumentInitialProps,
 } from 'next/document';
 import {ServerStyleSheets} from '@material-ui/core/styles';
-import {Theme} from '../src/theme/Theme';
+import {Theme} from '../theme/Theme';
 
 export default class MyDocument extends Document {
   // `getInitialProps` belongs to `_document` (instead of `_app`),

@@ -7,9 +7,9 @@ import {
   TypeChartMatrix,
   TypeChartMatrixProps,
 } from '../../matrix/TypeChartMatrix';
-import {PCol} from '../common/table/model/PCol';
-import {PValue} from '../common/table/model/PRow';
-import {PMatrixTable} from '../common/table/PMatrixTable';
+import {PCol} from '../table/model/PCol';
+import {PValue} from '../table/model/PRow';
+import {PMatrixTable} from '../table/PMatrixTable';
 import {EffectivenessChip} from './EffectivenessChip';
 import {SpeciesImage} from './SpeciesImage';
 import {TypeImage} from './TypeImage';

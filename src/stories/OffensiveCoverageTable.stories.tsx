@@ -3,7 +3,7 @@ import {Story} from '@storybook/react';
 import {
   OffensiveMatrixTable,
   OffensiveMatrixTableProps,
-} from '../components/coverage/OffensiveMatrixTable';
+} from '../modules/coverage/OffensiveMatrixTable';
 
 export default {
   title: 'OffensiveCoverageTable',

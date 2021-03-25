@@ -1,6 +1,6 @@
 import React, {ReactElement} from 'react';
 import {flow, map, toLower, toString, upperFirst} from 'lodash/fp';
-import {Matrix, MatrixValue} from '../../../matrix/Matrix';
+import {Matrix, MatrixValue} from '../../matrix/Matrix';
 import {PRow, PValue} from './model/PRow';
 import {PCol} from './model/PCol';
 import {PTable} from './PTable';
