@@ -1,51 +1,31 @@
 import React, {useState} from 'react';
+import dynamic from 'next/dynamic';
+import {useRouter} from 'next/router';
 import {
   AppBar,
   IconButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
   makeStyles,
-  SwipeableDrawer,
   Tab,
   Tabs,
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import {Email, GitHub, Menu, MonetizationOn} from '@material-ui/icons';
-import Link from 'next/link';
-import {useRouter} from 'next/router';
+import {Menu} from '@material-ui/icons';
 import {getCurrentRoute, Routes} from '../../router/Routes';
+import {DrawerProps} from './Drawer';
 
-const drawerWidth = 240;
+const Drawer = dynamic<DrawerProps>(() =>
+  import('./Drawer').then(module => module.Drawer)
+);
 
 const useStyles = makeStyles(theme => ({
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
   },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-  },
-  drawerPaper: {
-    width: drawerWidth,
-  },
   menuButton: {
     marginRight: theme.spacing(2),
   },
 }));
-
-const GITHUB_URL = 'https://github.com/darrenswhite/pokedot';
-const PAYPAL_URL =
-  'https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ZJZ94RDWF6GU4&item_name=Pokédot&currency_code=GBP&source=url';
-const EMAIL_URL = 'mailto:pokedot@darrenswhite.com';
-
-const items = [
-  {title: 'GitHub', icon: GitHub, link: GITHUB_URL},
-  {title: 'Donate', icon: MonetizationOn, link: PAYPAL_URL},
-  {title: 'Email', icon: Email, link: EMAIL_URL},
-];
 
 export const Header: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -95,32 +75,7 @@ export const Header: React.FC = () => {
         </Tabs>
       </AppBar>
 
-      <SwipeableDrawer
-        open={drawerOpen}
-        onClose={toggleDrawer}
-        onOpen={toggleDrawer}
-        className={classes.drawer}
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-        variant="temporary"
-      >
-        <List dense>
-          {items.map(item => (
-            <Link href={item.link} passHref key={item.title}>
-              <ListItem
-                button
-                component="a"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <ListItemIcon>{<item.icon />}</ListItemIcon>
-                <ListItemText primary={item.title} />
-              </ListItem>
-            </Link>
-          ))}
-        </List>
-      </SwipeableDrawer>
+      <Drawer open={drawerOpen} onClose={toggleDrawer} onOpen={toggleDrawer} />
     </React.Fragment>
   );
 };
