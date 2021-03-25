@@ -1,6 +1,7 @@
 {
   "name": "pokedot",
   "version": "1.0.0",
+  "desciption": "Pokédot web app",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -14,6 +15,16 @@
       "pre-commit": "lint-staged"
     }
   },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/darrenswhite/pokedot.git"
+  },
+  "author": "Darren S. White",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/darrenswhite/pokedot/issues"
+  },
+  "homepage": "https://pokedot.darrenswhite.com",
   "dependencies": {
     "@material-ui/core": "^4.11.3",
     "@material-ui/data-grid": "^4.0.0-alpha.22",

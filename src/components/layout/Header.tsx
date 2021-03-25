@@ -16,7 +16,7 @@ import {
 import {Email, GitHub, Menu, MonetizationOn} from '@material-ui/icons';
 import Link from 'next/link';
 import {useRouter} from 'next/router';
-import {Routes} from '../../router/Routes';
+import {getCurrentRoute, Routes} from '../../router/Routes';
 
 const drawerWidth = 240;
 
@@ -52,6 +52,8 @@ export const Header: React.FC = () => {
   const toggleDrawer = () => setDrawerOpen(!drawerOpen);
   const classes = useStyles();
   const router = useRouter();
+  const currentRoute = getCurrentRoute(router);
+  const currentTab = currentRoute?.path ?? false;
 
   const handleTabChange = (_: React.ChangeEvent<unknown>, value: string) =>
     router.push(value);
@@ -75,7 +77,7 @@ export const Header: React.FC = () => {
         </Toolbar>
 
         <Tabs
-          value={router.pathname}
+          value={currentTab}
           onChange={handleTabChange}
           indicatorColor="primary"
           textColor="primary"

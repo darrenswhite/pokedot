@@ -14,12 +14,12 @@ export const Routes = {
     icon: dynamic(() => import('@material-ui/icons/Home')),
   },
   SPECIES_INFO: {
-    displayName: 'Species Info',
+    displayName: 'Species info',
     path: '/species-info',
     icon: dynamic(() => import('@material-ui/icons/Search')),
   },
   TEAM_ANALYSIS: {
-    displayName: 'Team Analysis',
+    displayName: 'Team analysis',
     path: '/team-analysis',
     icon: dynamic(() => import('@material-ui/icons/BarChart')),
   },
