@@ -1,8 +1,8 @@
 import React from 'react';
 import {Typography} from '@material-ui/core';
-import {PartialPokemonSet} from '../../info/PokeInfo';
-import {ResistanceMatrix} from '../../matrix/ResistanceMatrix';
-import {TypeChartMatrixProps} from '../../matrix/TypeChartMatrix';
+import {PartialPokemonSet} from '../../pkmn/PokeInfo';
+import {ResistanceMatrix} from '../../pkmn/matrix/ResistanceMatrix';
+import {TypeChartMatrixProps} from '../../pkmn/matrix/TypeChartMatrix';
 import {TypeChartMatrixTable} from './TypeChartMatrixTable';
 
 export interface DefensiveMatrixTableProps {

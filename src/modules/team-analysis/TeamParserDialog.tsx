@@ -9,7 +9,7 @@ import {
   TextField,
 } from '@material-ui/core';
 import {Team} from '@pkmn/sets';
-import {PartialPokemonSet} from '../../info/PokeInfo';
+import {PartialPokemonSet} from '../../pkmn/PokeInfo';
 
 export interface TeamParserDialogProps {
   open: boolean;

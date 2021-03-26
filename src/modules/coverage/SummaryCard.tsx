@@ -9,13 +9,13 @@ import {
 } from '@material-ui/core';
 import {TypeName} from '@pkmn/types';
 import {filter, flow, map, reduce, reject} from 'lodash/fp';
-import {PartialPokemonSet, PokeInfo} from '../../info/PokeInfo';
-import {CoverageMatrix} from '../../matrix/CoverageMatrix';
-import {ResistanceMatrix} from '../../matrix/ResistanceMatrix';
+import {PartialPokemonSet, PokeInfo} from '../../pkmn/PokeInfo';
+import {CoverageMatrix} from '../../pkmn/matrix/CoverageMatrix';
+import {ResistanceMatrix} from '../../pkmn/matrix/ResistanceMatrix';
 import {
   TypeChartMatrix,
   TypeChartMatrixProps,
-} from '../../matrix/TypeChartMatrix';
+} from '../../pkmn/matrix/TypeChartMatrix';
 import {TypeImage} from './TypeImage';
 
 const EFFECTIVENESS_RESIST = [0.0, 0.25, 0.5];

@@ -17,18 +17,15 @@ type PartialExcept<T, K extends keyof T> = Pick<T, K> & Partial<Omit<T, K>>;
 export type PartialPokemonSet = PartialExcept<PokemonSet, 'species'>;
 
 export class PokeInfo {
-  private generation: Generation;
-  private specie: Specie;
+  specie: Specie;
   resistances: TypeChart;
   coverage: TypeChart;
 
   private constructor(
-    generation: Generation,
     specie: Specie,
     resistances: TypeChart,
     coverage: TypeChart
   ) {
-    this.generation = generation;
     this.specie = specie;
     this.resistances = resistances;
     this.coverage = coverage;
@@ -36,14 +33,14 @@ export class PokeInfo {
 
   static async forSpecies(
     species: string,
-    gen: GenerationNum = 8
+    gen?: GenerationNum
   ): Promise<PokeInfo> {
     return PokeInfo.forPokemonSet({species}, gen);
   }
 
   static async forPokemonSet(
     set: PartialPokemonSet,
-    gen: GenerationNum = 8
+    gen?: GenerationNum
   ): Promise<PokeInfo> {
     const generation = await PokeInfo.getGeneration(gen);
     const species = set.species.replace('[\\W_]+', '').toLowerCase();
@@ -54,19 +51,19 @@ export class PokeInfo {
       const resistances = PokeInfo.createResistanceTypeChart(generation, types);
       const coverage = PokeInfo.createCoverageTypeChart(generation, set.moves);
 
-      return new PokeInfo(generation, specie, resistances, coverage);
+      return new PokeInfo(specie, resistances, coverage);
     } else {
       throw new Error(`Unknown species: ${name}`);
     }
   }
 
-  static async species(gen: GenerationNum = 8): Promise<string[]> {
+  static async species(gen?: GenerationNum): Promise<string[]> {
     const generation = await PokeInfo.getGeneration(gen);
 
     return Array.from(generation.species).map(specie => specie.name);
   }
 
-  static async types(gen: GenerationNum = 8): Promise<TypeName[]> {
+  static async types(gen?: GenerationNum): Promise<TypeName[]> {
     const generation = await PokeInfo.getGeneration(gen);
 
     return map(type => type.name, Array.from(generation.types));

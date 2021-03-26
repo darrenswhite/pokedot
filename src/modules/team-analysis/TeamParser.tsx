@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import dynamic from 'next/dynamic';
 import {Button, Grid} from '@material-ui/core';
 import {Add} from '@material-ui/icons';
-import {PartialPokemonSet} from '../../info/PokeInfo';
+import {PartialPokemonSet} from '../../pkmn/PokeInfo';
 import {TeamParserDialogProps} from './TeamParserDialog';
 
 const TeamParserDialog = dynamic<TeamParserDialogProps>(() =>

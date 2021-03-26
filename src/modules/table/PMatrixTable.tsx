@@ -1,9 +1,11 @@
 import React, {ReactElement} from 'react';
 import {flow, map, toLower, toString, upperFirst} from 'lodash/fp';
-import {Matrix, MatrixValue} from '../../matrix/Matrix';
+import {Matrix, MatrixValue} from '../../pkmn/matrix/Matrix';
 import {PRow, PValue} from './model/PRow';
 import {PCol} from './model/PCol';
 import {PTable} from './PTable';
+
+const sentanceCase = flow(toString, toLower, upperFirst);
 
 const getColumns = <T extends MatrixValue>(
   matrix: Matrix<T>,
@@ -13,16 +15,16 @@ const getColumns = <T extends MatrixValue>(
   columnFieldOverrides?: Partial<PCol>,
   idFieldOverrides?: Partial<PCol>
 ): PCol[] => {
-  const columnName = flow(toString, toLower, upperFirst)(columnField);
   const columnColumn = {
     field: toString(columnField),
-    headerName: columnName,
+    headerName: sentanceCase(columnField),
     fixed: true,
     ...columnFieldOverrides,
   };
   const columnKeys = Object.keys(matrix.groupBy(idField));
   const rowColumns: PCol[] = columnKeys.sort().map(key => ({
     field: key,
+    headerName: sentanceCase(key),
     mapValue: value => map(val => (val as T)[valueField])(value as T[]),
     ...idFieldOverrides,
   }));

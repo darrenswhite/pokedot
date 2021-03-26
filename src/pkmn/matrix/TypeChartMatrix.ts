@@ -1,5 +1,5 @@
 import {TypeName} from '@pkmn/types';
-import {PartialPokemonSet, PokeInfo, TypeChart} from '../info/PokeInfo';
+import {PartialPokemonSet, PokeInfo, TypeChart} from '../PokeInfo';
 import {flow, map} from 'lodash/fp';
 import {Matrix} from './Matrix';
 

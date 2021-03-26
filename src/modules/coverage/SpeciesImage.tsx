@@ -10,7 +10,7 @@ export const SpeciesImage: React.FC<SpeciesImageProps> = ({
   name,
 }: SpeciesImageProps) => {
   return (
-    <Tooltip title={name}>
+    <Tooltip title={name ?? ''}>
       <span style={Icons.getPokemon(name).css} />
     </Tooltip>
   );

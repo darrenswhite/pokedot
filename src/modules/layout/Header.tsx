@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {ReactElement, useState} from 'react';
 import dynamic from 'next/dynamic';
 import {useRouter} from 'next/router';
 import {
@@ -11,7 +11,8 @@ import {
   Typography,
 } from '@material-ui/core';
 import {Menu} from '@material-ui/icons';
-import {getCurrentRoute, Routes} from '../../router/Routes';
+import {flow, map, values} from 'lodash/fp';
+import {getCurrentRoute, Route, Routes} from '../../router/Routes';
 import {DrawerProps} from './Drawer';
 
 const Drawer = dynamic<DrawerProps>(() =>
@@ -23,6 +24,14 @@ const useStyles = makeStyles(theme => ({
     zIndex: theme.zIndex.drawer + 1,
   },
   menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  tabContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  tabIcon: {
     marginRight: theme.spacing(2),
   },
 }));
@@ -37,6 +46,15 @@ export const Header: React.FC = () => {
 
   const handleTabChange = (_: React.ChangeEvent<unknown>, value: string) =>
     router.push(value);
+
+  const renderRouteLabel = (route: Route): ReactElement => {
+    return (
+      <div className={classes.tabContainer}>
+        {<route.icon className={classes.tabIcon} />}
+        {route.displayName}
+      </div>
+    );
+  };
 
   return (
     <>
@@ -65,13 +83,16 @@ export const Header: React.FC = () => {
           scrollButtons="auto"
           aria-label="Navigation tabs"
         >
-          {Object.values(Routes).map(route => (
-            <Tab
-              key={route.path}
-              label={route.displayName}
-              value={route.path}
-            />
-          ))}
+          {flow(
+            values,
+            map(route => (
+              <Tab
+                key={route.path}
+                label={renderRouteLabel(route)}
+                value={route.path}
+              />
+            ))
+          )(Routes)}
         </Tabs>
       </AppBar>
 

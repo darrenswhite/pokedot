@@ -4,7 +4,7 @@ import {Grid} from '@material-ui/core';
 import {DefensiveMatrixTableProps} from '../coverage/DefensiveMatrixTable';
 import {OffensiveMatrixTableProps} from '../coverage/OffensiveMatrixTable';
 import {SummaryCardProps} from '../coverage/SummaryCard';
-import {PartialPokemonSet} from '../../info/PokeInfo';
+import {PartialPokemonSet} from '../../pkmn/PokeInfo';
 import {TeamParser} from './TeamParser';
 
 const DefensiveMatrixTable = dynamic<DefensiveMatrixTableProps>(() =>

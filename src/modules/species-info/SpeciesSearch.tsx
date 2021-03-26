@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {TextField} from '@material-ui/core';
 import {Autocomplete} from '@material-ui/lab';
-import {PartialPokemonSet, PokeInfo} from '../../info/PokeInfo';
+import {PartialPokemonSet, PokeInfo} from '../../pkmn/PokeInfo';
 
 export interface SpeciesSearchProps {
   onSelect: (pokemonSets: PartialPokemonSet[]) => void;

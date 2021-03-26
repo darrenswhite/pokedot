@@ -1,12 +1,12 @@
 import React, {ReactElement, useEffect, useState} from 'react';
 import {Grid, makeStyles} from '@material-ui/core';
 import {TypeName} from '@pkmn/types';
-import {PartialPokemonSet} from '../../info/PokeInfo';
-import {Matrix} from '../../matrix/Matrix';
+import {PartialPokemonSet} from '../../pkmn/PokeInfo';
+import {Matrix} from '../../pkmn/matrix/Matrix';
 import {
   TypeChartMatrix,
   TypeChartMatrixProps,
-} from '../../matrix/TypeChartMatrix';
+} from '../../pkmn/matrix/TypeChartMatrix';
 import {PCol} from '../table/model/PCol';
 import {PValue} from '../table/model/PRow';
 import {PMatrixTable} from '../table/PMatrixTable';
@@ -16,7 +16,7 @@ import {TypeImage} from './TypeImage';
 
 const renderCell = (
   key: keyof TypeChartMatrixProps
-): ((params: PValue) => ReactElement) | undefined => {
+): ((value: PValue) => ReactElement) | undefined => {
   const render = getFieldRenderFunction(key);
 
   if (render) {
