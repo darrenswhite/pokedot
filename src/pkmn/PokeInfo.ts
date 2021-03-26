@@ -10,7 +10,7 @@ import {
 import {Generation, Generations, Specie} from '@pkmn/data';
 import {map} from 'lodash/fp';
 
-export type TypeChart = Partial<Record<TypeName, number>>;
+export type TypeChart = Record<TypeName, number>;
 
 type PartialExcept<T, K extends keyof T> = Pick<T, K> & Partial<Omit<T, K>>;
 
@@ -101,50 +101,40 @@ export class PokeInfo {
     generation: Generation,
     moves: string[] | undefined
   ): TypeChart {
-    const coverage: TypeChart = {};
+    const damageMoves = (moves
+      ?.map(move => generation.moves.get(move))
+      .filter(move => move !== undefined && move.category !== 'Status') ??
+      []) as Move[];
 
-    if (moves) {
-      const damageMoves = moves
-        .map(move => generation.moves.get(move))
-        .filter(
-          move => move !== undefined && move.category !== 'Status'
-        ) as Move[];
+    return Object.fromEntries(
+      Array.from(generation.types).map(type => {
+        const total = damageMoves
+          .map(move => {
+            return (
+              generation.types.get(move.type)?.totalEffectiveness(type.name) ??
+              0.0
+            );
+          })
+          .reduce((prev, curr) => (curr > prev ? curr : prev), 0.0);
 
-      damageMoves.forEach(move => {
-        Array.from(generation.types).forEach(type => {
-          const effectiveness = generation.types
-            .get(move.type)
-            ?.totalEffectiveness(type.name);
-
-          if (effectiveness !== undefined) {
-            const curr = coverage[type.name];
-
-            if (curr === undefined || effectiveness > curr) {
-              coverage[type.name] = effectiveness;
-            }
-          }
-        });
-      });
-    }
-
-    return coverage;
+        return [type, total];
+      })
+    );
   }
 
   private static createResistanceTypeChart(
     generation: Generation,
     types: TypeName[]
   ): TypeChart {
-    const resistances: TypeChart = {};
+    return Object.fromEntries(
+      Array.from(generation.types).map(type => {
+        const values: number[] = types.map(targetType =>
+          type.totalEffectiveness(targetType)
+        );
+        const total = values.reduce((prev, curr) => prev * curr, 1);
 
-    Array.from(generation.types).forEach(type => {
-      const values: number[] = types.map(targetType =>
-        type.totalEffectiveness(targetType)
-      );
-      const total = values.reduce((prev, curr) => prev * curr, 1);
-
-      resistances[type.name] = total;
-    });
-
-    return resistances;
+        return [type, total];
+      })
+    );
   }
 }

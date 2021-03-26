@@ -26,7 +26,7 @@ export abstract class TypeChartMatrix extends Matrix<TypeChartMatrixProps> {
       const typeChart = typeChartFunction(info);
 
       return types.map(type => {
-        const effectiveness = typeChart[type] ?? 1.0;
+        const effectiveness = typeChart[type];
 
         return {
           species,
