@@ -1,7 +1,46 @@
 import React, {useEffect, useState} from 'react';
-import {TextField} from '@material-ui/core';
-import {Autocomplete, createFilterOptions} from '@material-ui/lab';
+import {Grid, TextField, Typography} from '@material-ui/core';
+import {
+  Autocomplete,
+  AutocompleteRenderOptionState,
+  createFilterOptions,
+} from '@material-ui/lab';
+import {findAll} from 'highlight-words-core';
 import {PartialPokemonSet, PokeInfo} from '../../pkmn/PokeInfo';
+import {SpeciesImage} from '../coverage/SpeciesImage';
+
+const renderOption = (
+  option: string,
+  {inputValue}: AutocompleteRenderOptionState
+) => {
+  const chunks = findAll({
+    searchWords: [inputValue],
+    textToHighlight: option,
+  });
+
+  return (
+    <Grid container spacing={1} alignItems="center" justify="center">
+      <Grid item>
+        <SpeciesImage name={option} />
+      </Grid>
+
+      <Grid item xs>
+        <Typography noWrap>
+          {chunks.map((chunk, index) => {
+            const {end, highlight, start} = chunk;
+            const text = option.substr(start, end - start);
+
+            return (
+              <span key={index} style={{fontWeight: highlight ? 700 : 400}}>
+                {text}
+              </span>
+            );
+          })}
+        </Typography>
+      </Grid>
+    </Grid>
+  );
+};
 
 export interface PokemonSearchProps {
   onSelect: (pokemonSets: PartialPokemonSet[]) => void;
@@ -33,6 +72,7 @@ export const PokemonSearch: React.FC<PokemonSearchProps> = ({
           size="small"
         />
       )}
+      renderOption={renderOption}
       onChange={(_, values: string[]) => {
         onSelect(
           values.map(value => ({
