@@ -14,18 +14,18 @@ export const Routes = {
     path: '/',
     icon: dynamic(() => import('@material-ui/icons/Home')),
   },
-  SPECIES_INFO: {
-    displayName: 'Species info',
-    path: '/species-info',
+  POKEMON_INFO: {
+    displayName: 'Pokémon Info',
+    path: '/pokemon-info',
     icon: dynamic(() => import('@material-ui/icons/Search')),
   },
   TEAM_ANALYSIS: {
-    displayName: 'Team analysis',
+    displayName: 'Team Analysis',
     path: '/team-analysis',
     icon: dynamic(() => import('@material-ui/icons/BarChart')),
   },
   TEAM_GENERATOR: {
-    displayName: 'Team generator',
+    displayName: 'Team Generator',
     path: '/team-generator',
     icon: dynamic(() => import('@material-ui/icons/Casino')),
   },
