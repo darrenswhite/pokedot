@@ -10,7 +10,7 @@ export interface RandomGeneratedTeam {
 export interface RandomTeamGeneratorOptions {
   players: string[];
   sampleSize: number;
-  revealMs: number;
+  reveal: number;
   gen?: GenerationNum;
 }
 
@@ -29,12 +29,20 @@ export class RandomTeamGenerator {
   static async generate(
     options: RandomTeamGeneratorOptions
   ): Promise<RandomGeneratedTeam[]> {
-    const species = await PokeInfo.species(options.gen);
-    const pokeInfos = await Promise.all(
-      species.map(specie => PokeInfo.forSpecies(specie))
-    );
+    let teams: RandomGeneratedTeam[];
 
-    return new RandomTeamGenerator(pokeInfos, options).generateTeams();
+    if (options.players.length > 0 && options.sampleSize > 0) {
+      const species = await PokeInfo.species(options.gen);
+      const pokeInfos = await Promise.all(
+        species.map(specie => PokeInfo.forSpecies(specie))
+      );
+
+      teams = new RandomTeamGenerator(pokeInfos, options).generateTeams();
+    } else {
+      teams = [];
+    }
+
+    return teams;
   }
 
   samplePokemon(): PokeInfo[] {

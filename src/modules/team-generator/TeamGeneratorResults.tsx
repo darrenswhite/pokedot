@@ -16,8 +16,8 @@ export interface TeamGeneratorResultsProps {
   teams: RandomGeneratedTeam[];
 }
 
-const renderIndexHeader = (field: string): ReactElement => {
-  return <span>#{Number(field) + 1}</span>;
+const renderIndexCell = (value: PValue): ReactElement => {
+  return <span>#{Number(value) + 1}</span>;
 };
 
 const renderSpeciesCell = (value: PValue): ReactElement => {
@@ -48,8 +48,12 @@ export const TeamGeneratorResults: React.FC<TeamGeneratorResultsProps> = ({
     })
   );
 
+  const columnFieldOverrides: Partial<PCol> = {
+    headerName: 'Pokémon Slot',
+    renderCell: renderIndexCell,
+  };
+
   const idFieldOverrides: Partial<PCol> = {
-    renderHeader: renderIndexHeader,
     renderCell: renderSpeciesCell,
     mapValue: value => (value as TeamMatrixProps[])[0].info?.species,
   };
@@ -62,7 +66,7 @@ export const TeamGeneratorResults: React.FC<TeamGeneratorResultsProps> = ({
     if (teams.length > 0 && revealed < options.sampleSize) {
       const interval = setInterval(() => {
         setRevealed(revealed + 1);
-      }, options.revealMs);
+      }, options.reveal);
 
       return () => clearInterval(interval);
     }
@@ -71,9 +75,10 @@ export const TeamGeneratorResults: React.FC<TeamGeneratorResultsProps> = ({
   return (
     <PMatrixTable
       matrix={matrix}
-      columnField="player"
-      idField="index"
+      columnField="index"
+      idField="player"
       valueField="info"
+      columnFieldOverrides={columnFieldOverrides}
       idFieldOverrides={idFieldOverrides}
     />
   );

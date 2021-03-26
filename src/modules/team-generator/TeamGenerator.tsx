@@ -13,7 +13,7 @@ export const TeamGenerator: React.FC = () => {
   const [options, setOptions] = useState<RandomTeamGeneratorOptions>({
     players: [],
     sampleSize: 6,
-    revealMs: 2000,
+    reveal: 2000,
   });
   const [generatedTeams, setGeneratedTeams] = useState<RandomGeneratedTeam[]>(
     []
@@ -47,7 +47,7 @@ export const TeamGenerator: React.FC = () => {
         justify="center"
         spacing={4}
       >
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={8}>
           <TeamGeneratorConfiguration value={options} onChange={setOptions} />
         </Grid>
 
