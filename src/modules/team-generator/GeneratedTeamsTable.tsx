@@ -1,8 +1,5 @@
 import React, {ReactElement, useEffect, useState} from 'react';
-import {
-  RandomGeneratedTeam,
-  RandomTeamGeneratorOptions,
-} from '../../pkmn/RandomTeamGenerator';
+import {GeneratedTeam, TeamGeneratorOptions} from '../../pkmn/TeamGenerator';
 import {PMatrixTable} from '../table/PMatrixTable';
 import {Matrix} from '../../pkmn/matrix/Matrix';
 import {PCol} from '../table/model/PCol';
@@ -11,9 +8,9 @@ import {PokeInfo} from '../../pkmn/PokeInfo';
 import {find, range} from 'lodash/fp';
 import {SpeciesImage} from '../pokemon-info/SpeciesImage';
 
-export interface TeamGeneratorResultsProps {
-  options: RandomTeamGeneratorOptions;
-  teams: RandomGeneratedTeam[];
+export interface GeneratedTeamsTableProps {
+  options: TeamGeneratorOptions;
+  teams: GeneratedTeam[];
 }
 
 const renderIndexCell = (value: PValue): ReactElement => {
@@ -30,10 +27,10 @@ interface TeamMatrixProps {
   info: PokeInfo;
 }
 
-export const TeamGeneratorResults: React.FC<TeamGeneratorResultsProps> = ({
+export const GeneratedTeamsTable: React.FC<GeneratedTeamsTableProps> = ({
   options,
   teams,
-}: TeamGeneratorResultsProps) => {
+}: GeneratedTeamsTableProps) => {
   const [revealed, setRevealed] = useState(0);
   const matrix = new Matrix<TeamMatrixProps>(
     options.players.flatMap(player => {

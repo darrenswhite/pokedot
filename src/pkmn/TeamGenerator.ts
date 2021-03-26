@@ -2,34 +2,31 @@ import {GenerationNum} from '@pkmn/types';
 import {map, sampleSize} from 'lodash/fp';
 import {PokeInfo} from './PokeInfo';
 
-export interface RandomGeneratedTeam {
+export interface GeneratedTeam {
   player: string;
   team: PokeInfo[];
 }
 
-export interface RandomTeamGeneratorOptions {
+export interface TeamGeneratorOptions {
   players: string[];
   sampleSize: number;
   reveal: number;
   gen?: GenerationNum;
 }
 
-export class RandomTeamGenerator {
+export class TeamGenerator {
   private pokeInfos: PokeInfo[];
-  private options: RandomTeamGeneratorOptions;
+  private options: TeamGeneratorOptions;
 
-  private constructor(
-    pokeInfos: PokeInfo[],
-    options: RandomTeamGeneratorOptions
-  ) {
+  private constructor(pokeInfos: PokeInfo[], options: TeamGeneratorOptions) {
     this.pokeInfos = pokeInfos;
     this.options = options;
   }
 
   static async generate(
-    options: RandomTeamGeneratorOptions
-  ): Promise<RandomGeneratedTeam[]> {
-    let teams: RandomGeneratedTeam[];
+    options: TeamGeneratorOptions
+  ): Promise<GeneratedTeam[]> {
+    let teams: GeneratedTeam[];
 
     if (options.players.length > 0 && options.sampleSize > 0) {
       const species = await PokeInfo.species(options.gen);
@@ -37,7 +34,7 @@ export class RandomTeamGenerator {
         species.map(specie => PokeInfo.forSpecies(specie))
       );
 
-      teams = new RandomTeamGenerator(pokeInfos, options).generateTeams();
+      teams = new TeamGenerator(pokeInfos, options).generateTeams();
     } else {
       teams = [];
     }
@@ -49,7 +46,7 @@ export class RandomTeamGenerator {
     return sampleSize(this.options.sampleSize, this.pokeInfos);
   }
 
-  generateTeams(): RandomGeneratedTeam[] {
+  generateTeams(): GeneratedTeam[] {
     return map(
       player => ({
         player,

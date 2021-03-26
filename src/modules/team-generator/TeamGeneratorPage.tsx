@@ -1,35 +1,41 @@
 import React, {useState} from 'react';
+import dynamic from 'next/dynamic';
 import {Button, Grid} from '@material-ui/core';
 import {Send} from '@material-ui/icons';
 import {TeamGeneratorConfiguration} from './TeamGeneratorConfiguration';
 import {
-  RandomGeneratedTeam,
-  RandomTeamGenerator,
-  RandomTeamGeneratorOptions,
-} from '../../pkmn/RandomTeamGenerator';
-import {TeamGeneratorResults} from './TeamGeneratorResults';
+  GeneratedTeam,
+  TeamGenerator,
+  TeamGeneratorOptions,
+} from '../../pkmn/TeamGenerator';
+import {GeneratedTeamsTableProps} from './GeneratedTeamsTable';
 
-export const TeamGenerator: React.FC = () => {
-  const [options, setOptions] = useState<RandomTeamGeneratorOptions>({
+const GeneratedTeamsTable = dynamic<GeneratedTeamsTableProps>(() =>
+  import('./GeneratedTeamsTable').then(m => m.GeneratedTeamsTable)
+);
+
+const DEFAULT_SAMPLE_SIZE = 6;
+const DEFAULT_REVEAL = 2000;
+
+export const TeamGeneratorPage: React.FC = () => {
+  const [options, setOptions] = useState<TeamGeneratorOptions>({
     players: [],
-    sampleSize: 6,
-    reveal: 2000,
+    sampleSize: DEFAULT_SAMPLE_SIZE,
+    reveal: DEFAULT_REVEAL,
   });
-  const [generatedTeams, setGeneratedTeams] = useState<RandomGeneratedTeam[]>(
-    []
-  );
+  const [generatedTeams, setGeneratedTeams] = useState<GeneratedTeam[]>([]);
   let results;
 
   if (options.players.length > 0) {
     results = (
       <Grid item xs={12}>
-        <TeamGeneratorResults options={options} teams={generatedTeams} />
+        <GeneratedTeamsTable options={options} teams={generatedTeams} />
       </Grid>
     );
   }
 
   const generateTeams = async () => {
-    const teams = await RandomTeamGenerator.generate(options);
+    const teams = await TeamGenerator.generate(options);
 
     setGeneratedTeams(teams);
   };

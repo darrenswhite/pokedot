@@ -5,34 +5,48 @@ import {
   CardHeader,
   CardContent,
   Grid,
+  makeStyles,
   Slider,
   TextField,
   Typography,
 } from '@material-ui/core';
 import {Add} from '@material-ui/icons';
 import {isEmpty} from 'lodash/fp';
-import {RandomTeamGeneratorOptions} from '../../pkmn/RandomTeamGenerator';
+import {TeamGeneratorOptions} from '../../pkmn/TeamGenerator';
+
+const useStyles = makeStyles(theme => ({
+  addPlayerButton: {
+    marginTop: theme.spacing(2),
+  },
+}));
 
 export interface TeamGeneratorConfigurationProps {
-  value: RandomTeamGeneratorOptions;
-  onChange: (options: RandomTeamGeneratorOptions) => void;
+  value: TeamGeneratorOptions;
+  onChange: (options: TeamGeneratorOptions) => void;
 }
 
 export const TeamGeneratorConfiguration: React.FC<TeamGeneratorConfigurationProps> = ({
   value,
   onChange,
 }: TeamGeneratorConfigurationProps) => {
+  const classes = useStyles();
   const [currentName, setCurrentName] = useState<string>('');
+  const [nameError, setNameError] = useState<string>('');
 
   const addPlayerName = () => {
     const nameLowercase = currentName.trim().toLowerCase();
 
-    if (!isEmpty(nameLowercase) && !value.players.includes(nameLowercase)) {
+    if (isEmpty(nameLowercase)) {
+      setNameError('Name is required');
+    } else if (value.players.includes(nameLowercase)) {
+      setNameError('Name already exists');
+    } else {
       onChange({
         ...value,
         players: [...value.players, nameLowercase],
       });
       setCurrentName('');
+      setNameError('');
     }
   };
 
@@ -67,13 +81,7 @@ export const TeamGeneratorConfiguration: React.FC<TeamGeneratorConfigurationProp
 
         <CardContent>
           <Grid container spacing={2}>
-            <Grid
-              item
-              container
-              spacing={2}
-              alignItems="flex-end"
-              justify="center"
-            >
+            <Grid item container spacing={2}>
               <Grid item xs>
                 <TextField
                   label="Player name"
@@ -81,15 +89,18 @@ export const TeamGeneratorConfiguration: React.FC<TeamGeneratorConfigurationProp
                   value={currentName}
                   onChange={e => setCurrentName(e.currentTarget.value)}
                   onKeyUp={e => e.key === 'Enter' && addPlayerName()}
+                  helperText={nameError}
+                  error={!!nameError}
                   fullWidth
                 />
               </Grid>
 
               <Grid item>
                 <Button
-                  variant="contained"
+                  variant="outlined"
                   size="small"
                   onClick={addPlayerName}
+                  className={classes.addPlayerButton}
                 >
                   <Add />
                   Add player
@@ -97,13 +108,7 @@ export const TeamGeneratorConfiguration: React.FC<TeamGeneratorConfigurationProp
               </Grid>
             </Grid>
 
-            <Grid
-              item
-              container
-              spacing={2}
-              alignItems="center"
-              justify="center"
-            >
+            <Grid item container spacing={2}>
               <Grid item xs={3}>
                 <Typography id="sample-size-slider">Team Size</Typography>
               </Grid>
@@ -122,13 +127,7 @@ export const TeamGeneratorConfiguration: React.FC<TeamGeneratorConfigurationProp
               </Grid>
             </Grid>
 
-            <Grid
-              item
-              container
-              spacing={2}
-              alignItems="center"
-              justify="center"
-            >
+            <Grid item container spacing={2}>
               <Grid item xs={3}>
                 <Typography id="reveal-slider">Reveal Time</Typography>
               </Grid>

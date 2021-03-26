@@ -22,7 +22,7 @@ export const TeamParserDialog: React.FC<TeamParserDialogProps> = ({
   onClose,
   onParse,
 }: TeamParserDialogProps) => {
-  const [team, setTeam] = useState<string>();
+  const [team, setTeam] = useState<string>('');
   const [parseError, setParseError] = useState<string>();
   const teamInputRef = useRef<HTMLInputElement>(null);
 

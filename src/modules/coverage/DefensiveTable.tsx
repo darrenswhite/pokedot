@@ -3,28 +3,28 @@ import {Typography} from '@material-ui/core';
 import {PartialPokemonSet} from '../../pkmn/PokeInfo';
 import {ResistanceMatrix} from '../../pkmn/matrix/ResistanceMatrix';
 import {TypeChartMatrixProps} from '../../pkmn/matrix/TypeChartMatrix';
-import {TypeChartMatrixTable} from './TypeChartMatrixTable';
+import {TypeChartTable} from './TypeChartTable';
 
-export interface DefensiveMatrixTableProps {
+export interface DefensiveTableProps {
   pokemonSets: PartialPokemonSet[];
   columnField: keyof TypeChartMatrixProps;
   idField: keyof TypeChartMatrixProps;
   valueField: keyof TypeChartMatrixProps;
 }
 
-export const DefensiveMatrixTable: React.FC<DefensiveMatrixTableProps> = ({
+export const DefensiveTable: React.FC<DefensiveTableProps> = ({
   pokemonSets,
   columnField,
   idField,
   valueField,
-}: DefensiveMatrixTableProps) => {
+}: DefensiveTableProps) => {
   return (
     <>
       <Typography variant="h5" component="h2" gutterBottom>
         Defensive Coverage
       </Typography>
 
-      <TypeChartMatrixTable
+      <TypeChartTable
         pokemonSets={pokemonSets}
         columnField={columnField}
         idField={idField}

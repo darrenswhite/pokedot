@@ -1,37 +1,33 @@
 import React from 'react';
 import {Story} from '@storybook/react';
 import {
-  OffensiveMatrixTable,
-  OffensiveMatrixTableProps,
-} from '../modules/coverage/OffensiveMatrixTable';
+  DefensiveTable,
+  DefensiveTableProps,
+} from '../modules/coverage/DefensiveTable';
 
 export default {
-  title: 'OffensiveCoverageTable',
+  title: 'DefensiveTable',
   args: {
     pokemonSets: [
       {
         species: 'Venusaur',
-        moves: ['Earth Power', 'Leaf Storm', 'Sleep Powder', 'Sludge Bomb'],
       },
       {
         species: 'Corviknight',
-        moves: ['Brace Bird', 'Bulk Up', 'Iron Head', 'Roost'],
       },
       {
         species: 'Dusclops',
-        moves: ['Bulldoze', 'Pain Split', 'Trick Room', 'Will-O-Wisp'],
       },
       {
         species: 'Gastrodon',
-        moves: ['Earth Power', 'Protect', 'Recover', 'Scald'],
+        ability: 'Storm Drain',
       },
       {
         species: 'Raichu',
-        moves: ['Brick Break', 'Fake Out', 'Nuzzle', 'Volt Switch'],
+        ability: 'Lightning Rod',
       },
       {
         species: 'Togekiss',
-        moves: ['Air Slash', 'Dazzling Gleam', 'Heat Wave', 'Protect'],
       },
     ],
     columnField: 'species',
@@ -65,8 +61,8 @@ export default {
   },
 };
 
-const TheOffensiveMatrixTable: Story<OffensiveMatrixTableProps> = args => {
-  return <OffensiveMatrixTable {...args} />;
+const TheDefensiveTable: Story<DefensiveTableProps> = args => {
+  return <DefensiveTable {...args} />;
 };
 
-export const Main = TheOffensiveMatrixTable.bind({});
+export const Main = TheDefensiveTable.bind({});

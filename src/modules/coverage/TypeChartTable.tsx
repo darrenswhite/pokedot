@@ -97,7 +97,7 @@ export type TypeChartMatrixConstructor = (
   pokemonSets: PartialPokemonSet[]
 ) => Promise<TypeChartMatrix>;
 
-export interface TypeChartMatrixTableProps {
+export interface TypeChartTableProps {
   pokemonSets: PartialPokemonSet[];
   columnField: keyof TypeChartMatrixProps;
   idField: keyof TypeChartMatrixProps;
@@ -105,13 +105,13 @@ export interface TypeChartMatrixTableProps {
   matrixConstructor: TypeChartMatrixConstructor;
 }
 
-export const TypeChartMatrixTable: React.FC<TypeChartMatrixTableProps> = ({
+export const TypeChartTable: React.FC<TypeChartTableProps> = ({
   pokemonSets,
   columnField,
   idField,
   valueField,
   matrixConstructor,
-}: TypeChartMatrixTableProps) => {
+}: TypeChartTableProps) => {
   const classes = useStyles();
   const [matrix, setMatrix] = useState<Matrix<TypeChartMatrixProps>>(
     new Matrix<TypeChartMatrixProps>([])

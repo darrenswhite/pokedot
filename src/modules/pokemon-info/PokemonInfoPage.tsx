@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
 import dynamic from 'next/dynamic';
 import {Grid} from '@material-ui/core';
-import {DefensiveMatrixTableProps} from '../coverage/DefensiveMatrixTable';
+import {DefensiveTableProps} from '../coverage/DefensiveTable';
 import {SummaryCardProps} from '../coverage/SummaryCard';
 import {PokemonSearch} from './PokemonSearch';
 import {PartialPokemonSet} from '../../pkmn/PokeInfo';
 
-const DefensiveMatrixTable = dynamic<DefensiveMatrixTableProps>(() =>
-  import('../coverage/DefensiveMatrixTable').then(m => m.DefensiveMatrixTable)
+const DefensiveTable = dynamic<DefensiveTableProps>(() =>
+  import('../coverage/DefensiveTable').then(m => m.DefensiveTable)
 );
 
 const SummaryCard = dynamic<SummaryCardProps>(() =>
@@ -16,12 +16,12 @@ const SummaryCard = dynamic<SummaryCardProps>(() =>
 
 export const PokemonInfoPage: React.FC = () => {
   const [pokemonSets, setPokemonSets] = useState<PartialPokemonSet[]>([]);
-  let defensiveMatrixTable;
+  let defensiveTable;
   let summaryCard;
 
   if (pokemonSets.length > 0) {
-    defensiveMatrixTable = (
-      <DefensiveMatrixTable
+    defensiveTable = (
+      <DefensiveTable
         pokemonSets={pokemonSets}
         columnField="species"
         idField="effectiveness"
@@ -49,7 +49,7 @@ export const PokemonInfoPage: React.FC = () => {
         </Grid>
 
         <Grid item xs={12}>
-          {defensiveMatrixTable}
+          {defensiveTable}
         </Grid>
 
         <Grid item xs={12} sm={6}>

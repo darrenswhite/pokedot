@@ -1,3 +1,3 @@
-import {TeamGenerator} from '../modules/team-generator/TeamGenerator';
+import {TeamGeneratorPage} from '../modules/team-generator/TeamGeneratorPage';
 
-export default TeamGenerator;
+export default TeamGeneratorPage;
