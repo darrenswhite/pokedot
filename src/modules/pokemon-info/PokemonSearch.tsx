@@ -7,7 +7,7 @@ import {
 } from '@material-ui/lab';
 import {findAll} from 'highlight-words-core';
 import {PartialPokemonSet, PokeInfo} from '../../pkmn/PokeInfo';
-import {SpeciesImage} from '../coverage/SpeciesImage';
+import {SpeciesImage} from './SpeciesImage';
 
 const renderOption = (
   option: string,

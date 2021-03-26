@@ -16,7 +16,7 @@ import {
   TypeChartMatrix,
   TypeChartMatrixProps,
 } from '../../pkmn/matrix/TypeChartMatrix';
-import {TypeImage} from './TypeImage';
+import {TypeImage} from '../pokemon-info/TypeImage';
 
 const EFFECTIVENESS_RESIST = [0.0, 0.25, 0.5];
 const EFFECTIVENESS_SUPER = [2.0, 4.0];

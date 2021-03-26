@@ -9,7 +9,7 @@ import {PCol} from '../table/model/PCol';
 import {PValue} from '../table/model/PRow';
 import {PokeInfo} from '../../pkmn/PokeInfo';
 import {find, range} from 'lodash/fp';
-import {SpeciesImage} from '../coverage/SpeciesImage';
+import {SpeciesImage} from '../pokemon-info/SpeciesImage';
 
 export interface TeamGeneratorResultsProps {
   options: RandomTeamGeneratorOptions;

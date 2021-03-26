@@ -11,8 +11,8 @@ import {PCol} from '../table/model/PCol';
 import {PValue} from '../table/model/PRow';
 import {PMatrixTable} from '../table/PMatrixTable';
 import {EffectivenessChip} from './EffectivenessChip';
-import {SpeciesImage} from './SpeciesImage';
-import {TypeImage} from './TypeImage';
+import {SpeciesImage} from '../pokemon-info/SpeciesImage';
+import {TypeImage} from '../pokemon-info/TypeImage';
 
 const renderCell = (
   key: keyof TypeChartMatrixProps
