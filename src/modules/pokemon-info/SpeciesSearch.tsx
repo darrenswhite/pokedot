@@ -46,7 +46,7 @@ export interface PokemonSearchProps {
   onSelect: (pokemonSets: PartialPokemonSet[]) => void;
 }
 
-export const PokemonSearch: React.FC<PokemonSearchProps> = ({
+export const SpeciesSearch: React.FC<PokemonSearchProps> = ({
   onSelect,
 }: PokemonSearchProps) => {
   const [species, setSpecies] = useState<string[]>([]);

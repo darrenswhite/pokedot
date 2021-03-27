@@ -22,6 +22,8 @@ export const TeamGeneratorPage: React.FC = () => {
     players: [],
     sampleSize: DEFAULT_SAMPLE_SIZE,
     reveal: DEFAULT_REVEAL,
+    legendaries: 0,
+    mythicals: 0,
   });
   const [generatedTeams, setGeneratedTeams] = useState<GeneratedTeam[]>([]);
   let results;

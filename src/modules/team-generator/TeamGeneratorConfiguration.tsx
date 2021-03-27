@@ -50,28 +50,13 @@ export const TeamGeneratorConfiguration: React.FC<TeamGeneratorConfigurationProp
     }
   };
 
-  const setSampleSize = (
-    _: React.ChangeEvent<unknown>,
-    newValue: number | number[]
-  ) => {
-    const sampleSize = newValue as number;
-
-    onChange({
-      ...value,
-      sampleSize,
-    });
-  };
-
-  const setReveal = (
-    _: React.ChangeEvent<unknown>,
-    newValue: number | number[]
-  ) => {
-    const reveal = newValue as number;
-
-    onChange({
-      ...value,
-      reveal,
-    });
+  const setOptionValue = (key: keyof TeamGeneratorOptions) => {
+    return (_: React.ChangeEvent<unknown>, newValue: unknown) => {
+      onChange({
+        ...value,
+        [key]: newValue,
+      });
+    };
   };
 
   return (
@@ -110,13 +95,13 @@ export const TeamGeneratorConfiguration: React.FC<TeamGeneratorConfigurationProp
 
             <Grid item container spacing={2}>
               <Grid item xs={3}>
-                <Typography id="sample-size-slider">Team Size</Typography>
+                <Typography id="sample-size-slider">Team size</Typography>
               </Grid>
 
               <Grid item xs>
                 <Slider
                   value={value.sampleSize}
-                  onChange={setSampleSize}
+                  onChange={setOptionValue('sampleSize')}
                   aria-labelledby="sample-size-slider"
                   valueLabelDisplay="auto"
                   step={1}
@@ -129,13 +114,13 @@ export const TeamGeneratorConfiguration: React.FC<TeamGeneratorConfigurationProp
 
             <Grid item container spacing={2}>
               <Grid item xs={3}>
-                <Typography id="reveal-slider">Reveal Time</Typography>
+                <Typography id="reveal-slider">Reveal time</Typography>
               </Grid>
 
               <Grid item xs>
                 <Slider
                   value={value.reveal}
-                  onChange={setReveal}
+                  onChange={setOptionValue('reveal')}
                   aria-labelledby="reveal-slider"
                   valueLabelDisplay="auto"
                   valueLabelFormat={value => value / 1000 + 's'}
@@ -143,6 +128,44 @@ export const TeamGeneratorConfiguration: React.FC<TeamGeneratorConfigurationProp
                   marks
                   min={0}
                   max={10000}
+                />
+              </Grid>
+            </Grid>
+
+            <Grid item container spacing={2}>
+              <Grid item xs={3}>
+                <Typography id="legendary-slider"># of Legendaries</Typography>
+              </Grid>
+
+              <Grid item xs>
+                <Slider
+                  value={value.legendaries}
+                  onChange={setOptionValue('legendaries')}
+                  aria-labelledby="legendary-slider"
+                  valueLabelDisplay="auto"
+                  step={1}
+                  marks
+                  min={0}
+                  max={value.sampleSize - value.mythicals}
+                />
+              </Grid>
+            </Grid>
+
+            <Grid item container spacing={2}>
+              <Grid item xs={3}>
+                <Typography id="mythical-slider"># of Mythical</Typography>
+              </Grid>
+
+              <Grid item xs>
+                <Slider
+                  value={value.mythicals}
+                  onChange={setOptionValue('mythicals')}
+                  aria-labelledby="mythical-slider"
+                  valueLabelDisplay="auto"
+                  step={1}
+                  marks
+                  min={0}
+                  max={value.sampleSize - value.legendaries}
                 />
               </Grid>
             </Grid>

@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 import {Grid} from '@material-ui/core';
 import {DefensiveTableProps} from '../coverage/DefensiveTable';
 import {SummaryCardProps} from '../coverage/SummaryCard';
-import {PokemonSearch} from './PokemonSearch';
+import {SpeciesSearch} from './SpeciesSearch';
 import {PartialPokemonSet} from '../../pkmn/PokeInfo';
 
 const DefensiveTable = dynamic<DefensiveTableProps>(() =>
@@ -45,7 +45,7 @@ export const PokemonInfoPage: React.FC = () => {
         spacing={4}
       >
         <Grid item xs={12}>
-          <PokemonSearch onSelect={setPokemonSets} />
+          <SpeciesSearch onSelect={setPokemonSets} />
         </Grid>
 
         <Grid item xs={12}>

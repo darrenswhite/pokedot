@@ -1,5 +1,5 @@
 import {GenerationNum} from '@pkmn/types';
-import {map, sampleSize} from 'lodash/fp';
+import {filter, map, sampleSize} from 'lodash/fp';
 import {PokeInfo} from './PokeInfo';
 
 export interface GeneratedTeam {
@@ -11,6 +11,8 @@ export interface TeamGeneratorOptions {
   players: string[];
   sampleSize: number;
   reveal: number;
+  legendaries: number;
+  mythicals: number;
   gen?: GenerationNum;
 }
 
@@ -42,15 +44,42 @@ export class TeamGenerator {
     return teams;
   }
 
-  samplePokemon(): PokeInfo[] {
-    return sampleSize(this.options.sampleSize, this.pokeInfos);
+  sampleLegendaryPokemon(): PokeInfo[] {
+    return this.samplePokemon(
+      this.options.legendaries,
+      info => info.isLegendary
+    );
+  }
+
+  sampleMythicalPokemon(): PokeInfo[] {
+    return this.samplePokemon(this.options.mythicals, info => info.isMythical);
+  }
+
+  samplePokemon(
+    size: number,
+    isValid?: (infos: PokeInfo) => boolean
+  ): PokeInfo[] {
+    return sampleSize(
+      size,
+      isValid ? filter(isValid, this.pokeInfos) : this.pokeInfos
+    );
+  }
+
+  generateTeam(): PokeInfo[] {
+    const legendaries = this.sampleLegendaryPokemon();
+    const mythicals = this.sampleMythicalPokemon();
+    const rest = this.samplePokemon(
+      this.options.sampleSize - legendaries.length - mythicals.length
+    );
+
+    return [...legendaries, ...mythicals, ...rest];
   }
 
   generateTeams(): GeneratedTeam[] {
     return map(
       player => ({
         player,
-        team: this.samplePokemon(),
+        team: this.generateTeam(),
       }),
       this.options.players
     );
