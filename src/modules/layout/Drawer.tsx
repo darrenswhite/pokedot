@@ -54,7 +54,6 @@ export const Drawer: React.FC<DrawerProps> = ({
       classes={{
         paper: classes.drawerPaper,
       }}
-      variant="temporary"
     >
       <List dense>
         {items.map(item => (

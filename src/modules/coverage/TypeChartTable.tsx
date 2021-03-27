@@ -80,7 +80,7 @@ const renderEffectiveness = (value: PValue): ReactElement => {
 };
 
 const renderSpecies = (value: PValue): ReactElement => {
-  return <SpeciesImage name={value as string} />;
+  return <SpeciesImage name={value as string} moreInfo />;
 };
 
 const renderType = (value: PValue): ReactElement => {

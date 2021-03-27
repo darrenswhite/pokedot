@@ -1,7 +1,13 @@
-import React from 'react';
+import React, {useState} from 'react';
+import dynamic from 'next/dynamic';
 import {Container, makeStyles} from '@material-ui/core';
 import {Header} from './Header';
 import {Footer} from './Footer';
+import {SpeciesBottomDrawerContext} from '../pokemon-info/SpeciesBottomDrawer';
+
+const SpeciesBottomDrawer = dynamic<unknown>(() =>
+  import('../pokemon-info/SpeciesBottomDrawer').then(m => m.SpeciesBottomDrawer)
+);
 
 type Props = {
   children: NonNullable<React.ReactNode>;
@@ -33,6 +39,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const PageContainer: React.FC<Props> = ({children}: Props) => {
+  const [open, setOpen] = useState(false);
+  const [species, setSpecies] = useState('');
   const classes = useStyles();
 
   return (
@@ -40,11 +48,17 @@ export const PageContainer: React.FC<Props> = ({children}: Props) => {
       <div className={classes.wrapper}>
         <Header />
 
-        <main className={classes.main}>
-          <Container maxWidth={false} className={classes.container}>
-            {children}
-          </Container>
-        </main>
+        <SpeciesBottomDrawerContext.Provider
+          value={{open, setOpen, species, setSpecies}}
+        >
+          <main className={classes.main}>
+            <Container maxWidth={false} className={classes.container}>
+              {children}
+            </Container>
+          </main>
+
+          <SpeciesBottomDrawer />
+        </SpeciesBottomDrawerContext.Provider>
 
         <Footer />
       </div>

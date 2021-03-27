@@ -16,8 +16,17 @@ type PartialExcept<T, K extends keyof T> = Pick<T, K> & Partial<Omit<T, K>>;
 
 export type PartialPokemonSet = PartialExcept<PokemonSet, 'species'>;
 
+export const STAT_NAMES: StatsTable<string> = {
+  hp: 'HP',
+  atk: 'Atk',
+  def: 'Def',
+  spa: 'SpA',
+  spd: 'SpD',
+  spe: 'Spe',
+};
+
 export class PokeInfo {
-  specie: Specie;
+  private specie: Specie;
   resistances: TypeChart;
   coverage: TypeChart;
 
@@ -95,6 +104,10 @@ export class PokeInfo {
 
   get eggGroups(): EggGroup[] {
     return this.specie.eggGroups;
+  }
+
+  get types(): TypeName[] {
+    return this.specie.types;
   }
 
   private static createCoverageTypeChart(

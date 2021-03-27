@@ -19,7 +19,7 @@ const renderIndexCell = (value: PValue): ReactElement => {
 };
 
 const renderSpeciesCell = (value: PValue): ReactElement => {
-  return <SpeciesImage name={value as string} />;
+  return <SpeciesImage name={value as string} moreInfo />;
 };
 
 const mapSpeciesValue = (
