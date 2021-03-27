@@ -1,16 +1,17 @@
 import React, {ReactElement, useEffect, useState} from 'react';
 import {GeneratedTeam, TeamGeneratorOptions} from '../../pkmn/TeamGenerator';
 import {PMatrixTable} from '../table/PMatrixTable';
-import {Matrix} from '../../pkmn/matrix/Matrix';
 import {PCol} from '../table/model/PCol';
 import {PValue} from '../table/model/PRow';
-import {PokeInfo} from '../../pkmn/PokeInfo';
-import {find, range} from 'lodash/fp';
 import {SpeciesImage} from '../pokemon-info/SpeciesImage';
+import {
+  GeneratedTeamsMatrix,
+  GeneratedTeamsMatrixProps,
+} from '../../pkmn/matrix/GeneratedTeamsMatrix';
 
 export interface GeneratedTeamsTableProps {
-  options: TeamGeneratorOptions;
   teams: GeneratedTeam[];
+  options: TeamGeneratorOptions;
 }
 
 const renderIndexCell = (value: PValue): ReactElement => {
@@ -21,29 +22,22 @@ const renderSpeciesCell = (value: PValue): ReactElement => {
   return <SpeciesImage name={value as string} />;
 };
 
-interface TeamMatrixProps {
-  player: string;
-  index: number;
-  info: PokeInfo;
-}
+const mapSpeciesValue = (
+  revealed: number
+): ((value: PValue) => PValue) | undefined => {
+  return value => {
+    const entry = (value as GeneratedTeamsMatrixProps[])[0];
+
+    return entry.index <= revealed ? entry.info?.species : '';
+  };
+};
 
 export const GeneratedTeamsTable: React.FC<GeneratedTeamsTableProps> = ({
-  options,
   teams,
+  options,
 }: GeneratedTeamsTableProps) => {
   const [revealed, setRevealed] = useState(0);
-  const matrix = new Matrix<TeamMatrixProps>(
-    options.players.flatMap(player => {
-      const playerTeam = find(team => team.player === player, teams);
-      const team = playerTeam?.team ?? Array(options.sampleSize);
-
-      return range(0, options.sampleSize).map(index => ({
-        player,
-        index,
-        info: index < revealed ? team[index] : '',
-      }));
-    })
-  );
+  const matrix = GeneratedTeamsMatrix.forTeams(teams, options);
 
   const columnFieldOverrides: Partial<PCol> = {
     headerName: 'Pokémon Slot',
@@ -52,7 +46,7 @@ export const GeneratedTeamsTable: React.FC<GeneratedTeamsTableProps> = ({
 
   const idFieldOverrides: Partial<PCol> = {
     renderCell: renderSpeciesCell,
-    mapValue: value => (value as TeamMatrixProps[])[0].info?.species,
+    mapValue: mapSpeciesValue(revealed),
   };
 
   useEffect(() => {
@@ -60,7 +54,7 @@ export const GeneratedTeamsTable: React.FC<GeneratedTeamsTableProps> = ({
   }, [teams]);
 
   useEffect(() => {
-    if (teams.length > 0 && revealed < options.sampleSize) {
+    if (teams.length > 0 && revealed < options.sampleSize - 1) {
       const interval = setInterval(() => {
         setRevealed(revealed + 1);
       }, options.reveal);
