@@ -24,6 +24,7 @@ COPY --from=builder /pokedot/next.config.js ./
 #COPY --from=builder /pokedot/public ./public
 COPY --from=builder /pokedot/.next ./.next
 COPY --from=builder /pokedot/node_modules ./node_modules
+COPY --from=builder /pokedot/package.json /pokedot/server.js ./
 
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
@@ -37,4 +38,4 @@ EXPOSE 3000
 # Uncomment the following line in case you want to disable telemetry.
 # RUN npx next telemetry disable
 
-CMD ["node_modules/.bin/next", "start"]
+CMD ["npm", "start"]
