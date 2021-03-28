@@ -30,7 +30,7 @@ COPY --from=builder /pokedot/next.config.js ./
 #COPY --from=builder /pokedot/public ./public
 COPY --from=builder /pokedot/.next ./.next
 COPY --from=proddeps /pokedot/node_modules ./node_modules
-COPY --from=builder package.json server.js ./
+COPY --from=builder /pokedot/package.json /pokedot/server.js ./
 
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
