@@ -12,9 +12,11 @@ export interface Room {
 }
 
 export interface RoomOptions {
+  teamSize: number;
   poolSize: number;
   legendaries: number;
   mythicals: number;
+  exclusivePools: boolean;
   gen?: GenerationNum;
 }
 
