@@ -9,7 +9,7 @@ const SpeciesBottomDrawer = dynamic<unknown>(() =>
   import('../pokemon-info/SpeciesBottomDrawer').then(m => m.SpeciesBottomDrawer)
 );
 
-type Props = {
+type PageContainerProps = {
   children: NonNullable<React.ReactNode>;
 };
 
@@ -38,7 +38,9 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export const PageContainer: React.FC<Props> = ({children}: Props) => {
+export const PageContainer: React.FC<PageContainerProps> = ({
+  children,
+}: PageContainerProps) => {
   const [open, setOpen] = useState(false);
   const [species, setSpecies] = useState('');
   const classes = useStyles();

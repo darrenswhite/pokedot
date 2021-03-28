@@ -14,7 +14,7 @@ const getTitle = (router: NextRouter): string => {
   if (route) {
     title = `${route.displayName} - ${title}`;
   } else if (router.pathname === '/404') {
-    title = `Page not found - ${title}`;
+    title = `Page Not Found - ${title}`;
   } else if (router.pathname === '/_error') {
     title = `Error - ${title}`;
   }

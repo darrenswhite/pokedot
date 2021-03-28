@@ -1,16 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {Grid, makeStyles, Typography} from '@material-ui/core';
+import {Box, Grid, makeStyles, Typography} from '@material-ui/core';
 import {sample} from 'lodash/fp';
 
 const useStyles = makeStyles(theme => ({
-  container: {
-    display: 'flex',
-    height: `calc(100vh - ${theme.spacing(22)}px)`,
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avator: {
+  avatar: {
     marginBottom: theme.spacing(2),
     marginTop: theme.spacing(12),
   },
@@ -55,7 +48,13 @@ export const Error: React.FC<ErrorProps> = ({
   }, []);
 
   return (
-    <div className={classes.container}>
+    <Box
+      display="flex"
+      height="100%"
+      alignContent="center"
+      justifyContent="center"
+      flexDirection="column"
+    >
       <Grid container justify="center">
         <Grid item xs={12}>
           <Typography variant="h3" component="h1" align="center">
@@ -63,7 +62,7 @@ export const Error: React.FC<ErrorProps> = ({
           </Typography>
         </Grid>
 
-        <Grid item className={classes.avator}>
+        <Grid item className={classes.avatar}>
           <img src={avatar} />
         </Grid>
 
@@ -71,7 +70,7 @@ export const Error: React.FC<ErrorProps> = ({
           <RandomMessage messages={messages} />
         </Grid>
       </Grid>
-    </div>
+    </Box>
   );
 };
 

@@ -2,6 +2,7 @@ const app = require('express')();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const next = require('next');
+const nanoid = require('nanoid');
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== 'production';
@@ -9,86 +10,142 @@ const nextApp = next({dev});
 const nextHandler = nextApp.getRequestHandler();
 
 const rooms = {};
-let currentRoomId = 1;
 
-io.on('connection', socket => {
-  socket.on('createroom', options => {
-    const roomId = currentRoomId++;
+const ID_MAX_RETRIES = 1000;
 
-    rooms[roomId] = {
-      options: options,
-      players: [],
-      messages: [],
+const generateId = nanoid.customAlphabet(
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+  4
+);
+
+const generateIdWithRetry = array => {
+  let currentId;
+  let validId;
+
+  for (let i = 0; i < ID_MAX_RETRIES; i++) {
+    currentId = generateId();
+
+    if (!(currentId in array)) {
+      validId = currentId;
+      break;
+    }
+  }
+
+  return validId;
+};
+
+const createRoom = options => {
+  const id = generateIdWithRetry(rooms);
+  let room;
+
+  if (id) {
+    room = {
+      id,
+      options,
+      players: {},
     };
 
-    socket.emit('roomcreated', roomId);
-  });
+    rooms[id] = room;
+  }
 
-  socket.on('joinroom', roomId => {
-    if (socket.roomId) {
-      socket.leave(socket.roomId);
-    }
+  return room;
+};
 
-    if (rooms[roomId]) {
-      socket.roomId = roomId;
+const createPlayer = roomId => {
+  const id = generateIdWithRetry(rooms[roomId].players);
+  let player;
 
-      socket.join(roomId);
+  if (id) {
+    player = {
+      id,
+    };
+  }
 
-      socket.emit('roomjoined', rooms[roomId]);
+  return player;
+};
+
+const removePlayerFromCurrentRoom = socket => {
+  const roomId = socket.roomId;
+  const playerId = socket.playerId;
+
+  if (roomId in rooms && playerId in rooms[roomId].players) {
+    delete rooms[roomId].players[socket.playerId];
+
+    if (Object.keys(rooms[roomId].players).length > 0) {
+      playersUpdated(socket, roomId);
     } else {
-      socket.emit('invalidroom');
+      delete rooms[roomId];
+    }
+
+    socket.leave(roomId);
+  }
+};
+
+const playersUpdated = (socket, roomId) => {
+  socket.broadcast.in(roomId).emit('players-updated', rooms[roomId].players);
+};
+
+io.on('connection', socket => {
+  socket.on('create-room', (options, fn) => {
+    const room = createRoom(options);
+
+    if (room) {
+      fn('room-created', room.id);
+    } else {
+      fn('room-create-error');
     }
   });
 
-  socket.on('addplayer', name => {
-    const roomId = socket.roomId;
+  socket.on('join-room', (roomId, fn) => {
+    if (socket.roomId !== roomId) {
+      removePlayerFromCurrentRoom(socket);
 
-    console.log('addplayer: ' + roomId + ', ' + name);
+      if (roomId in rooms) {
+        const player = createPlayer(roomId);
 
-    if (name && roomId) {
-      socket.name = name;
+        if (player) {
+          rooms[roomId].players[player.id] = player;
 
-      rooms[roomId].players.push(name);
+          socket.roomId = roomId;
+          socket.playerId = player.id;
 
-      socket.broadcast.in(roomId).emit('updateplayers', rooms[roomId].players);
-    }
-  });
+          socket.join(roomId);
 
-  socket.on('sendmessage', message => {
-    const roomId = socket.roomId;
-    const name = socket.name;
+          playersUpdated(socket, roomId);
 
-    console.log('sendmessage: ' + roomId + ', ' + name + ', ' + message);
-
-    if (message && roomId && name) {
-      rooms[roomId].messages.push(message);
-
-      io.sockets.in(roomId).emit('updatemessages', rooms[roomId].messages);
-    }
-  });
-
-  socket.on('disconnect', function () {
-    const roomId = socket.roomId;
-
-    if (roomId) {
-      delete rooms[roomId].players[socket.name];
-
-      if (rooms[roomId].players.length > 0) {
-        io.sockets.emit('updateplayers', rooms[roomId].players);
+          fn('room-joined', rooms[roomId]);
+        } else {
+          fn('room-join-error');
+        }
       } else {
-        delete rooms[roomId];
+        fn('room-invalid', roomId);
       }
-
-      socket.leave(roomId);
+    } else {
+      fn('room-joined', rooms[roomId]);
     }
+  });
+
+  socket.on('update-player', player => {
+    const roomId = socket.roomId;
+    const playerId = socket.playerId;
+
+    if (
+      roomId in rooms &&
+      playerId in rooms[roomId].players &&
+      player.id === playerId
+    ) {
+      rooms[roomId].players = player;
+
+      playersUpdated();
+    }
+  });
+
+  socket.on('disconnect', () => {
+    removePlayerFromCurrentRoom(socket);
   });
 });
 
 nextApp.prepare().then(() => {
-  app.get('/rooms/:id/cache', (req, res) => {
-    res.json(rooms[req.params.id]);
-  });
-
   app.get('*', nextHandler);
 
   server.listen(port, err => {
