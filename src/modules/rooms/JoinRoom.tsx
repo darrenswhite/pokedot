@@ -30,7 +30,7 @@ export const JoinRoom: React.FC<JoinRoomProps> = ({onBack}: JoinRoomProps) => {
   const joinRoom = () => {
     setRoomIdError('');
 
-    if (roomId.length === ROOM_ID_LENGTH) {
+    if (roomId.trim().length === ROOM_ID_LENGTH) {
       socket.emit('join-room', roomId, (event: string) => {
         if (event === 'room-joined') {
           router.push(`/rooms/${roomId}`);

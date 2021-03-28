@@ -58,6 +58,7 @@ const createPlayer = roomId => {
   if (id) {
     player = {
       id,
+      name: 'Anonymous',
     };
   }
 
@@ -72,7 +73,7 @@ const removePlayerFromCurrentRoom = socket => {
     delete rooms[roomId].players[socket.playerId];
 
     if (Object.keys(rooms[roomId].players).length > 0) {
-      playersUpdated(socket, roomId);
+      playersUpdated(socket);
     } else {
       delete rooms[roomId];
     }
@@ -81,8 +82,12 @@ const removePlayerFromCurrentRoom = socket => {
   }
 };
 
-const playersUpdated = (socket, roomId) => {
-  socket.broadcast.in(roomId).emit('players-updated', rooms[roomId].players);
+const playersUpdated = socket => {
+  const roomId = socket.roomId;
+
+  if (roomId in rooms) {
+    io.in(roomId).emit('players-updated', rooms[roomId].players);
+  }
 };
 
 io.on('connection', socket => {
@@ -111,9 +116,9 @@ io.on('connection', socket => {
 
           socket.join(roomId);
 
-          playersUpdated(socket, roomId);
+          playersUpdated(socket);
 
-          fn('room-joined', rooms[roomId]);
+          fn('room-joined', rooms[roomId], player.id);
         } else {
           fn('room-join-error');
         }
@@ -134,9 +139,11 @@ io.on('connection', socket => {
       playerId in rooms[roomId].players &&
       player.id === playerId
     ) {
-      rooms[roomId].players = player;
+      rooms[roomId].players[playerId] = player;
 
-      playersUpdated();
+      playersUpdated(socket);
+    } else {
+      console.log('Player not valid');
     }
   });
 
