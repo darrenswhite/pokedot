@@ -4,7 +4,13 @@ FROM node:14-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /pokedot
 COPY package.json package-lock.json ./
-RUN npm install
+RUN npm ci
+
+# Install production dependencies
+FROM node:14-alpine AS proddeps
+WORKDIR /pokedot
+COPY package.json package-lock.json ./
+RUN npm ci --only=production
 
 # Rebuild the source code only when needed
 FROM node:14-alpine AS builder
@@ -23,8 +29,8 @@ ENV NODE_ENV production
 COPY --from=builder /pokedot/next.config.js ./
 #COPY --from=builder /pokedot/public ./public
 COPY --from=builder /pokedot/.next ./.next
-COPY --from=builder /pokedot/node_modules ./node_modules
-COPY --from=builder /pokedot/package.json /pokedot/server.js ./
+COPY --from=proddeps /pokedot/node_modules ./node_modules
+COPY --from=builder package.json server.js ./
 
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
