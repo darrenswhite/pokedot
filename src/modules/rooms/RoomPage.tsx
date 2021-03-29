@@ -41,7 +41,7 @@ export const RoomPage: React.FC = () => {
     }
   };
 
-  useSocket('connected', joinRoom);
+  useSocket('connect', joinRoom);
 
   useEffect(() => {
     if (socket.connected) {
