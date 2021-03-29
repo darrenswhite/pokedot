@@ -38,7 +38,10 @@ export const JoinRoom: React.FC<JoinRoomProps> = ({onBack}: JoinRoomProps) => {
           setRoomIdError('Room does not exist');
         } else if (event === 'room-join-error') {
           // TODO display friendly error
-          console.error('Failed to join room: ' + roomId);
+          console.error('Failed to join room');
+        } else {
+          // TODO display friendly error
+          console.error('Unknown error occurred');
         }
       });
     } else {

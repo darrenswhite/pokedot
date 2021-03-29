@@ -74,10 +74,14 @@ const removePlayerFromCurrentRoom = socket => {
   if (roomId in rooms && playerId in rooms[roomId].players) {
     delete rooms[roomId].players[socket.playerId];
 
+    console.log(`Removed playing ${playerId} from room ${roomId}`);
+
     if (Object.keys(rooms[roomId].players).length > 0) {
       playersUpdated(socket);
     } else {
       delete rooms[roomId];
+
+      console.log(`Removed stale room ${roomId}`);
     }
 
     socket.leave(roomId);
@@ -98,37 +102,39 @@ io.on('connection', socket => {
 
     if (room) {
       fn('room-created', room.id);
+
+      console.log(`Created room ${room.id}`);
     } else {
+      console.error('Failed to create room');
       fn('room-create-error');
     }
   });
 
   socket.on('join-room', (roomId, fn) => {
-    if (socket.roomId !== roomId) {
-      removePlayerFromCurrentRoom(socket);
+    removePlayerFromCurrentRoom(socket);
 
-      if (roomId in rooms) {
-        const player = createPlayer(roomId);
+    if (roomId in rooms) {
+      const player = createPlayer(roomId);
 
-        if (player) {
-          rooms[roomId].players[player.id] = player;
+      if (player) {
+        rooms[roomId].players[player.id] = player;
 
-          socket.roomId = roomId;
-          socket.playerId = player.id;
+        socket.roomId = roomId;
+        socket.playerId = player.id;
 
-          socket.join(roomId);
+        socket.join(roomId);
 
-          playersUpdated(socket);
+        playersUpdated(socket);
 
-          fn('room-joined', rooms[roomId], player.id);
-        } else {
-          fn('room-join-error');
-        }
+        fn('room-joined', rooms[roomId], player.id);
+
+        console.log(`Player ${player.id} joined room ${roomId}`);
       } else {
-        fn('room-invalid', roomId);
+        console.log(`Failed to create player`);
+        fn('room-join-error');
       }
     } else {
-      fn('room-joined', rooms[roomId]);
+      fn('room-invalid');
     }
   });
 

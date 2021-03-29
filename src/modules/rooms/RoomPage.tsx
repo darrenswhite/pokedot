@@ -31,6 +31,8 @@ export const RoomPage: React.FC = () => {
             setJoinRoomError('Room does not exist');
           } else if (event === 'room-join-error') {
             setJoinRoomError('Failed to join room');
+          } else {
+            setJoinRoomError('Unknown error occurred');
           }
         }
       );
