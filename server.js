@@ -97,6 +97,8 @@ const playersUpdated = socket => {
 };
 
 io.on('connection', socket => {
+  console.log('New client connected');
+
   socket.on('create-room', (options, fn) => {
     const room = createRoom(options);
 
@@ -111,6 +113,8 @@ io.on('connection', socket => {
   });
 
   socket.on('join-room', (roomId, fn) => {
+    console.log(`join-room request ${roomId}`);
+
     removePlayerFromCurrentRoom(socket);
 
     if (roomId in rooms) {
@@ -130,10 +134,11 @@ io.on('connection', socket => {
 
         console.log(`Player ${player.id} joined room ${roomId}`);
       } else {
-        console.log(`Failed to create player`);
+        console.log('Failed to create player');
         fn('room-join-error');
       }
     } else {
+      console.log('Room does not exist');
       fn('room-invalid');
     }
   });
@@ -156,6 +161,8 @@ io.on('connection', socket => {
   });
 
   socket.on('disconnect', () => {
+    console.log('Client donnected');
+
     removePlayerFromCurrentRoom(socket);
   });
 });
