@@ -161,7 +161,7 @@ io.on('connection', socket => {
   });
 
   socket.on('disconnect', () => {
-    console.log('Client donnected');
+    console.log('Client disonnected');
 
     removePlayerFromCurrentRoom(socket);
   });
