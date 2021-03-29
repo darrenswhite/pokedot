@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useRouter} from 'next/router';
-import {Box, Button, Grid, Slider, Switch, Typography} from '@material-ui/core';
+import {Button, Grid, Slider, Switch, Typography} from '@material-ui/core';
 import {getSocket} from '../../hooks/useSocket';
 import {RoomId, RoomOptions} from './Room';
 
@@ -80,9 +80,15 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
   };
 
   return (
-    <>
+    <Grid
+      container
+      justify="center"
+      direction="column"
+      spacing={2}
+      style={{height: '100%'}}
+    >
       {sliders.map(slider => (
-        <Box key={slider.field} display="flex" p={1} justifyContent="center">
+        <Grid key={slider.field} item container justify="center">
           <Grid item xs={12} sm={4} md={3} lg={2} xl={1}>
             <Grid item container spacing={2}>
               <Grid item xs={5}>
@@ -105,10 +111,10 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
               </Grid>
             </Grid>
           </Grid>
-        </Box>
+        </Grid>
       ))}
 
-      <Box display="flex" p={1} justifyContent="center">
+      <Grid item container justify="center">
         <Grid item xs={12} sm={4} md={3} lg={2} xl={1}>
           <Grid item container spacing={2}>
             <Grid item xs={5}>
@@ -127,9 +133,9 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
             </Grid>
           </Grid>
         </Grid>
-      </Box>
+      </Grid>
 
-      <Box display="flex" p={1} justifyContent="center">
+      <Grid item container justify="center">
         <Grid item xs={12} sm={4} md={3} lg={2} xl={1}>
           <Button
             onClick={createRoom}
@@ -140,9 +146,9 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
             Create room
           </Button>
         </Grid>
-      </Box>
+      </Grid>
 
-      <Box display="flex" p={1} justifyContent="center">
+      <Grid item container justify="center">
         <Grid item xs={12} sm={4} md={3} lg={2} xl={1}>
           <Button
             onClick={onBack}
@@ -153,7 +159,7 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
             Back
           </Button>
         </Grid>
-      </Box>
-    </>
+      </Grid>
+    </Grid>
   );
 };

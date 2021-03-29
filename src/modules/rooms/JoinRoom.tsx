@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useRouter} from 'next/router';
-import {Box, Button, Grid, makeStyles, TextField} from '@material-ui/core';
+import {Button, Grid, makeStyles, TextField} from '@material-ui/core';
 import {getSocket} from '../../hooks/useSocket';
 import {RoomId, ROOM_ID_LENGTH} from './Room';
 
@@ -47,8 +47,14 @@ export const JoinRoom: React.FC<JoinRoomProps> = ({onBack}: JoinRoomProps) => {
   };
 
   return (
-    <>
-      <Box display="flex" p={1} justifyContent="center">
+    <Grid
+      container
+      justify="center"
+      direction="column"
+      spacing={2}
+      style={{height: '100%'}}
+    >
+      <Grid item container justify="center">
         <Grid item xs={12} sm={4} md={3} lg={2} xl={1}>
           <TextField
             label="Room code"
@@ -63,9 +69,9 @@ export const JoinRoom: React.FC<JoinRoomProps> = ({onBack}: JoinRoomProps) => {
             fullWidth
           />
         </Grid>
-      </Box>
+      </Grid>
 
-      <Box display="flex" p={1} justifyContent="center">
+      <Grid item container justify="center">
         <Grid item xs={12} sm={4} md={3} lg={2} xl={1}>
           <Button
             onClick={joinRoom}
@@ -76,9 +82,9 @@ export const JoinRoom: React.FC<JoinRoomProps> = ({onBack}: JoinRoomProps) => {
             Join room
           </Button>
         </Grid>
-      </Box>
+      </Grid>
 
-      <Box display="flex" p={1} justifyContent="center">
+      <Grid item container justify="center">
         <Grid item xs={12} sm={4} md={3} lg={2} xl={1}>
           <Button
             onClick={onBack}
@@ -89,7 +95,7 @@ export const JoinRoom: React.FC<JoinRoomProps> = ({onBack}: JoinRoomProps) => {
             Back
           </Button>
         </Grid>
-      </Box>
-    </>
+      </Grid>
+    </Grid>
   );
 };

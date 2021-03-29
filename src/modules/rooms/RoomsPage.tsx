@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Box, Button, Grid} from '@material-ui/core';
+import {Button, Grid} from '@material-ui/core';
 import {CreateRoom} from './CreateRoom';
 import {JoinRoom} from './JoinRoom';
 
@@ -30,8 +30,14 @@ export const RoomsPage: React.FC = () => {
     content = <JoinRoom onBack={reset} />;
   } else {
     content = (
-      <>
-        <Box display="flex" p={1} justifyContent="center">
+      <Grid
+        container
+        justify="center"
+        direction="column"
+        spacing={2}
+        style={{height: '100%'}}
+      >
+        <Grid item container justify="center">
           <Grid item xs={12} sm={4} md={3} lg={2} xl={1}>
             <Button
               onClick={showCreate}
@@ -42,9 +48,9 @@ export const RoomsPage: React.FC = () => {
               Create room
             </Button>
           </Grid>
-        </Box>
+        </Grid>
 
-        <Box display="flex" p={1} justifyContent="center">
+        <Grid item container justify="center">
           <Grid item xs={12} sm={4} md={3} lg={2} xl={1}>
             <Button
               onClick={showJoin}
@@ -55,20 +61,10 @@ export const RoomsPage: React.FC = () => {
               Join room
             </Button>
           </Grid>
-        </Box>
-      </>
+        </Grid>
+      </Grid>
     );
   }
 
-  return (
-    <Box
-      display="flex"
-      height="100%"
-      alignContent="center"
-      justifyContent="center"
-      flexDirection="column"
-    >
-      {content}
-    </Box>
-  );
+  return content;
 };

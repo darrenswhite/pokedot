@@ -59,6 +59,8 @@ const createPlayer = roomId => {
     player = {
       id,
       name: 'Anonymous',
+      ready: false,
+      team: [],
     };
   }
 

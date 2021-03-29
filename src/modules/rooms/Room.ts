@@ -24,6 +24,7 @@ export interface Player {
   id: PlayerId;
   name: string;
   team: Pokemon[];
+  ready: boolean;
 }
 
 export interface Pokemon {
