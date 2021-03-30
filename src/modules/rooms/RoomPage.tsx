@@ -1,65 +1,21 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {useRouter} from 'next/router';
 import {CircularProgress, Grid, Typography} from '@material-ui/core';
-import {getSocket, useSocket} from '../../hooks/useSocket';
-import {Player, PlayerId, Room, ROOM_ID_LENGTH} from './Room';
+import {useRoom} from '../../hooks/useRoom';
 import {RoomInstance} from './RoomInstance';
 
 export const RoomPage: React.FC = () => {
-  const router = useRouter();
-  const roomId = router.query.roomId;
-  const socket = getSocket();
-  const [joinRoomError, setJoinRoomError] = useState<string>('');
-  const [room, setRoom] = useState<Room | null>(null);
-  const [playerId, setPlayerId] = useState<PlayerId>('');
+  const {query} = useRouter();
+  const roomId = typeof query.roomId === 'string' ? query.roomId : '';
+  const {room, state, error, joinRoom} = useRoom();
   let content;
-
-  const joinRoom = () => {
-    setRoom(null);
-    setPlayerId('');
-    setJoinRoomError('');
-
-    if (roomId?.length === ROOM_ID_LENGTH) {
-      socket.emit(
-        'join-room',
-        roomId,
-        playerId,
-        (event: string, room: Room, playerId: PlayerId) => {
-          if (event === 'room-joined') {
-            setRoom(room);
-            setPlayerId(playerId);
-          } else if (event === 'room-invalid') {
-            setJoinRoomError('Room does not exist');
-          } else if (event === 'room-join-error') {
-            setJoinRoomError('Failed to join room');
-          } else {
-            setJoinRoomError('Unknown error occurred');
-          }
-        }
-      );
-    } else {
-      setJoinRoomError('Invalid room code');
-    }
-  };
-
-  useSocket('connect', joinRoom);
+  let player;
 
   useEffect(() => {
-    if (socket.connected) {
-      joinRoom();
-    }
-  }, [socket.connected, roomId]);
+    joinRoom(roomId);
+  }, [roomId]);
 
-  useSocket('players-updated', (players: Record<PlayerId, Player>) => {
-    if (room) {
-      setRoom({
-        ...room,
-        players,
-      });
-    }
-  });
-
-  if (joinRoomError) {
+  if (error) {
     content = (
       <Grid
         container
@@ -68,12 +24,12 @@ export const RoomPage: React.FC = () => {
         style={{height: '100%'}}
       >
         <Grid item>
-          <Typography>{joinRoomError}</Typography>
+          <Typography>{error}</Typography>
         </Grid>
       </Grid>
     );
-  } else if (room && playerId) {
-    content = <RoomInstance room={room} playerId={playerId} />;
+  } else if (room && state && (player = state.players.get(room.sessionId))) {
+    content = <RoomInstance room={room} state={state} player={player} />;
   } else {
     content = (
       <Grid

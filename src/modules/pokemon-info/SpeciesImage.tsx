@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {makeStyles, Tooltip} from '@material-ui/core';
 import clsx from 'clsx';
 import {Icons} from '@pkmn/img';
-import {SpeciesBottomDrawerContext} from './SpeciesBottomDrawer';
+import {SpeciesContext} from './SpeciesProvider';
 
 const useStyle = makeStyles(() => ({
   icon: {
@@ -22,7 +22,7 @@ export const SpeciesImage: React.FC<SpeciesImageProps> = ({
   moreInfo,
 }: SpeciesImageProps) => {
   const classes = useStyle();
-  const {setOpen, setSpecies} = useContext(SpeciesBottomDrawerContext);
+  const {setOpen, setSpecies} = useContext(SpeciesContext);
   const tooltipTitle = moreInfo ? 'Click for more info' : '';
 
   const showMoreInfo = () => {

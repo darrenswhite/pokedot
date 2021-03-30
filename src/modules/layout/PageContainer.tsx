@@ -1,12 +1,17 @@
-import React, {useState} from 'react';
+import React from 'react';
 import dynamic from 'next/dynamic';
 import {Container, makeStyles} from '@material-ui/core';
 import {Header} from './Header';
 import {Footer} from './Footer';
-import {SpeciesBottomDrawerContext} from '../pokemon-info/SpeciesBottomDrawer';
+import {SpeciesProviderProps} from '../pokemon-info/SpeciesProvider';
+import {RoomProvider} from '../rooms/RoomProvider';
 
 const SpeciesBottomDrawer = dynamic<unknown>(() =>
   import('../pokemon-info/SpeciesBottomDrawer').then(m => m.SpeciesBottomDrawer)
+);
+
+const SpeciesProvider = dynamic<SpeciesProviderProps>(() =>
+  import('../pokemon-info/SpeciesProvider').then(m => m.SpeciesProvider)
 );
 
 type PageContainerProps = {
@@ -41,8 +46,6 @@ const useStyles = makeStyles(theme => ({
 export const PageContainer: React.FC<PageContainerProps> = ({
   children,
 }: PageContainerProps) => {
-  const [open, setOpen] = useState(false);
-  const [species, setSpecies] = useState('');
   const classes = useStyles();
 
   return (
@@ -50,17 +53,17 @@ export const PageContainer: React.FC<PageContainerProps> = ({
       <div className={classes.wrapper}>
         <Header />
 
-        <SpeciesBottomDrawerContext.Provider
-          value={{open, setOpen, species, setSpecies}}
-        >
-          <main className={classes.main}>
-            <Container maxWidth={false} className={classes.container}>
-              {children}
-            </Container>
-          </main>
+        <RoomProvider>
+          <SpeciesProvider>
+            <main className={classes.main}>
+              <Container maxWidth={false} className={classes.container}>
+                {children}
+              </Container>
+            </main>
 
-          <SpeciesBottomDrawer />
-        </SpeciesBottomDrawerContext.Provider>
+            <SpeciesBottomDrawer />
+          </SpeciesProvider>
+        </RoomProvider>
 
         <Footer />
       </div>

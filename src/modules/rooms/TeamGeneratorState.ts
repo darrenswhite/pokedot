@@ -1,17 +1,12 @@
 import {GenerationNum} from '@pkmn/types';
+import {ArraySchema, MapSchema} from '@colyseus/schema';
 
-export type RoomId = string;
-export type PlayerId = string;
-
-export const ROOM_ID_LENGTH = 4;
-
-export interface Room {
-  id: RoomId;
-  options: RoomOptions;
-  players: Record<PlayerId, Player>;
+export interface TeamGeneratorState {
+  options: TeamGeneratorOptions;
+  players: MapSchema<Player>;
 }
 
-export interface RoomOptions {
+export interface TeamGeneratorOptions {
   teamSize: number;
   poolSize: number;
   legendaries: number;
@@ -21,9 +16,9 @@ export interface RoomOptions {
 }
 
 export interface Player {
-  id: PlayerId;
+  id: string;
   name: string;
-  team: Pokemon[];
+  team: ArraySchema<Pokemon>;
   ready: boolean;
 }
 

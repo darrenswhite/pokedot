@@ -1,18 +1,11 @@
-import React, {createContext, useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Box, Drawer} from '@material-ui/core';
-import {noop} from 'lodash/fp';
 import {PokeInfo} from '../../pkmn/PokeInfo';
 import {SpeciesInfo} from './SpeciesInfo';
-
-export const SpeciesBottomDrawerContext = createContext({
-  open: false,
-  setOpen: noop,
-  species: '',
-  setSpecies: noop,
-});
+import {SpeciesContext} from './SpeciesProvider';
 
 export const SpeciesBottomDrawer: React.FC = () => {
-  const {open, setOpen, species} = useContext(SpeciesBottomDrawerContext);
+  const {open, setOpen, species} = useContext(SpeciesContext);
   const [info, setInfo] = useState<PokeInfo | undefined>();
   let content;
 

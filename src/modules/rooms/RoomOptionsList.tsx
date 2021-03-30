@@ -9,7 +9,7 @@ import {
   Paper,
 } from '@material-ui/core';
 import React from 'react';
-import {RoomOptions} from './Room';
+import {TeamGeneratorOptions} from './TeamGeneratorState';
 
 const useStyles = makeStyles(() => ({
   paper: {
@@ -18,7 +18,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export interface RoomOptionsListProps {
-  options: RoomOptions;
+  options: TeamGeneratorOptions;
 }
 
 export const RoomOptionsList: React.FC<RoomOptionsListProps> = ({

@@ -1,16 +1,14 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useRouter} from 'next/router';
 import {Button, Grid, Slider, Switch, Typography} from '@material-ui/core';
-import {getSocket} from '../../hooks/useSocket';
-import {RoomId, RoomOptions} from './Room';
+import {TeamGeneratorOptions} from './TeamGeneratorState';
+import {useRoom} from '../../hooks/useRoom';
 
 const DEFAULT_TEAM_SIZE = 6;
 const DEFAULT_POOL_SIZE = 5;
 
-const socket = getSocket();
-
 interface Slider {
-  field: keyof RoomOptions;
+  field: keyof TeamGeneratorOptions;
   label: string;
   min: number;
   max: number;
@@ -23,14 +21,25 @@ export interface CreateRoomProps {
 export const CreateRoom: React.FC<CreateRoomProps> = ({
   onBack,
 }: CreateRoomProps) => {
+  const {room, createRoom} = useRoom();
   const router = useRouter();
-  const [options, setOptions] = useState<RoomOptions>({
+  const [options, setOptions] = useState<TeamGeneratorOptions>({
     teamSize: DEFAULT_TEAM_SIZE,
     poolSize: DEFAULT_POOL_SIZE,
     legendaries: 0,
     mythicals: 0,
     exclusivePools: false,
   });
+
+  const createNewRoom = () => {
+    createRoom('team-generator', options);
+  };
+
+  useEffect(() => {
+    if (room) {
+      router.push(`/rooms/${room.id}`);
+    }
+  }, [room]);
 
   const sliders: Slider[] = [
     {
@@ -59,18 +68,7 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
     },
   ];
 
-  const createRoom = () => {
-    socket.emit('create-room', options, (event: string, roomId: RoomId) => {
-      if (event === 'room-created') {
-        router.push(`/rooms/${roomId}`);
-      } else if (event === 'room-create-error') {
-        // TODO display friendly error
-        console.error('Failed to create room.');
-      }
-    });
-  };
-
-  const setOptionValue = (key: keyof RoomOptions) => {
+  const setOptionValue = (key: keyof TeamGeneratorOptions) => {
     return (_: React.ChangeEvent<unknown>, newValue: unknown) => {
       setOptions({
         ...options,
@@ -138,7 +136,7 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
       <Grid item container justify="center">
         <Grid item xs={12} sm={4} md={3} lg={2} xl={1}>
           <Button
-            onClick={createRoom}
+            onClick={createNewRoom}
             variant="contained"
             color="primary"
             fullWidth

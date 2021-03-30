@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core';
 import {Check, Clear} from '@material-ui/icons';
 import {every} from 'lodash/fp';
-import {Player, PlayerId} from './Room';
+import {Player} from './TeamGeneratorState';
 
 const useStyles = makeStyles(() => ({
   paper: {
@@ -21,7 +21,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export interface PlayerListProps {
-  players: Record<PlayerId, Player>;
+  players: Player[];
   currentPool: number;
 }
 
@@ -54,7 +54,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
           }
         >
           <Divider />
-          {Object.values(players).map(player => (
+          {players.map(player => (
             <ListItem key={player.id}>
               <ListItemIcon>
                 {isPlayerReady(player) ? <Check /> : <Clear />}
