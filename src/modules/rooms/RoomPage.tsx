@@ -23,6 +23,7 @@ export const RoomPage: React.FC = () => {
       socket.emit(
         'join-room',
         roomId,
+        playerId,
         (event: string, room: Room, playerId: PlayerId) => {
           if (event === 'room-joined') {
             setRoom(room);

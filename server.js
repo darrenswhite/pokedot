@@ -61,30 +61,46 @@ const createPlayer = roomId => {
       name: 'Anonymous',
       ready: false,
       team: [],
+      connected: true,
     };
   }
 
   return player;
 };
 
-const removePlayerFromCurrentRoom = socket => {
+const disconnectPlayerFromCurrentRoom = socket => {
   const roomId = socket.roomId;
   const playerId = socket.playerId;
 
   if (roomId in rooms && playerId in rooms[roomId].players) {
-    delete rooms[roomId].players[socket.playerId];
+    rooms[roomId].players[socket.playerId].connected = false;
 
-    console.log(`Removed playing ${playerId} from room ${roomId}`);
+    playersUpdated(socket);
 
-    if (Object.keys(rooms[roomId].players).length > 0) {
-      playersUpdated(socket);
-    } else {
-      delete rooms[roomId];
+    console.log(`Disconnected player ${playerId} from room ${roomId}.`);
+  }
+};
 
-      console.log(`Removed stale room ${roomId}`);
+const removePlayerFromCurrentRoom = (socket, force) => {
+  const roomId = socket.roomId;
+  const playerId = socket.playerId;
+
+  if (roomId in rooms && playerId in rooms[roomId].players) {
+    if (force || !rooms[roomId].players[socket.playerId].connected) {
+      delete rooms[roomId].players[socket.playerId];
+
+      console.log(`Removed player ${playerId} from room ${roomId}.`);
+
+      if (Object.keys(rooms[roomId].players).length > 0) {
+        playersUpdated(socket);
+      } else {
+        delete rooms[roomId];
+
+        console.log(`Removed stale room ${roomId}.`);
+      }
+
+      socket.leave(roomId);
     }
-
-    socket.leave(roomId);
   }
 };
 
@@ -97,48 +113,70 @@ const playersUpdated = socket => {
 };
 
 io.on('connection', socket => {
-  console.log('New client connected');
+  console.log('connection: new client connected.');
 
   socket.on('create-room', (options, fn) => {
+    console.log(`create-room: creating with options ${options}...`);
+
     const room = createRoom(options);
 
     if (room) {
       fn('room-created', room.id);
 
-      console.log(`Created room ${room.id}`);
+      console.log(`create-room: created ${room.id}.`);
     } else {
-      console.error('Failed to create room');
+      console.error(`create-room: failed to create room.`);
       fn('room-create-error');
     }
   });
 
-  socket.on('join-room', (roomId, fn) => {
-    console.log(`join-room request ${roomId}`);
+  socket.on('join-room', (roomId, playerId, fn) => {
+    console.log(`join-room: joining room ${roomId}...`);
 
-    removePlayerFromCurrentRoom(socket);
+    removePlayerFromCurrentRoom(socket, true);
 
     if (roomId in rooms) {
-      const player = createPlayer(roomId);
+      if (playerId && playerId in rooms[roomId].players) {
+        console.log(
+          `join-room: player ${playerId} re-joining room ${roomId}...`
+        );
 
-      if (player) {
-        rooms[roomId].players[player.id] = player;
-
-        socket.roomId = roomId;
-        socket.playerId = player.id;
-
-        socket.join(roomId);
+        rooms[roomId].players[playerId].connected = true;
 
         playersUpdated(socket);
 
-        fn('room-joined', rooms[roomId], player.id);
+        fn('room-joined', rooms[roomId], playerId);
 
-        console.log(`Player ${player.id} joined room ${roomId}`);
+        console.log(`join-room: player ${playerId} re-joined room ${roomId}.`);
       } else {
-        console.log('Failed to create player');
-        fn('room-join-error');
+        console.log(`join-room: creating new player for room ${roomId}...`);
+
+        const player = createPlayer(roomId);
+
+        if (player) {
+          console.log(
+            `join-room: player created ${player.id} for room ${roomId}.`
+          );
+
+          rooms[roomId].players[player.id] = player;
+
+          socket.roomId = roomId;
+          socket.playerId = player.id;
+
+          socket.join(roomId);
+
+          playersUpdated(socket);
+
+          fn('room-joined', rooms[roomId], player.id);
+
+          console.log(`join-room: player ${player.id} joined room ${roomId}.`);
+        } else {
+          console.log(`join-room: failed to create player for room ${roomId}.`);
+          fn('room-join-error');
+        }
       }
     } else {
-      console.log('Room does not exist');
+      console.log(`join-room: room does not exist ${roomId}.`);
       fn('room-invalid');
     }
   });
@@ -156,14 +194,20 @@ io.on('connection', socket => {
 
       playersUpdated(socket);
     } else {
-      console.log('Player not valid');
+      console.log(
+        `update-player: player ${playerId} not valid for room ${roomId}.`
+      );
     }
   });
 
   socket.on('disconnect', reason => {
-    console.log('Client disconnected ', reason);
+    console.log(`disconnect: client disconnected ${reason}.`);
 
-    removePlayerFromCurrentRoom(socket);
+    disconnectPlayerFromCurrentRoom(socket);
+
+    setTimeout(() => {
+      removePlayerFromCurrentRoom(socket, false);
+    }, 30000);
   });
 });
 
