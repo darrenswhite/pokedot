@@ -160,8 +160,8 @@ io.on('connection', socket => {
     }
   });
 
-  socket.on('disconnect', () => {
-    console.log('Client disonnected');
+  socket.on('disconnect', reason => {
+    console.log('Client disconnected ', reason);
 
     removePlayerFromCurrentRoom(socket);
   });
