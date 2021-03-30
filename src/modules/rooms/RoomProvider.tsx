@@ -1,7 +1,8 @@
 import React, {createContext, useState} from 'react';
-import {Client, Room} from 'colyseus.js';
+import {Room} from 'colyseus.js';
 import {noop} from 'lodash/fp';
 import {TeamGeneratorState} from './TeamGeneratorState';
+import {Client} from '../../colyseus/Client';
 
 const client = new Client();
 
