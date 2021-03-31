@@ -1,18 +1,20 @@
-import React, {ReactElement, useEffect, useState} from 'react';
 import {Grid, makeStyles} from '@material-ui/core';
 import {TypeName} from '@pkmn/types';
-import {PartialPokemonSet} from '../../pkmn/PokeInfo';
+import React, {ReactElement, useEffect, useState} from 'react';
+
 import {Matrix} from '../../pkmn/matrix/Matrix';
 import {
   TypeChartMatrix,
   TypeChartMatrixProps,
 } from '../../pkmn/matrix/TypeChartMatrix';
+import {PartialPokemonSet} from '../../pkmn/PokeInfo';
+import {SpeciesImage} from '../pokemon-info/SpeciesImage';
+import {TypeImage} from '../pokemon-info/TypeImage';
 import {PCol} from '../table/model/PCol';
 import {PValue} from '../table/model/PRow';
 import {PMatrixTable} from '../table/PMatrixTable';
+
 import {EffectivenessChip} from './EffectivenessChip';
-import {SpeciesImage} from '../pokemon-info/SpeciesImage';
-import {TypeImage} from '../pokemon-info/TypeImage';
 
 const renderCell = (
   key: keyof TypeChartMatrixProps
@@ -122,7 +124,7 @@ export const TypeChartTable: React.FC<TypeChartTableProps> = ({
 
   useEffect(() => {
     matrixConstructor(pokemonSets).then(setMatrix);
-  }, [pokemonSets]);
+  }, [matrixConstructor, pokemonSets]);
 
   const columnFieldOverrides: Partial<PCol> = {
     renderCell: renderCell(columnField),

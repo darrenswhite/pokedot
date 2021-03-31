@@ -1,13 +1,13 @@
-import React from 'react';
 import {
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  makeStyles,
   SwipeableDrawer,
+  makeStyles,
 } from '@material-ui/core';
 import {Email, GitHub, MonetizationOn} from '@material-ui/icons';
+import React from 'react';
 
 const GITHUB_URL = 'https://github.com/darrenswhite/pokedot';
 const PAYPAL_URL =

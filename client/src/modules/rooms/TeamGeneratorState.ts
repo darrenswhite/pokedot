@@ -1,5 +1,5 @@
-import {GenerationNum} from '@pkmn/types';
 import {ArraySchema, MapSchema} from '@colyseus/schema';
+import {GenerationNum} from '@pkmn/types';
 
 export interface TeamGeneratorState {
   options: TeamGeneratorOptions;

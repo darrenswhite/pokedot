@@ -1,6 +1,8 @@
-import React, {useContext, useEffect, useState} from 'react';
 import {Box, Drawer} from '@material-ui/core';
+import React, {useContext, useEffect, useState} from 'react';
+
 import {PokeInfo} from '../../pkmn/PokeInfo';
+
 import {SpeciesInfo} from './SpeciesInfo';
 import {SpeciesContext} from './SpeciesProvider';
 

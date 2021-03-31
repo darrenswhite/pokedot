@@ -1,8 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {useRouter} from 'next/router';
 import {Button, Grid, Slider, Switch, Typography} from '@material-ui/core';
-import {TeamGeneratorOptions} from './TeamGeneratorState';
+import {useRouter} from 'next/router';
+import React, {useEffect, useState} from 'react';
+
 import {useRoom} from '../../hooks/useRoom';
+
+import {TeamGeneratorOptions} from './TeamGeneratorState';
 
 const DEFAULT_TEAM_SIZE = 6;
 const DEFAULT_POOL_SIZE = 5;
@@ -39,7 +41,7 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
     if (room) {
       router.push(`/rooms/${room.id}`);
     }
-  }, [room]);
+  }, [router, room]);
 
   const sliders: Slider[] = [
     {

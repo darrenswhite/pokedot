@@ -1,7 +1,8 @@
-import React, {useContext} from 'react';
-import {makeStyles, Tooltip} from '@material-ui/core';
-import clsx from 'clsx';
+import {Tooltip, makeStyles} from '@material-ui/core';
 import {Icons} from '@pkmn/img';
+import clsx from 'clsx';
+import React, {useContext} from 'react';
+
 import {SpeciesContext} from './SpeciesProvider';
 
 const useStyle = makeStyles(() => ({

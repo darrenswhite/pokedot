@@ -1,0 +1,12 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+cd client
+npm run format
+npm run lint:fix
+
+cd ..
+
+cd server
+npm run format
+npm run lint:fix

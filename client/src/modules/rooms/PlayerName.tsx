@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
 import {Button, Grid, TextField} from '@material-ui/core';
+import React, {useState} from 'react';
 
 export interface PlayerNameProps {
   onSubmit: (name: string) => void;

@@ -5,10 +5,11 @@ import {
   ListItem,
   ListItemText,
   ListSubheader,
-  makeStyles,
   Paper,
+  makeStyles,
 } from '@material-ui/core';
 import React from 'react';
+
 import {TeamGeneratorOptions} from './TeamGeneratorState';
 
 const useStyles = makeStyles(() => ({

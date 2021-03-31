@@ -1,7 +1,9 @@
-import React, {useEffect} from 'react';
-import {useRouter} from 'next/router';
 import {CircularProgress, Grid, Typography} from '@material-ui/core';
+import {useRouter} from 'next/router';
+import React, {useEffect} from 'react';
+
 import {useRoom} from '../../hooks/useRoom';
+
 import {RoomInstance} from './RoomInstance';
 
 export const RoomPage: React.FC = () => {
@@ -13,7 +15,7 @@ export const RoomPage: React.FC = () => {
 
   useEffect(() => {
     joinRoom(roomId);
-  }, [roomId]);
+  }, [joinRoom, roomId]);
 
   if (error) {
     content = (

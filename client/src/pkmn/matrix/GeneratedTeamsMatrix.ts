@@ -1,7 +1,8 @@
 import {find, range} from 'lodash/fp';
+
 import {Matrix} from '../../pkmn/matrix/Matrix';
-import {GeneratedTeam, TeamGeneratorOptions} from '../../pkmn/TeamGenerator';
 import {PokeInfo} from '../../pkmn/PokeInfo';
+import {GeneratedTeam, TeamGeneratorOptions} from '../../pkmn/TeamGenerator';
 
 export interface GeneratedTeamsMatrixProps {
   player: string;

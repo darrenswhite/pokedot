@@ -1,4 +1,5 @@
 import {PartialPokemonSet} from '../PokeInfo';
+
 import {TypeChartMatrix} from './TypeChartMatrix';
 
 export class ResistanceMatrix extends TypeChartMatrix {

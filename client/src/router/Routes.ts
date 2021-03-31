@@ -1,6 +1,6 @@
+import {find, flow, values} from 'lodash/fp';
 import dynamic from 'next/dynamic';
 import {NextRouter} from 'next/router';
-import {values, find, flow} from 'lodash/fp';
 
 export interface Route {
   displayName: string;

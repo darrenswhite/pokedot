@@ -1,5 +1,5 @@
-import React, {createContext, useState} from 'react';
 import {noop} from 'lodash/fp';
+import React, {createContext, useState} from 'react';
 
 export interface SpeciesContextProps {
   open: boolean;

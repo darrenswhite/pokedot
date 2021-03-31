@@ -1,10 +1,12 @@
-import React from 'react';
-import dynamic from 'next/dynamic';
 import {Container, makeStyles} from '@material-ui/core';
-import {Header} from './Header';
-import {Footer} from './Footer';
+import dynamic from 'next/dynamic';
+import React from 'react';
+
 import {SpeciesProviderProps} from '../pokemon-info/SpeciesProvider';
 import {RoomProvider} from '../rooms/RoomProvider';
+
+import {Footer} from './Footer';
+import {Header} from './Header';
 
 const SpeciesBottomDrawer = dynamic<unknown>(() =>
   import('../pokemon-info/SpeciesBottomDrawer').then(m => m.SpeciesBottomDrawer)

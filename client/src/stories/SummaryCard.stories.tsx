@@ -1,5 +1,6 @@
-import React from 'react';
 import {Story} from '@storybook/react';
+import React from 'react';
+
 import {SummaryCard, SummaryCardProps} from '../modules/coverage/SummaryCard';
 
 export default {

@@ -1,6 +1,7 @@
-import {useContext, useState} from 'react';
 import {Client, Room} from 'colyseus.js';
 import {cloneDeep} from 'lodash/fp';
+import {useContext, useState} from 'react';
+
 import {RoomContext} from '../modules/rooms/RoomProvider';
 import {
   TeamGeneratorOptions,

@@ -1,9 +1,11 @@
-import React, {ReactElement} from 'react';
-import {colors, Grid, makeStyles, Typography} from '@material-ui/core';
-import clsx from 'clsx';
+import {Grid, Typography, colors, makeStyles} from '@material-ui/core';
 import {Sprites} from '@pkmn/img';
 import {StatName, StatsTable} from '@pkmn/types';
+import clsx from 'clsx';
+import React, {ReactElement} from 'react';
+
 import {PokeInfo, STAT_NAMES} from '../../pkmn/PokeInfo';
+
 import {TypeImage} from './TypeImage';
 
 const MAX_STAT = 255;

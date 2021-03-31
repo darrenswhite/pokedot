@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import {Button, Grid, TextField, makeStyles} from '@material-ui/core';
 import {useRouter} from 'next/router';
-import {Button, Grid, makeStyles, TextField} from '@material-ui/core';
+import React, {useState} from 'react';
+
 import {ROOM_ID_LENGTH} from '../../hooks/useRoom';
 
 const useStyles = makeStyles(() => ({

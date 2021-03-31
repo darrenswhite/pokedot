@@ -1,5 +1,6 @@
-import React, {ReactElement, useState} from 'react';
 import {Table, TableBody, TableContainer, TableRow} from '@material-ui/core';
+import React, {ReactElement, useState} from 'react';
+
 import {PCol} from './model/PCol';
 import {PRow} from './model/PRow';
 import {PSortDirection, PSortItem} from './model/PSort';

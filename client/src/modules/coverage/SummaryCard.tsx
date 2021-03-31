@@ -1,4 +1,3 @@
-import React, {ReactElement, useEffect, useState} from 'react';
 import {
   Box,
   Card,
@@ -9,13 +8,15 @@ import {
 } from '@material-ui/core';
 import {TypeName} from '@pkmn/types';
 import {filter, flow, map, reduce, reject} from 'lodash/fp';
-import {PartialPokemonSet, PokeInfo} from '../../pkmn/PokeInfo';
+import React, {ReactElement, useEffect, useState} from 'react';
+
 import {CoverageMatrix} from '../../pkmn/matrix/CoverageMatrix';
 import {ResistanceMatrix} from '../../pkmn/matrix/ResistanceMatrix';
 import {
   TypeChartMatrix,
   TypeChartMatrixProps,
 } from '../../pkmn/matrix/TypeChartMatrix';
+import {PartialPokemonSet, PokeInfo} from '../../pkmn/PokeInfo';
 import {TypeImage} from '../pokemon-info/TypeImage';
 
 const EFFECTIVENESS_RESIST = [0.0, 0.25, 0.5];

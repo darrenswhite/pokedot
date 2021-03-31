@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Box,
   Divider,
@@ -7,11 +6,13 @@ import {
   ListItemIcon,
   ListItemText,
   ListSubheader,
-  makeStyles,
   Paper,
+  makeStyles,
 } from '@material-ui/core';
 import {Check, Clear} from '@material-ui/icons';
 import {every} from 'lodash/fp';
+import React from 'react';
+
 import {Player} from './TeamGeneratorState';
 
 const useStyles = makeStyles(() => ({

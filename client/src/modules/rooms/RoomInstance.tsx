@@ -1,9 +1,10 @@
-import React from 'react';
-import {Room} from 'colyseus.js';
 import {Button, Grid, Typography} from '@material-ui/core';
+import {Room} from 'colyseus.js';
 import {every, map, min} from 'lodash/fp';
-import {PlayerName} from './PlayerName';
+import React from 'react';
+
 import {PlayerList} from './PlayerList';
+import {PlayerName} from './PlayerName';
 import {RoomOptionsList} from './RoomOptionsList';
 import {
   Player,

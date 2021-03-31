@@ -1,13 +1,14 @@
 import React, {ReactElement, useEffect, useState} from 'react';
-import {GeneratedTeam, TeamGeneratorOptions} from '../../pkmn/TeamGenerator';
-import {PMatrixTable} from '../table/PMatrixTable';
-import {PCol} from '../table/model/PCol';
-import {PValue} from '../table/model/PRow';
-import {SpeciesImage} from '../pokemon-info/SpeciesImage';
+
 import {
   GeneratedTeamsMatrix,
   GeneratedTeamsMatrixProps,
 } from '../../pkmn/matrix/GeneratedTeamsMatrix';
+import {GeneratedTeam, TeamGeneratorOptions} from '../../pkmn/TeamGenerator';
+import {SpeciesImage} from '../pokemon-info/SpeciesImage';
+import {PCol} from '../table/model/PCol';
+import {PValue} from '../table/model/PRow';
+import {PMatrixTable} from '../table/PMatrixTable';
 
 export interface GeneratedTeamsTableProps {
   teams: GeneratedTeam[];
@@ -61,7 +62,7 @@ export const GeneratedTeamsTable: React.FC<GeneratedTeamsTableProps> = ({
 
       return () => clearInterval(interval);
     }
-  }, [teams, revealed]);
+  }, [teams, revealed, options.reveal, options.sampleSize]);
 
   return (
     <PMatrixTable

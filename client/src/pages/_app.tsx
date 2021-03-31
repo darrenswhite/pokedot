@@ -1,11 +1,12 @@
-import React, {useEffect} from 'react';
-import Head from 'next/head';
-import {AppProps} from 'next/app';
-import {NextRouter, useRouter} from 'next/router';
 import {CssBaseline, ThemeProvider} from '@material-ui/core';
-import {Theme} from '../theme/Theme';
+import {AppProps} from 'next/app';
+import Head from 'next/head';
+import {NextRouter, useRouter} from 'next/router';
+import React, {useEffect} from 'react';
+
 import {PageContainer} from '../modules/layout/PageContainer';
 import {getCurrentRoute} from '../router/Routes';
+import {Theme} from '../theme/Theme';
 
 const getTitle = (router: NextRouter): string => {
   const route = getCurrentRoute(router);

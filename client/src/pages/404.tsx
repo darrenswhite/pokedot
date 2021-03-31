@@ -1,5 +1,6 @@
 import React from 'react';
-import Error from '../modules/layout/Error';
+
+import {Error} from '../modules/layout/Error';
 
 const messages = [
   "What do you want? You can't pass through here right now! We're on guard duty! It's very important!",

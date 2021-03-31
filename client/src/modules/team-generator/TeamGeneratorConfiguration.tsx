@@ -1,17 +1,18 @@
-import React, {useState} from 'react';
 import {
   Button,
   Card,
-  CardHeader,
   CardContent,
+  CardHeader,
   Grid,
-  makeStyles,
   Slider,
   TextField,
   Typography,
+  makeStyles,
 } from '@material-ui/core';
 import {Add} from '@material-ui/icons';
 import {isEmpty} from 'lodash/fp';
+import React, {useState} from 'react';
+
 import {TeamGeneratorOptions} from '../../pkmn/TeamGenerator';
 
 const useStyles = makeStyles(theme => ({

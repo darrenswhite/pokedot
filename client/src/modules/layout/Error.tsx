@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
-import {Box, Grid, makeStyles, Typography} from '@material-ui/core';
+import {Box, Grid, Typography, makeStyles} from '@material-ui/core';
 import {sample} from 'lodash/fp';
+import React, {useEffect, useState} from 'react';
 
 const useStyles = makeStyles(theme => ({
   avatar: {
@@ -18,7 +18,7 @@ const RandomMessage: React.FC<{messages: string[]}> = ({
 
   useEffect(() => {
     setMessage(sample(messages));
-  }, []);
+  }, [messages]);
 
   return (
     <Typography variant="body1" align="center">
@@ -45,7 +45,7 @@ export const Error: React.FC<ErrorProps> = ({
     import('@pkmn/img').then(({Sprites}) => {
       setAvatar(Sprites.getAvatar(avatarName));
     });
-  }, []);
+  }, [avatarName]);
 
   return (
     <Box

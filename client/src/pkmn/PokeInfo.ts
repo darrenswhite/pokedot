@@ -1,3 +1,4 @@
+import {Generation, Generations, Specie} from '@pkmn/data';
 import {
   AbilityName,
   EggGroup,
@@ -7,7 +8,6 @@ import {
   StatsTable,
   TypeName,
 } from '@pkmn/dex-types';
-import {Generation, Generations, Specie} from '@pkmn/data';
 import {map} from 'lodash/fp';
 
 export type TypeChart = Record<TypeName, number>;

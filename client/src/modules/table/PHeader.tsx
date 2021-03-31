@@ -1,5 +1,6 @@
-import React, {ReactElement} from 'react';
 import {TableHead, TableRow, TableSortLabel} from '@material-ui/core';
+import React, {ReactElement} from 'react';
+
 import {PCol} from './model/PCol';
 import {PSortItem} from './model/PSort';
 import {PCell} from './PCell';

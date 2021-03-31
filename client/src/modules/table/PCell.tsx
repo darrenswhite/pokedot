@@ -1,6 +1,7 @@
-import React from 'react';
-import {makeStyles, TableCell} from '@material-ui/core';
+import {TableCell, makeStyles} from '@material-ui/core';
 import clsx from 'clsx';
+import React from 'react';
+
 import {PSortDirection} from './model/PSort';
 
 export interface PCellProps {

@@ -1,0 +1,20 @@
+{
+  "name": "pokedot",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "pokedot-client",
+      "pokedot-server"
+    ]
+  },
+  "dependencies": {
+    "@commitlint/cli": "^12.1.0",
+    "@commitlint/config-conventional": "^12.1.0"
+  },
+  "devDependencies": {
+    "husky": "^6.0.0"
+  },
+  "scripts": {
+    "postinstall": "husky install"
+  }
+}

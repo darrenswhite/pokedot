@@ -1,14 +1,16 @@
-import React, {useState} from 'react';
-import dynamic from 'next/dynamic';
 import {Button, Grid} from '@material-ui/core';
 import {Send} from '@material-ui/icons';
-import {TeamGeneratorConfiguration} from './TeamGeneratorConfiguration';
+import dynamic from 'next/dynamic';
+import React, {useState} from 'react';
+
 import {
   GeneratedTeam,
   TeamGenerator,
   TeamGeneratorOptions,
 } from '../../pkmn/TeamGenerator';
+
 import {GeneratedTeamsTableProps} from './GeneratedTeamsTable';
+import {TeamGeneratorConfiguration} from './TeamGeneratorConfiguration';
 
 const GeneratedTeamsTable = dynamic<GeneratedTeamsTableProps>(() =>
   import('./GeneratedTeamsTable').then(m => m.GeneratedTeamsTable)

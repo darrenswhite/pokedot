@@ -1,10 +1,12 @@
-import React, {useState} from 'react';
-import dynamic from 'next/dynamic';
 import {Grid} from '@material-ui/core';
+import dynamic from 'next/dynamic';
+import React, {useState} from 'react';
+
+import {PartialPokemonSet} from '../../pkmn/PokeInfo';
 import {DefensiveTableProps} from '../coverage/DefensiveTable';
 import {SummaryCardProps} from '../coverage/SummaryCard';
+
 import {SpeciesSearch} from './SpeciesSearch';
-import {PartialPokemonSet} from '../../pkmn/PokeInfo';
 
 const DefensiveTable = dynamic<DefensiveTableProps>(() =>
   import('../coverage/DefensiveTable').then(m => m.DefensiveTable)

@@ -1,4 +1,3 @@
-import React, {useEffect, useState} from 'react';
 import {Grid, TextField, Typography} from '@material-ui/core';
 import {
   Autocomplete,
@@ -6,7 +5,10 @@ import {
   createFilterOptions,
 } from '@material-ui/lab';
 import {findAll} from 'highlight-words-core';
+import React, {useEffect, useState} from 'react';
+
 import {PartialPokemonSet, PokeInfo} from '../../pkmn/PokeInfo';
+
 import {SpeciesImage} from './SpeciesImage';
 
 const renderOption = (

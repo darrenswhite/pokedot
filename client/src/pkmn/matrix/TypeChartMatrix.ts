@@ -1,6 +1,8 @@
 import {TypeName} from '@pkmn/types';
-import {PartialPokemonSet, PokeInfo, TypeChart} from '../PokeInfo';
 import {flow, map} from 'lodash/fp';
+
+import {PartialPokemonSet, PokeInfo, TypeChart} from '../PokeInfo';
+
 import {Matrix} from './Matrix';
 
 export interface TypeChartMatrixProps {

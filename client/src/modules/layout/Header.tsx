@@ -1,18 +1,20 @@
-import React, {ReactElement, useState} from 'react';
-import dynamic from 'next/dynamic';
-import {useRouter} from 'next/router';
 import {
   AppBar,
   IconButton,
-  makeStyles,
   Tab,
   Tabs,
   Toolbar,
   Typography,
+  makeStyles,
 } from '@material-ui/core';
 import {Menu} from '@material-ui/icons';
 import {flow, map, values} from 'lodash/fp';
-import {getCurrentRoute, Route, Routes} from '../../router/Routes';
+import dynamic from 'next/dynamic';
+import {useRouter} from 'next/router';
+import React, {ReactElement, useState} from 'react';
+
+import {Route, Routes, getCurrentRoute} from '../../router/Routes';
+
 import {DrawerProps} from './Drawer';
 
 const Drawer = dynamic<DrawerProps>(() =>

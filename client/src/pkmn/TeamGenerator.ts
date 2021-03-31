@@ -1,5 +1,6 @@
 import {GenerationNum} from '@pkmn/types';
 import {filter, map, sampleSize} from 'lodash/fp';
+
 import {PokeInfo} from './PokeInfo';
 
 export interface GeneratedTeam {

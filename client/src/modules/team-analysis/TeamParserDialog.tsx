@@ -1,4 +1,3 @@
-import React, {useRef, useState} from 'react';
 import {
   Button,
   Dialog,
@@ -9,6 +8,8 @@ import {
   TextField,
 } from '@material-ui/core';
 import {Team} from '@pkmn/sets';
+import React, {useRef, useState} from 'react';
+
 import {PartialPokemonSet} from '../../pkmn/PokeInfo';
 
 export interface TeamParserDialogProps {
