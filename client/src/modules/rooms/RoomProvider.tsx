@@ -2,9 +2,11 @@ import {Client, Room} from 'colyseus.js';
 import {noop} from 'lodash/fp';
 import React, {createContext, useState} from 'react';
 
+import {serverUrl} from '../../util/constants';
+
 import {TeamGeneratorState} from './TeamGeneratorState';
 
-const client = new Client('ws://localhost:8080');
+const client = new Client(serverUrl);
 
 export interface RoomContextProps {
   client: Client;
