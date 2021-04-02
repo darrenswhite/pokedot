@@ -4,10 +4,13 @@ import {Logger as PinoLogger} from 'pino';
 import {Logger} from '../../util/Logger';
 import {TeamGeneratorState} from '../TeamGeneratorState';
 
-export abstract class TeamGeneratorCommand<P = unknown> extends Command<
-  TeamGeneratorState,
-  P
-> {
+export interface TeamGeneratorCommandPayload {
+  sessionId: string;
+}
+
+export abstract class TeamGeneratorCommand<
+  P extends TeamGeneratorCommandPayload = TeamGeneratorCommandPayload
+> extends Command<TeamGeneratorState, P> {
   private _logger?: PinoLogger;
 
   constructor(payload?: P) {

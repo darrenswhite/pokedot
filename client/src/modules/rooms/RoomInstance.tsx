@@ -82,11 +82,11 @@ export const RoomInstance: React.FC<RoomInstanceProps> = ({
   let content;
 
   const setPlayerName = (name: string) => {
-    room.send('player-set-name', name);
+    room.send('PlayerSetName', {name});
   };
 
   const togglePlayerReady = () => {
-    room.send('player-set-ready', !player.ready);
+    room.send('PlayerSetReady');
   };
 
   const addToTeam = (value: Pokemon) => {

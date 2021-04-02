@@ -6,6 +6,7 @@ import {Logger} from '../util/Logger';
 
 import {OnJoinCommand} from './command/OnJoinCommand';
 import {OnLeaveCommand} from './command/OnLeaveCommand';
+import {OnMessageCommand} from './command/OnMessageCommand';
 import {OptionsProps} from './Options';
 import {Pokemon} from './Pokemon';
 import {TeamGeneratorState} from './TeamGeneratorState';
@@ -26,20 +27,19 @@ export class TeamGeneratorRoom extends Room<TeamGeneratorState> {
 
     this.setState(new TeamGeneratorState(options));
 
-    this.onMessage('player-set-name', (client, name) => {
-      const player = this.state.players.get(client.sessionId);
+    this.onMessage('*', ({sessionId}, type, payload) => {
+      this.logger.info(
+        {sessionId, type},
+        'Delegating client message to dispatcher.'
+      );
 
-      if (player) {
-        player.name = name;
-      }
-    });
-
-    this.onMessage('player-set-ready', (client, ready) => {
-      const player = this.state.players.get(client.sessionId);
-
-      if (player) {
-        player.ready = ready;
-      }
+      this.dispatcher.dispatch(
+        new OnMessageCommand({
+          sessionId,
+          type,
+          payload: {sessionId, ...payload},
+        })
+      );
     });
 
     this.onMessage('player-team-add', (client, pokemon) => {
