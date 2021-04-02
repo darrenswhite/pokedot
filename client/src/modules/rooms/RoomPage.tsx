@@ -1,21 +1,19 @@
 import {CircularProgress, Grid, Typography} from '@material-ui/core';
 import {useRouter} from 'next/router';
-import React, {useEffect} from 'react';
+import React from 'react';
 
-import {useRoom} from '../../hooks/useRoom';
+import {useJoinRoom, useRoomListeners} from '../../hooks/useRoom';
 
 import {RoomInstance} from './RoomInstance';
 
 export const RoomPage: React.FC = () => {
   const {query} = useRouter();
   const roomId = typeof query.roomId === 'string' ? query.roomId : '';
-  const {room, state, error, joinRoom} = useRoom();
+  const {room, state, error} = useJoinRoom(roomId);
   let content;
   let player;
 
-  useEffect(() => {
-    joinRoom(roomId);
-  }, [joinRoom, roomId]);
+  useRoomListeners();
 
   if (error) {
     content = (

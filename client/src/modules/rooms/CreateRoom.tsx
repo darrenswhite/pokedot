@@ -1,13 +1,14 @@
 import {Button, Grid, Slider, Switch, Typography} from '@material-ui/core';
 import {useRouter} from 'next/router';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 
-import {useRoom} from '../../hooks/useRoom';
+import {createRoom, useRoomListeners} from '../../hooks/useRoom';
 
+import {RoomContext} from './RoomProvider';
 import {TeamGeneratorOptions} from './TeamGeneratorState';
 
 const DEFAULT_TEAM_SIZE = 6;
-const DEFAULT_POOL_SIZE = 5;
+const DEFAULT_POOL_SIZE = 3;
 
 interface Slider {
   field: keyof TeamGeneratorOptions;
@@ -23,7 +24,7 @@ export interface CreateRoomProps {
 export const CreateRoom: React.FC<CreateRoomProps> = ({
   onBack,
 }: CreateRoomProps) => {
-  const {room, createRoom} = useRoom();
+  const {client, setRoom, setState} = useContext(RoomContext);
   const router = useRouter();
   const [options, setOptions] = useState<TeamGeneratorOptions>({
     teamSize: DEFAULT_TEAM_SIZE,
@@ -34,14 +35,18 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
   });
 
   const createNewRoom = () => {
-    createRoom('team-generator', options);
+    createRoom(client, 'team-generator', options)
+      .then(room => {
+        setRoom(room);
+        setState(room.state);
+        router.push(`/rooms/${room.id}`);
+      })
+      .catch(() => {
+        // TODO display friendly error
+      });
   };
 
-  useEffect(() => {
-    if (room) {
-      router.push(`/rooms/${room.id}`);
-    }
-  }, [router, room]);
+  useRoomListeners();
 
   const sliders: Slider[] = [
     {

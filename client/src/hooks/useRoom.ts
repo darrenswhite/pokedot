@@ -1,6 +1,6 @@
 import {Client, Room} from 'colyseus.js';
 import {cloneDeep} from 'lodash/fp';
-import {useContext, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 
 import {RoomContext} from '../modules/rooms/RoomProvider';
 import {
@@ -8,8 +8,10 @@ import {
   TeamGeneratorState,
 } from '../modules/rooms/TeamGeneratorState';
 
-export const ROOM_ID_LENGTH = 9;
+export const ROOM_ID_LENGTH = 4;
 
+export const LOCAL_STORAGE_KEY_ROOM_ID = 'pokedot-room-id';
+export const LOCAL_STORAGE_KEY_SESSION_ID = 'pokedot-session-id';
 export const LOCAL_STORAGE_KEY_ROOM_SESSION = 'pokedot-room-session';
 
 export interface UseRoomReturnType {
@@ -17,139 +19,169 @@ export interface UseRoomReturnType {
   room: Room<TeamGeneratorState> | null;
   state: TeamGeneratorState | null;
   error: string | null;
-  createRoom: (
-    roomName: string,
-    options: TeamGeneratorOptions
-  ) => Promise<void>;
-  joinRoom: (roomId: string) => Promise<void>;
 }
 
-export const useRoom = (): UseRoomReturnType => {
+export const createRoom = async (
+  client: Client,
+  roomName: string,
+  options: TeamGeneratorOptions
+): Promise<Room<TeamGeneratorState>> => {
+  let room;
+
+  try {
+    room = await client.create<TeamGeneratorState>(roomName, options);
+
+    console.log(`Created room ${room.id}.`);
+  } catch (e) {
+    console.error(`Failed to create room ${roomName}: ${e}`);
+    throw new Error(`Failed to create room ${roomName}: ${e}`);
+  }
+
+  return room;
+};
+
+export const useJoinRoom = (roomId: string): UseRoomReturnType => {
   const {client, room, setRoom, state, setState} = useContext(RoomContext);
   const [error, setError] = useState<string | null>(null);
 
-  const addRoomSessionCache = () => {
-    if (localStorage && room) {
-      localStorage.setItem(
-        LOCAL_STORAGE_KEY_ROOM_SESSION,
-        JSON.stringify({
-          roomId: room.id,
-          sessionId: room.sessionId,
-        })
-      );
-    }
-  };
-
-  const removeRoomSessionCache = () => {
-    if (localStorage) {
-      localStorage.removeItem(LOCAL_STORAGE_KEY_ROOM_SESSION);
-    }
-  };
-
-  const getRoomSessionCache = () => {
-    const existingSessionItem = localStorage
-      ? localStorage.getItem(LOCAL_STORAGE_KEY_ROOM_SESSION)
-      : null;
-
-    return existingSessionItem ? JSON.parse(existingSessionItem) : null;
-  };
-
-  const createRoom = async (
-    roomName: string,
-    options: TeamGeneratorOptions
-  ) => {
-    if (room) {
-      room.leave();
-      setRoom(null);
-    }
-
-    setError(null);
-    removeRoomSessionCache();
-
-    try {
-      const room = await client.create<TeamGeneratorState>(roomName, options);
-
-      onRoomJoined(room);
-
-      console.log(`Created and joined room ${room.id}.`);
-    } catch (error) {
-      console.error('Failed to create room.', error);
-      setError('Failed to create room.');
-      removeRoomSessionCache();
-    }
-  };
-
-  const joinRoom = async (roomId: string) => {
-    if (!room || room.id !== roomId) {
+  useEffect(() => {
+    if (roomId.length == ROOM_ID_LENGTH && (!room || room.id !== roomId)) {
       if (room) {
+        console.log(`Leaving current room ${room.id}.`);
         room.leave();
         setRoom(null);
       }
 
       setError(null);
-      removeRoomSessionCache();
 
-      const sessionCache = getRoomSessionCache();
-
-      if (sessionCache) {
-        try {
-          const room = await client.reconnect<TeamGeneratorState>(
-            sessionCache.roomId,
-            sessionCache.sessionId
-          );
-
-          onRoomJoined(room);
-
-          console.log(`Re-joined room ${room.id}.`);
-        } catch (error) {
-          console.warn(
-            `Failed to re-join room, ${roomId} joining new session.`,
-            error
-          );
-          removeRoomSessionCache();
-          joinById(roomId);
-        }
-      } else {
-        joinById(roomId);
-      }
-    }
-  };
-
-  const joinById = (roomId: string) => {
-    if (roomId.length === ROOM_ID_LENGTH) {
-      client
-        .joinById<TeamGeneratorState>(roomId)
+      rejoinOrJoinRoom(client, roomId)
         .then(room => {
-          onRoomJoined(room);
-
-          console.log(`Joined room ${room.id}.`);
+          setRoom(room);
+          setState(room.state);
         })
-        .catch(error => {
-          console.error(`Failed to join room ${roomId}.`, error);
-          setError('Unable to join room.');
-          removeRoomSessionCache();
+        .catch(err => {
+          setError(err);
         });
-    } else {
-      setError('Invalid room code format.');
     }
-  };
+  }, [room, client, roomId, setRoom, setState]);
 
-  const onRoomJoined = (room: Room<TeamGeneratorState>) => {
-    addRoomSessionCache();
+  return {client, room, state, error};
+};
 
-    room.onLeave(() => {
-      localStorage.removeItem(LOCAL_STORAGE_KEY_ROOM_SESSION);
-    });
-    room.onError(error => {
-      console.error(`Room error: `, error);
-      localStorage.removeItem(LOCAL_STORAGE_KEY_ROOM_SESSION);
-    });
-    room.onStateChange(state => {
-      setState(cloneDeep(state));
-    });
+export const useRoomListeners = (): void => {
+  const {room, setState} = useContext(RoomContext);
 
-    setRoom(room);
-  };
+  useEffect(() => {
+    if (room) {
+      room.onLeave((...args) => {
+        console.log(`Client left room: ${args}`);
+      });
+      room.onError(err => {
+        console.error(`Room error: ${err}`);
+      });
+      room.onStateChange(state => {
+        setState(cloneDeep(state));
+      });
 
-  return {client, room, state, error, createRoom, joinRoom};
+      return () => {
+        room.removeAllListeners();
+      };
+    }
+  }, [room, setState]);
+};
+
+const rejoinOrJoinRoom = async (
+  client: Client,
+  unnormalizedRoomId: string
+): Promise<Room<TeamGeneratorState>> => {
+  let room;
+
+  const roomId = normalizeRoomId(unnormalizedRoomId);
+
+  const existingRoomId = getRoomIdCache();
+  const existingSessionId = getSessionIdCache();
+
+  if (existingRoomId && existingSessionId) {
+    try {
+      room = await client.reconnect<TeamGeneratorState>(
+        existingRoomId,
+        existingSessionId
+      );
+
+      console.log(`Re-joined room ${room.id}.`);
+    } catch (e) {
+      console.warn(`Failed to re-join room, ${roomId} joining new session.`, e);
+      removeRoomSessionCache();
+      room = joinRoom(client, roomId);
+    }
+  } else {
+    room = joinRoom(client, roomId);
+  }
+
+  return room;
+};
+
+const joinRoom = async (
+  client: Client,
+  unnormalizedRoomId: string
+): Promise<Room<TeamGeneratorState>> => {
+  let room;
+
+  const roomId = normalizeRoomId(unnormalizedRoomId);
+
+  if (roomId.length === ROOM_ID_LENGTH) {
+    try {
+      room = await client.joinById<TeamGeneratorState>(roomId);
+
+      addRoomSessionCache(room);
+    } catch (e) {
+      throw new Error(`Failed to join room ${roomId}: ${e}`);
+    }
+  } else {
+    throw new Error(`Invalid room code format: ${roomId}.`);
+  }
+
+  return room;
+};
+
+const normalizeRoomId = (roomId: string): string => {
+  return roomId.trim().toUpperCase();
+};
+
+const addRoomSessionCache = (room: Room): void => {
+  if (localStorage) {
+    localStorage.setItem(LOCAL_STORAGE_KEY_ROOM_ID, room.id);
+    localStorage.setItem(LOCAL_STORAGE_KEY_SESSION_ID, room.sessionId);
+  }
+};
+
+const removeRoomSessionCache = (): void => {
+  if (localStorage) {
+    localStorage.removeItem(LOCAL_STORAGE_KEY_ROOM_ID);
+    localStorage.removeItem(LOCAL_STORAGE_KEY_SESSION_ID);
+  }
+};
+
+const getRoomIdCache = (): string | null => {
+  let roomId;
+
+  if (localStorage) {
+    roomId = localStorage.getItem(LOCAL_STORAGE_KEY_ROOM_ID);
+  } else {
+    roomId = null;
+  }
+
+  return roomId;
+};
+
+const getSessionIdCache = (): string | null => {
+  let sessionId;
+
+  if (localStorage) {
+    sessionId = localStorage.getItem(LOCAL_STORAGE_KEY_SESSION_ID);
+  } else {
+    sessionId = null;
+  }
+
+  return sessionId;
 };

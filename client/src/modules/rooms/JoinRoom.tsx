@@ -7,9 +7,9 @@ import {ROOM_ID_LENGTH} from '../../hooks/useRoom';
 const useStyles = makeStyles(() => ({
   roomInput: {
     '& input': {
-      // textTransform: 'uppercase',
+      textTransform: 'uppercase',
       '&::placeholder': {
-        // textTransform: 'none',
+        textTransform: 'none',
       },
     },
   },
@@ -41,7 +41,7 @@ export const JoinRoom: React.FC<JoinRoomProps> = ({onBack}: JoinRoomProps) => {
           <TextField
             label="Room code"
             placeholder="Enter code..."
-            onChange={e => setRoomId(e.target.value.trim())}
+            onChange={e => setRoomId(e.target.value)}
             onKeyUp={e => e.key === 'Enter' && joinRoom()}
             value={roomId}
             className={classes.roomInput}
