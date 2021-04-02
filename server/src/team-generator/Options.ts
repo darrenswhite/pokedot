@@ -1,20 +1,14 @@
 import {Schema, type} from '@colyseus/schema';
 
-export interface OptionsProps {
-  teamSize: number;
-  poolSize: number;
-  legendaries: number;
-  mythicals: number;
-  exclusivePools: boolean;
-  gen?: number;
-}
-
 export class Options extends Schema {
   @type('number')
   teamSize: number;
 
   @type('number')
   poolSize: number;
+
+  @type('number')
+  poolSelectionTime: number;
 
   @type('number')
   legendaries: number;
@@ -28,13 +22,22 @@ export class Options extends Schema {
   @type('number')
   gen?: number;
 
-  constructor(props: OptionsProps) {
+  constructor(
+    teamSize: number,
+    poolSize: number,
+    poolSelectionTime: number,
+    legendaries: number,
+    mythicals: number,
+    exclusivePools: boolean,
+    gen?: number
+  ) {
     super();
-    this.teamSize = props.teamSize;
-    this.poolSize = props.poolSize;
-    this.legendaries = props.legendaries;
-    this.mythicals = props.mythicals;
-    this.exclusivePools = props.exclusivePools;
-    this.gen = props.gen;
+    this.teamSize = teamSize;
+    this.poolSize = poolSize;
+    this.poolSelectionTime = poolSelectionTime;
+    this.legendaries = legendaries;
+    this.mythicals = mythicals;
+    this.exclusivePools = exclusivePools;
+    this.gen = gen;
   }
 }

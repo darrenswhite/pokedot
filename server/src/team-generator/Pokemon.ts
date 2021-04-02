@@ -1,15 +1,11 @@
 import {Schema, type} from '@colyseus/schema';
 
-export interface PokemonProps {
-  species: string;
-}
-
 export class Pokemon extends Schema {
   @type('string')
   species: string;
 
-  constructor(props: PokemonProps) {
+  constructor(species: string) {
     super();
-    this.species = props.species;
+    this.species = species;
   }
 }

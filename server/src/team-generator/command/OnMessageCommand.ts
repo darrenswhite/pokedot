@@ -1,22 +1,22 @@
 import {MessageCommandFactory, MessageType} from './MessageCommandFactory';
-import {
-  TeamGeneratorCommand,
-  TeamGeneratorCommandPayload,
-} from './TeamGeneratorCommand';
+import {TeamGeneratorCommand} from './TeamGeneratorCommand';
 
-export interface OnMessageCommandPayload<
-  P extends TeamGeneratorCommandPayload = TeamGeneratorCommandPayload
-> {
-  sessionId: string;
+export interface OnMessageCommandPayload {
   type: string | number;
-  payload: P;
+  payload: DefaultMessagePayload;
+}
+
+export interface DefaultMessagePayload {
+  sessionId: string;
+  [key: string]: unknown;
 }
 
 export class OnMessageCommand extends TeamGeneratorCommand<OnMessageCommandPayload> {
   execute(
-    {sessionId, type, payload}: OnMessageCommandPayload = this.payload
+    {type, payload}: OnMessageCommandPayload = this.payload
   ): TeamGeneratorCommand[] {
     const nextCommands = [];
+    const {sessionId} = payload;
 
     this.logger.info({sessionId, type}, 'Client message received.');
 

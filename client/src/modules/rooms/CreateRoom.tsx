@@ -9,6 +9,7 @@ import {TeamGeneratorOptions} from './TeamGeneratorState';
 
 const DEFAULT_TEAM_SIZE = 6;
 const DEFAULT_POOL_SIZE = 3;
+const DEFAULT_POOL_SELECTION_TIME = 5000;
 
 interface Slider {
   field: keyof TeamGeneratorOptions;
@@ -29,6 +30,7 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
   const [options, setOptions] = useState<TeamGeneratorOptions>({
     teamSize: DEFAULT_TEAM_SIZE,
     poolSize: DEFAULT_POOL_SIZE,
+    poolSelectionTime: DEFAULT_POOL_SELECTION_TIME,
     legendaries: 0,
     mythicals: 0,
     exclusivePools: false,

@@ -7,7 +7,7 @@ import {Logger} from '../util/Logger';
 import {OnJoinCommand} from './command/OnJoinCommand';
 import {OnLeaveCommand} from './command/OnLeaveCommand';
 import {OnMessageCommand} from './command/OnMessageCommand';
-import {OptionsProps} from './Options';
+import {Options} from './Options';
 import {Pokemon} from './Pokemon';
 import {TeamGeneratorState} from './TeamGeneratorState';
 
@@ -15,7 +15,7 @@ export class TeamGeneratorRoom extends Room<TeamGeneratorState> {
   logger = Logger.child({});
   dispatcher: Dispatcher = new Dispatcher(this);
 
-  onCreate(options: OptionsProps): void {
+  onCreate(options: Options): void {
     // TODO check id is unique
     this.roomId = IdGenerator.generateAlphanumeric();
 
@@ -25,7 +25,19 @@ export class TeamGeneratorRoom extends Room<TeamGeneratorState> {
 
     this.logger.info('Creating new room...');
 
-    this.setState(new TeamGeneratorState(options));
+    this.setState(
+      new TeamGeneratorState(
+        new Options(
+          options.teamSize,
+          options.poolSize,
+          options.poolSelectionTime,
+          options.legendaries,
+          options.mythicals,
+          options.exclusivePools,
+          options.gen
+        )
+      )
+    );
 
     this.onMessage('*', ({sessionId}, type, payload) => {
       this.logger.info(
@@ -35,9 +47,11 @@ export class TeamGeneratorRoom extends Room<TeamGeneratorState> {
 
       this.dispatcher.dispatch(
         new OnMessageCommand({
-          sessionId,
           type,
-          payload: {sessionId, ...payload},
+          payload: {
+            sessionId,
+            ...payload,
+          },
         })
       );
     });

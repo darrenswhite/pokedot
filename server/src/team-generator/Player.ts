@@ -1,14 +1,6 @@
 import {ArraySchema, Schema, type} from '@colyseus/schema';
 
-import {Pokemon, PokemonProps} from './Pokemon';
-
-export interface PlayerProps {
-  id: string;
-  name: string;
-  team: PokemonProps[];
-  ready: boolean;
-  connected: boolean;
-}
+import {Pokemon} from './Pokemon';
 
 export class Player extends Schema {
   @type('string')
@@ -18,22 +10,20 @@ export class Player extends Schema {
   name: string;
 
   @type([Pokemon])
-  team: ArraySchema<Pokemon>;
+  team: ArraySchema<Pokemon> = new ArraySchema<Pokemon>();
+
+  @type([Pokemon])
+  pool: ArraySchema<Pokemon> = new ArraySchema<Pokemon>();
 
   @type('boolean')
-  ready: boolean;
+  ready = false;
 
   @type('boolean')
-  connected: boolean;
+  connected = true;
 
-  constructor(props: PlayerProps) {
+  constructor(id: string, name: string) {
     super();
-    this.id = props.id;
-    this.name = props.name;
-    this.team = new ArraySchema<Pokemon>(
-      ...props.team.map(pokemonProps => new Pokemon(pokemonProps))
-    );
-    this.ready = props.ready;
-    this.connected = props.connected;
+    this.id = id;
+    this.name = name;
   }
 }

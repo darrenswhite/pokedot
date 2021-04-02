@@ -1,6 +1,5 @@
 import {Button, Grid, Typography} from '@material-ui/core';
 import {Room} from 'colyseus.js';
-import {every, map, min} from 'lodash/fp';
 import React from 'react';
 
 import {PlayerList} from './PlayerList';
@@ -8,7 +7,6 @@ import {PlayerName} from './PlayerName';
 import {RoomOptionsList} from './RoomOptionsList';
 import {
   Player,
-  Pokemon,
   TeamGeneratorOptions,
   TeamGeneratorState,
 } from './TeamGeneratorState';
@@ -73,33 +71,36 @@ export const RoomInstance: React.FC<RoomInstanceProps> = ({
   state,
   player,
 }: RoomInstanceProps) => {
+  const {currentPool, currentPoolTime, options} = state;
   const players = Array.from(state.players.values());
   const playerName = player.name;
-  const allPlayersReady = every('ready', players);
-  const allTeamSizes = map(player => player.team.length, players);
-  const currentPool = (min(allTeamSizes) || 0) + 1;
-  const allTeamsSelected = currentPool > state.options.teamSize;
+  const showPoolSelections = currentPool !== -1;
+  const showSummary = currentPool === options.teamSize;
   let content;
 
   const setPlayerName = (name: string) => {
-    room.send('PlayerSetName', {name});
+    room.send('SET_PLAYER_NAME', {
+      name,
+    });
   };
 
   const togglePlayerReady = () => {
-    room.send('PlayerSetReady');
+    room.send('SET_PLAYER_READY');
   };
 
-  const addToTeam = (value: Pokemon) => {
-    room.send('player-team-add', value);
+  const selectFromPool = (index: number) => {
+    room.send('SET_PLAYER_POOL_SELECTION', {
+      index,
+    });
   };
 
   if (playerName === 'Anonymous') {
     content = <PlayerName onSubmit={setPlayerName} />;
-  } else if (allTeamsSelected) {
+  } else if (showSummary) {
     content = (
       <RoomContentContainer
         players={players}
-        options={state.options}
+        options={options}
         currentPool={currentPool}
         header={
           <Typography
@@ -119,11 +120,11 @@ export const RoomInstance: React.FC<RoomInstanceProps> = ({
         </Grid>
       </RoomContentContainer>
     );
-  } else if (allPlayersReady) {
+  } else if (showPoolSelections) {
     content = (
       <RoomContentContainer
         players={players}
-        options={state.options}
+        options={options}
         currentPool={currentPool}
         header={
           <Typography
@@ -132,40 +133,23 @@ export const RoomInstance: React.FC<RoomInstanceProps> = ({
             align="center"
             gutterBottom
           >
-            Pool {currentPool} / {state.options.teamSize}
+            Pool {currentPool + 1} / {options.teamSize} (
+            {currentPoolTime / 1000}s)
           </Typography>
         }
       >
         <Grid container justify="center" spacing={4}>
-          <Grid item>
-            <Button
-              onClick={() => addToTeam({species: '0'})}
-              variant="contained"
-              color="primary"
-            >
-              0
-            </Button>
-          </Grid>
-
-          <Grid item>
-            <Button
-              onClick={() => addToTeam({species: '1'})}
-              variant="contained"
-              color="primary"
-            >
-              1
-            </Button>
-          </Grid>
-
-          <Grid item>
-            <Button
-              onClick={() => addToTeam({species: '2'})}
-              variant="contained"
-              color="primary"
-            >
-              2
-            </Button>
-          </Grid>
+          {player.pool.map((pokemon, index) => (
+            <Grid item key={index}>
+              <Button
+                onClick={() => selectFromPool(index)}
+                variant="contained"
+                color="primary"
+              >
+                {pokemon.species}
+              </Button>
+            </Grid>
+          ))}
         </Grid>
       </RoomContentContainer>
     );
@@ -173,7 +157,7 @@ export const RoomInstance: React.FC<RoomInstanceProps> = ({
     content = (
       <RoomContentContainer
         players={players}
-        options={state.options}
+        options={options}
         currentPool={currentPool}
         header={
           <Typography variant="h5" component="h2" align="center" gutterBottom>

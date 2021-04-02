@@ -10,7 +10,6 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import {Check, Clear} from '@material-ui/icons';
-import {every} from 'lodash/fp';
 import React from 'react';
 
 import {Player} from './TeamGeneratorState';
@@ -31,13 +30,12 @@ export const PlayerList: React.FC<PlayerListProps> = ({
   currentPool,
 }: PlayerListProps) => {
   const classes = useStyles();
-  const allPlayersReady = every('ready', players);
 
   const isPlayerReady = (player: Player) => {
     let ready;
 
-    if (allPlayersReady) {
-      ready = player.team.length === currentPool;
+    if (currentPool !== -1) {
+      ready = player.team.length === currentPool + 1;
     } else {
       ready = player.ready;
     }

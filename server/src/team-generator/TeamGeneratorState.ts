@@ -1,6 +1,6 @@
 import {MapSchema, Schema, type} from '@colyseus/schema';
 
-import {Options, OptionsProps} from './Options';
+import {Options} from './Options';
 import {Player} from './Player';
 
 export class TeamGeneratorState extends Schema {
@@ -10,8 +10,14 @@ export class TeamGeneratorState extends Schema {
   @type({map: Player})
   players = new MapSchema<Player>();
 
-  constructor(optionsProps: OptionsProps) {
+  @type('number')
+  currentPool = -1;
+
+  @type('number')
+  currentPoolTime = -1;
+
+  constructor(options: Options) {
     super();
-    this.options = new Options(optionsProps);
+    this.options = options;
   }
 }
