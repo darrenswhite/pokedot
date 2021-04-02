@@ -101,7 +101,7 @@ const rejoinOrJoinRoom = async (
   const existingRoomId = getRoomIdCache();
   const existingSessionId = getSessionIdCache();
 
-  if (existingRoomId && existingSessionId) {
+  if (existingRoomId && existingSessionId && existingRoomId === roomId) {
     try {
       room = await client.reconnect<TeamGeneratorState>(
         existingRoomId,
