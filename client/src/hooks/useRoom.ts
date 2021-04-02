@@ -31,6 +31,8 @@ export const createRoom = async (
   try {
     room = await client.create<TeamGeneratorState>(roomName, options);
 
+    addRoomSessionCache(room);
+
     console.log(`Created room ${room.id}.`);
   } catch (e) {
     console.error(`Failed to create room ${roomName}: ${e}`);
