@@ -33,8 +33,10 @@ export class StartPoolSelectionTimerCommand extends TeamGeneratorCommand {
       }
     });
 
-    if (currentPool < options.teamSize) {
+    if (currentPool < options.teamSize - 1) {
       nextCommands.push(new GeneratePoolCommand());
+    } else {
+      this.state.currentPool = currentPool + 1;
     }
 
     this.logger.info({poolSelectionTime}, 'Pool selection timer completed.');

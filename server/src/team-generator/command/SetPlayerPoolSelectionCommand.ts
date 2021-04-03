@@ -14,7 +14,10 @@ export class SetPlayerPoolSelectionCommand extends TeamGeneratorCommand<SetPlaye
   execute({sessionId, index} = this.payload): void {
     const currentPool = this.state.currentPool;
 
-    this.logger.info({sessionId, index}, 'Setting player pool selection.');
+    this.logger.info(
+      {sessionId, currentPool, index},
+      'Setting player pool selection.'
+    );
 
     const player = this.state.players.get(sessionId);
 
