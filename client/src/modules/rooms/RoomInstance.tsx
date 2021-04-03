@@ -2,6 +2,8 @@ import {Button, Grid, Typography} from '@material-ui/core';
 import {Room} from 'colyseus.js';
 import React from 'react';
 
+import {SpeciesImage, SpeciesImageType} from '../pokemon-info/SpeciesImage';
+
 import {PlayerList} from './PlayerList';
 import {PlayerName} from './PlayerName';
 import {RoomOptionsList} from './RoomOptionsList';
@@ -103,12 +105,7 @@ export const RoomInstance: React.FC<RoomInstanceProps> = ({
         options={options}
         currentPool={currentPool}
         header={
-          <Typography
-            variant="subtitle1"
-            component="h3"
-            align="center"
-            gutterBottom
-          >
+          <Typography variant="h5" component="h2" align="center" gutterBottom>
             Summary
           </Typography>
         }
@@ -127,12 +124,7 @@ export const RoomInstance: React.FC<RoomInstanceProps> = ({
         options={options}
         currentPool={currentPool}
         header={
-          <Typography
-            variant="subtitle1"
-            component="h3"
-            align="center"
-            gutterBottom
-          >
+          <Typography variant="h5" component="h2" align="center" gutterBottom>
             Pool {currentPool + 1} / {options.teamSize} (
             {currentPoolTime / 1000}s)
           </Typography>
@@ -141,13 +133,26 @@ export const RoomInstance: React.FC<RoomInstanceProps> = ({
         <Grid container justify="center" spacing={4}>
           {player.pool.map((pokemon, index) => (
             <Grid item key={index}>
-              <Button
-                onClick={() => selectFromPool(index)}
-                variant="contained"
-                color="primary"
-              >
-                {pokemon.species}
-              </Button>
+              <Grid container direction="column">
+                <Grid item>
+                  <SpeciesImage
+                    name={pokemon.species}
+                    type={SpeciesImageType.SPRITE}
+                    moreInfo
+                    showTooltip
+                  />
+                </Grid>
+
+                <Grid item>
+                  <Button
+                    onClick={() => selectFromPool(index)}
+                    variant="contained"
+                    color="primary"
+                  >
+                    Choose
+                  </Button>
+                </Grid>
+              </Grid>
             </Grid>
           ))}
         </Grid>

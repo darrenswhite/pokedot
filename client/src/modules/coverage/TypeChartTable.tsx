@@ -8,7 +8,7 @@ import {
   TypeChartMatrixProps,
 } from '../../pkmn/matrix/TypeChartMatrix';
 import {PartialPokemonSet} from '../../pkmn/PokeInfo';
-import {SpeciesImage} from '../pokemon-info/SpeciesImage';
+import {SpeciesImage, SpeciesImageType} from '../pokemon-info/SpeciesImage';
 import {TypeImage} from '../pokemon-info/TypeImage';
 import {PCol} from '../table/model/PCol';
 import {PValue} from '../table/model/PRow';
@@ -82,7 +82,14 @@ const renderEffectiveness = (value: PValue): ReactElement => {
 };
 
 const renderSpecies = (value: PValue): ReactElement => {
-  return <SpeciesImage name={value as string} moreInfo />;
+  return (
+    <SpeciesImage
+      name={value as string}
+      type={SpeciesImageType.ICON}
+      moreInfo
+      showTooltip
+    />
+  );
 };
 
 const renderType = (value: PValue): ReactElement => {

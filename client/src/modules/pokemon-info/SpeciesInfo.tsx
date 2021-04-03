@@ -1,11 +1,10 @@
 import {Grid, Typography, colors, makeStyles} from '@material-ui/core';
-import {Sprites} from '@pkmn/img';
 import {StatName, StatsTable} from '@pkmn/types';
-import clsx from 'clsx';
 import React, {ReactElement} from 'react';
 
 import {PokeInfo, STAT_NAMES} from '../../pkmn/PokeInfo';
 
+import {SpeciesImage, SpeciesImageType} from './SpeciesImage';
 import {TypeImage} from './TypeImage';
 
 const MAX_STAT = 255;
@@ -19,9 +18,6 @@ const STAT_COLORS: StatsTable<Record<number, string>> = {
 };
 
 const useStyles = makeStyles(theme => ({
-  pixelated: {
-    imageRendering: 'pixelated',
-  },
   stat: {
     height: theme.spacing(3),
   },
@@ -39,12 +35,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const renderHeader = (
-  info: PokeInfo,
-  classes: ReturnType<typeof useStyles>
-): ReactElement => {
-  const sprite = Sprites.getDexPokemon(info.species);
-
+const renderHeader = (info: PokeInfo): ReactElement => {
   return (
     <>
       <Grid container justify="center">
@@ -65,12 +56,7 @@ const renderHeader = (
 
       <Grid container justify="center">
         <Grid item>
-          <img
-            src={sprite.url}
-            width={sprite.w}
-            height={sprite.h}
-            className={clsx({[classes.pixelated]: sprite.pixelated})}
-          />
+          <SpeciesImage name={info.species} type={SpeciesImageType.SPRITE} />
         </Grid>
       </Grid>
     </>
@@ -143,7 +129,7 @@ export const SpeciesInfo: React.FC<SpeciesInfoProps> = ({
   return (
     <>
       <Grid container justify="center" spacing={2}>
-        <Grid item>{renderHeader(info, classes)}</Grid>
+        <Grid item>{renderHeader(info)}</Grid>
         <Grid item>{renderStats(info, classes)}</Grid>
       </Grid>
     </>

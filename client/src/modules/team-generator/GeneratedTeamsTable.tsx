@@ -5,7 +5,7 @@ import {
   GeneratedTeamsMatrixProps,
 } from '../../pkmn/matrix/GeneratedTeamsMatrix';
 import {GeneratedTeam, TeamGeneratorOptions} from '../../pkmn/TeamGenerator';
-import {SpeciesImage} from '../pokemon-info/SpeciesImage';
+import {SpeciesImage, SpeciesImageType} from '../pokemon-info/SpeciesImage';
 import {PCol} from '../table/model/PCol';
 import {PValue} from '../table/model/PRow';
 import {PMatrixTable} from '../table/PMatrixTable';
@@ -20,7 +20,14 @@ const renderIndexCell = (value: PValue): ReactElement => {
 };
 
 const renderSpeciesCell = (value: PValue): ReactElement => {
-  return <SpeciesImage name={value as string} moreInfo />;
+  return (
+    <SpeciesImage
+      name={value as string}
+      type={SpeciesImageType.ICON}
+      moreInfo
+      showTooltip
+    />
+  );
 };
 
 const mapSpeciesValue = (

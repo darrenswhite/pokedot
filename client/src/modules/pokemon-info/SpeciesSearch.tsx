@@ -9,7 +9,7 @@ import React, {useEffect, useState} from 'react';
 
 import {PartialPokemonSet, PokeInfo} from '../../pkmn/PokeInfo';
 
-import {SpeciesImage} from './SpeciesImage';
+import {SpeciesImage, SpeciesImageType} from './SpeciesImage';
 
 const renderOption = (
   option: string,
@@ -23,7 +23,7 @@ const renderOption = (
   return (
     <Grid container spacing={1} alignItems="center" justify="center">
       <Grid item>
-        <SpeciesImage name={option} />
+        <SpeciesImage name={option} type={SpeciesImageType.ICON} />
       </Grid>
 
       <Grid item xs>
