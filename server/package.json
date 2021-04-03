@@ -29,8 +29,8 @@
   "dependencies": {
     "@colyseus/command": "^0.1.6",
     "@colyseus/monitor": "^0.14.3",
-    "@pkmn/data": "^0.3.21",
-    "@pkmn/dex": "^0.3.21",
+    "@pkmn/data": "^0.3.22",
+    "@pkmn/dex": "^0.3.22",
     "colyseus": "^0.14.12",
     "config": "^3.3.6",
     "cors": "^2.8.5",

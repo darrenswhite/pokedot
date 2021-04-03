@@ -15,7 +15,7 @@ describe('TeamGeneratorState', () => {
         mythicals: 2,
         exclusivePools: true,
         gen: 8,
-      };
+      } as Options;
 
       const state = new TeamGeneratorState(
         new Options(

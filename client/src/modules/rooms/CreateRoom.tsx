@@ -38,6 +38,7 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
     legendaries: 0,
     mythicals: 0,
     exclusivePools: false,
+    gen: 8,
   });
 
   const createNewRoom = () => {

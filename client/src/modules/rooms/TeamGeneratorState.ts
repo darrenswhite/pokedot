@@ -15,7 +15,7 @@ export interface TeamGeneratorOptions {
   legendaries: number;
   mythicals: number;
   exclusivePools: boolean;
-  gen?: GenerationNum;
+  gen: GenerationNum;
 }
 
 export interface Player {

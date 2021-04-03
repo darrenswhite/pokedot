@@ -1,4 +1,5 @@
 import {Schema, type} from '@colyseus/schema';
+import {GenerationNum} from '@pkmn/types';
 
 export class Options extends Schema {
   @type('number')
@@ -20,7 +21,7 @@ export class Options extends Schema {
   exclusivePools: boolean;
 
   @type('number')
-  gen?: number;
+  gen: GenerationNum;
 
   constructor(
     teamSize: number,
@@ -29,7 +30,7 @@ export class Options extends Schema {
     legendaries: number,
     mythicals: number,
     exclusivePools: boolean,
-    gen?: number
+    gen: GenerationNum
   ) {
     super();
     this.teamSize = teamSize;

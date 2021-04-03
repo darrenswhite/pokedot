@@ -25,7 +25,7 @@ export class StartPoolSelectionTimerCommand extends TeamGeneratorCommand {
     await timer.run();
 
     players.forEach(player => {
-      if (player.team.length === currentPool) {
+      if (player.team.length === currentPool && player.pool.length > 0) {
         player.team.setAt(
           currentPool,
           player.pool.at(random(0, player.pool.length - 1))

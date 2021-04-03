@@ -163,7 +163,7 @@ export class PokeInfo {
 
       return new PokeInfo(specie, resistances, coverage);
     } else {
-      throw new Error(`Unknown species: ${name}`);
+      throw new Error(`Unknown species: ${species}`);
     }
   }
 

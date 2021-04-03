@@ -15,6 +15,9 @@ export class Player extends Schema {
   @type([Pokemon])
   pool: ArraySchema<Pokemon> = new ArraySchema<Pokemon>();
 
+  @type([Pokemon])
+  previousPools: ArraySchema<Pokemon> = new ArraySchema<Pokemon>();
+
   @type('boolean')
   ready = false;
 
