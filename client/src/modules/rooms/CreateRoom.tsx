@@ -9,13 +9,17 @@ import {TeamGeneratorOptions} from './TeamGeneratorState';
 
 const DEFAULT_TEAM_SIZE = 6;
 const DEFAULT_POOL_SIZE = 3;
-const DEFAULT_POOL_SELECTION_TIME = 5000;
+const DEFAULT_POOL_SELECTION_TIME = 30000;
 
 interface Slider {
   field: keyof TeamGeneratorOptions;
   label: string;
-  min: number;
-  max: number;
+  min?: number;
+  max?: number;
+  step?: number | null;
+  valueLabelFormat?:
+    | string
+    | ((value: number, index: number) => React.ReactNode);
 }
 
 export interface CreateRoomProps {
@@ -64,6 +68,14 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
       max: 10,
     },
     {
+      field: 'poolSelectionTime',
+      label: 'Pool Selection Time',
+      min: 10000,
+      max: 60000,
+      step: 10000,
+      valueLabelFormat: value => value / 1000 + 's',
+    },
+    {
       field: 'legendaries',
       label: 'Legendaries',
       min: 0,
@@ -110,10 +122,11 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
                   onChange={setOptionValue(slider.field)}
                   aria-labelledby={`${slider.field}-size-slider`}
                   valueLabelDisplay="auto"
-                  step={1}
+                  step={slider.step}
                   marks
                   min={slider.min}
                   max={slider.max}
+                  valueLabelFormat={slider.valueLabelFormat}
                 />
               </Grid>
             </Grid>
