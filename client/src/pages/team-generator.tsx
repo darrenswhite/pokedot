@@ -1,3 +1,3 @@
-import {TeamGeneratorPage} from '../modules/team-generator/TeamGeneratorPage';
+import {RoomsPage} from '../modules/team-generator/RoomsPage';
 
-export default TeamGeneratorPage;
+export default RoomsPage;

@@ -6,14 +6,16 @@ import {
   RoomContext,
   initialRoom,
   initialState,
-} from '../modules/rooms/RoomProvider';
-import {Options, TeamGeneratorState} from '../modules/rooms/TeamGeneratorState';
+} from '../modules/team-generator/RoomProvider';
+import {
+  Options,
+  TeamGeneratorState,
+} from '../modules/team-generator/TeamGeneratorState';
 
 export const ROOM_ID_LENGTH = 4;
 
 export const LOCAL_STORAGE_KEY_ROOM_ID = 'pokedot-room-id';
 export const LOCAL_STORAGE_KEY_SESSION_ID = 'pokedot-session-id';
-export const LOCAL_STORAGE_KEY_ROOM_SESSION = 'pokedot-room-session';
 
 export interface UseJoinRoomReturnType {
   client: Client;

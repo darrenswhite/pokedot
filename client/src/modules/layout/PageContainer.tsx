@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 import React from 'react';
 
 import {SpeciesProviderProps} from '../pokemon-info/SpeciesProvider';
-import {RoomProvider} from '../rooms/RoomProvider';
+import {RoomProvider} from '../team-generator/RoomProvider';
 
 import {Footer} from './Footer';
 import {Header} from './Header';

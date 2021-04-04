@@ -1,30 +1,26 @@
-import {find, range} from 'lodash/fp';
-
-import {PokeInfo} from '../PokeInfo';
-import {GeneratedTeam, TeamGeneratorOptions} from '../TeamGenerator';
+import {
+  Pokemon,
+  TeamGeneratorState,
+} from '../../modules/team-generator/TeamGeneratorState';
 
 import {Matrix} from './Matrix';
 
 export interface GeneratedTeamsMatrixProps {
-  player: string;
-  index: number;
-  info: PokeInfo;
+  playerName: string;
+  pool: number;
+  pokemon: Pokemon;
 }
 
 export class GeneratedTeamsMatrix extends Matrix<GeneratedTeamsMatrixProps> {
-  static forTeams(
-    teams: GeneratedTeam[],
-    options: TeamGeneratorOptions
-  ): GeneratedTeamsMatrix {
+  static forState(state: TeamGeneratorState): GeneratedTeamsMatrix {
     return new GeneratedTeamsMatrix(
-      options.players.flatMap(player => {
-        const playerTeam = find(team => team.player === player, teams);
-        const team = playerTeam?.team ?? Array(options.sampleSize);
+      Object.values(state.players).flatMap(player => {
+        const playerName = player.name;
 
-        return range(0, options.sampleSize).map(index => ({
-          player,
-          index,
-          info: team[index],
+        return player.team.map((pokemon, pool) => ({
+          playerName,
+          pool,
+          pokemon,
         }));
       })
     );

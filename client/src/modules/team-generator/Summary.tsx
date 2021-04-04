@@ -4,7 +4,7 @@ import React, {ReactElement, useContext} from 'react';
 import {
   GeneratedTeamsMatrix,
   GeneratedTeamsMatrixProps,
-} from '../../pkmn/matrix/GeneratedTeamsMatrix2';
+} from '../../pkmn/matrix/GeneratedTeamsMatrix';
 import {SpeciesImage, SpeciesImageType} from '../pokemon-info/SpeciesImage';
 import {PCol} from '../table/model/PCol';
 import {PValue} from '../table/model/PRow';
