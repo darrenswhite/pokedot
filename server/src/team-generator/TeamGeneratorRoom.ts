@@ -8,7 +8,6 @@ import {OnJoinCommand} from './command/OnJoinCommand';
 import {OnLeaveCommand} from './command/OnLeaveCommand';
 import {OnMessageCommand} from './command/OnMessageCommand';
 import {Options} from './Options';
-import {Pokemon} from './Pokemon';
 import {TeamGeneratorState} from './TeamGeneratorState';
 
 export class TeamGeneratorRoom extends Room<TeamGeneratorState> {
@@ -54,14 +53,6 @@ export class TeamGeneratorRoom extends Room<TeamGeneratorState> {
           },
         })
       );
-    });
-
-    this.onMessage('player-team-add', (client, pokemon) => {
-      const player = this.state.players.get(client.sessionId);
-
-      if (player) {
-        player.team.push(new Pokemon(pokemon.species));
-      }
     });
 
     this.logger.info('Successfully created new room.');

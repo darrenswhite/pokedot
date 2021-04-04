@@ -1,5 +1,5 @@
 import {ArraySchema} from '@colyseus/schema';
-import {Generations, Specie} from '@pkmn/data';
+import {GenerationNum, Generations, Specie} from '@pkmn/data';
 import {Dex} from '@pkmn/dex';
 import {sampleSize} from 'lodash/fp';
 
@@ -10,9 +10,9 @@ import {StartPoolSelectionTimerCommand} from './StartPoolSelectionTimerCommand';
 import {TeamGeneratorCommand} from './TeamGeneratorCommand';
 
 const generations = new Generations(Dex);
-const isMythical = (specie: Specie) => MYTHICALS.includes(specie.id);
-const isLegendary = (specie: Specie) =>
-  LEGENDS.includes(specie.id) || SUB_LEGENDS.includes(specie.id);
+const isMythical = (pokemon: Pokemon) => MYTHICALS.includes(pokemon.id);
+const isLegendary = (pokemon: Pokemon) =>
+  LEGENDS.includes(pokemon.id) || SUB_LEGENDS.includes(pokemon.id);
 
 export class GeneratePoolCommand extends TeamGeneratorCommand {
   execute(): TeamGeneratorCommand[] {
@@ -35,7 +35,7 @@ export class GeneratePoolCommand extends TeamGeneratorCommand {
     return [new StartPoolSelectionTimerCommand()];
   }
 
-  generatePool(player: Player): ArraySchema<Pokemon> {
+  generatePool({team, previousPools}: Player): ArraySchema<Pokemon> {
     const {
       poolSize,
       legendaries,
@@ -44,19 +44,13 @@ export class GeneratePoolCommand extends TeamGeneratorCommand {
       gen,
     } = this.state.options;
 
-    const generation = generations.get(gen);
-    const species = Array.from(generation.species);
-    const teamSpecies = player.team
-      .map(pokemon => generation.species.get(pokemon.species))
-      .filter(specie => !!specie) as Specie[];
-    const previousPoolsSpecies = player.previousPools
-      .map(pokemon => generation.species.get(pokemon.species))
-      .filter(specie => !!specie) as Specie[];
-    const teamMythicals = teamSpecies.filter(isMythical).length;
-    const teamLegendaries = teamSpecies.filter(isLegendary).length;
+    const pokemon = this.allPokemon(gen);
+    const teamMythicals = team.filter(isMythical).length;
+    const teamLegendaries = team.filter(isLegendary).length;
 
-    const exclusiveFilter = (specie: Specie) =>
-      !exclusivePools || !previousPoolsSpecies.includes(specie);
+    const teamFilter = (pokemon: Pokemon) => !team.includes(pokemon);
+    const exclusiveFilter = (pokemon: Pokemon) =>
+      !exclusivePools || !previousPools.includes(pokemon);
     let specieFilter;
 
     if (teamMythicals < mythicals) {
@@ -64,22 +58,29 @@ export class GeneratePoolCommand extends TeamGeneratorCommand {
     } else if (teamLegendaries < legendaries) {
       specieFilter = isLegendary;
     } else {
-      specieFilter = (specie: Specie) =>
-        !isMythical(specie) && !isLegendary(specie);
+      specieFilter = (pokemon: Pokemon) =>
+        !isMythical(pokemon) && !isLegendary(pokemon);
     }
 
-    const availableSpecies = species
-      .filter(specie => !teamSpecies.includes(specie))
+    const availableSpecies = pokemon
+      .filter(teamFilter)
       .filter(exclusiveFilter)
       .filter(specieFilter);
-    const speciesPool = sampleSize(poolSize, availableSpecies);
-    const pool = speciesPool.map(this.createPokemon);
+    const pool = sampleSize(poolSize, availableSpecies);
 
     return new ArraySchema<Pokemon>(...pool);
   }
 
+  allPokemon(gen: GenerationNum): Pokemon[] {
+    const generation = generations.get(gen);
+
+    return Array.from(generation.species)
+      .filter((specie: Specie) => specie.name === specie.baseSpecies)
+      .map(this.createPokemon);
+  }
+
   createPokemon(specie: Specie): Pokemon {
-    return new Pokemon(specie.id);
+    return new Pokemon(specie.id, specie.name);
   }
 }
 

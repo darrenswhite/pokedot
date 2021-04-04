@@ -2,10 +2,14 @@ import {Schema, type} from '@colyseus/schema';
 
 export class Pokemon extends Schema {
   @type('string')
-  species: string;
+  id: string;
 
-  constructor(species: string) {
+  @type('string')
+  name: string;
+
+  constructor(id: string, name: string) {
     super();
-    this.species = species;
+    this.id = id;
+    this.name = name;
   }
 }

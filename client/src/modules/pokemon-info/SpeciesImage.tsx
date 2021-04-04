@@ -14,6 +14,15 @@ const useStyle = makeStyles(() => ({
   pixelated: {
     imageRendering: 'pixelated',
   },
+  spriteContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: '150px',
+    minHeight: '150px',
+    width: '100%',
+    height: '100%',
+  },
 }));
 
 export enum SpeciesImageType {
@@ -62,15 +71,17 @@ export const SpeciesImage: React.FC<SpeciesImageProps> = ({
     const sprite = Sprites.getDexPokemon(name);
 
     return (
-      <img
-        src={sprite.url}
-        width={sprite.w}
-        height={sprite.h}
-        className={clsx({
-          [classes.image]: moreInfo,
-          [classes.pixelated]: sprite.pixelated,
-        })}
-      />
+      <div className={classes.spriteContainer}>
+        <img
+          src={sprite.url}
+          width={sprite.w}
+          height={sprite.h}
+          className={clsx({
+            [classes.image]: moreInfo,
+            [classes.pixelated]: sprite.pixelated,
+          })}
+        />
+      </div>
     );
   };
 
@@ -84,14 +95,14 @@ export const SpeciesImage: React.FC<SpeciesImageProps> = ({
 
   return (
     <Tooltip title={showTooltip ? name : ''}>
-      <span
+      <div
         className={clsx({
           [classes.image]: moreInfo,
         })}
         onClick={showMoreInfo}
       >
         {image}
-      </span>
+      </div>
     </Tooltip>
   );
 };

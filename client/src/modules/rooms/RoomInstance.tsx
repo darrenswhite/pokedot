@@ -1,4 +1,13 @@
-import {Button, Grid, Typography} from '@material-ui/core';
+import {
+  Button,
+  Card,
+  CardActionArea,
+  CardActions,
+  CardMedia,
+  Grid,
+  Typography,
+  useTheme,
+} from '@material-ui/core';
 import {Room} from 'colyseus.js';
 import React from 'react';
 
@@ -29,8 +38,8 @@ const RoomContentContainer: React.FC<RoomContentContainerProps> = ({
   currentPool,
 }: RoomContentContainerProps) => {
   return (
-    <Grid container style={{height: '100%'}}>
-      <Grid container item xs={12} sm={10} justify="center">
+    <Grid container spacing={4} style={{height: '100%'}}>
+      <Grid container item xs={12} sm={8} md={10} justify="center">
         <Grid item xs>
           {header}
         </Grid>
@@ -49,7 +58,7 @@ const RoomContentContainer: React.FC<RoomContentContainerProps> = ({
         </Grid>
       </Grid>
 
-      <Grid container item xs={12} sm={2} direction="column" spacing={1}>
+      <Grid container item xs={12} sm={4} md={2} direction="column" spacing={1}>
         <Grid item xs>
           <PlayerList players={players} currentPool={currentPool} />
         </Grid>
@@ -73,6 +82,7 @@ export const RoomInstance: React.FC<RoomInstanceProps> = ({
   state,
   player,
 }: RoomInstanceProps) => {
+  const theme = useTheme();
   const {currentPool, currentPoolTime, options} = state;
   const players = Array.from(state.players.values());
   const playerName = player.name;
@@ -124,37 +134,56 @@ export const RoomInstance: React.FC<RoomInstanceProps> = ({
         options={options}
         currentPool={currentPool}
         header={
-          <Typography variant="h5" component="h2" align="center" gutterBottom>
-            Pool {currentPool + 1} / {options.teamSize} (
-            {currentPoolTime / 1000}s)
-          </Typography>
+          <>
+            <Typography variant="h5" component="h2" align="center" gutterBottom>
+              Pool {currentPool + 1} / {options.teamSize}
+            </Typography>
+
+            <Typography variant="h5" component="h2" align="center" gutterBottom>
+              {currentPoolTime / 1000}s
+            </Typography>
+          </>
         }
       >
-        <Grid container justify="center" spacing={4}>
-          {player.pool.map((pokemon, index) => (
-            <Grid item key={index}>
-              <Grid container direction="column">
-                <Grid item>
-                  <SpeciesImage
-                    name={pokemon.species}
-                    type={SpeciesImageType.SPRITE}
-                    moreInfo
-                    showTooltip
-                  />
-                </Grid>
+        <Grid container justify="center" spacing={1}>
+          {player.pool.map((pokemon, index) => {
+            const selected = player.team.at(currentPool) === pokemon;
 
-                <Grid item>
-                  <Button
-                    onClick={() => selectFromPool(index)}
-                    variant="contained"
-                    color="primary"
-                  >
-                    Choose
-                  </Button>
-                </Grid>
+            return (
+              <Grid item key={index}>
+                <Card
+                  style={{
+                    border: `1px solid ${
+                      selected
+                        ? theme.palette.primary.main
+                        : theme.palette.divider
+                    }`,
+                  }}
+                >
+                  <CardActionArea>
+                    <CardMedia>
+                      <SpeciesImage
+                        name={pokemon.name}
+                        type={SpeciesImageType.SPRITE}
+                        moreInfo
+                        showTooltip
+                      />
+                    </CardMedia>
+                  </CardActionArea>
+
+                  <CardActions style={{justifyContent: 'center'}}>
+                    <Button
+                      size="small"
+                      color="primary"
+                      onClick={() => selectFromPool(index)}
+                    >
+                      Choose
+                    </Button>
+                  </CardActions>
+                </Card>
               </Grid>
-            </Grid>
-          ))}
+            );
+          })}
         </Grid>
       </RoomContentContainer>
     );
