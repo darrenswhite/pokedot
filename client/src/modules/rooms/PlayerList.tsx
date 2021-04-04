@@ -1,5 +1,4 @@
 import {
-  Box,
   Divider,
   List,
   ListItem,
@@ -7,29 +6,17 @@ import {
   ListItemText,
   ListSubheader,
   Paper,
-  makeStyles,
 } from '@material-ui/core';
 import {Check, Clear} from '@material-ui/icons';
-import React from 'react';
+import React, {useContext} from 'react';
 
+import {RoomContext} from './RoomProvider';
 import {Player} from './TeamGeneratorState';
 
-const useStyles = makeStyles(() => ({
-  paper: {
-    height: '100%',
-  },
-}));
-
-export interface PlayerListProps {
-  players: Player[];
-  currentPool: number;
-}
-
-export const PlayerList: React.FC<PlayerListProps> = ({
-  players,
-  currentPool,
-}: PlayerListProps) => {
-  const classes = useStyles();
+export const PlayerList: React.FC = () => {
+  const {state} = useContext(RoomContext);
+  const currentPool = state.currentPool;
+  const players = Object.values(state.players);
 
   const isPlayerReady = (player: Player) => {
     let ready;
@@ -44,25 +31,23 @@ export const PlayerList: React.FC<PlayerListProps> = ({
   };
 
   return (
-    <Box height="100%">
-      <Paper className={classes.paper}>
-        <List
-          aria-labelledby="players-subheader"
-          subheader={
-            <ListSubheader id="players-subheader">Players</ListSubheader>
-          }
-        >
-          <Divider />
-          {players.map(player => (
-            <ListItem key={player.id}>
-              <ListItemIcon>
-                {isPlayerReady(player) ? <Check /> : <Clear />}
-              </ListItemIcon>
-              <ListItemText>{player.name}</ListItemText>
-            </ListItem>
-          ))}
-        </List>
-      </Paper>
-    </Box>
+    <Paper style={{height: '100%'}}>
+      <List
+        aria-labelledby="players-subheader"
+        subheader={
+          <ListSubheader id="players-subheader">Players</ListSubheader>
+        }
+      >
+        <Divider />
+        {players.map(player => (
+          <ListItem key={player.id}>
+            <ListItemIcon>
+              {isPlayerReady(player) ? <Check /> : <Clear />}
+            </ListItemIcon>
+            <ListItemText>{player.name}</ListItemText>
+          </ListItem>
+        ))}
+      </List>
+    </Paper>
   );
 };

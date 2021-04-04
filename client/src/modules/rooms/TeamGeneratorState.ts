@@ -1,14 +1,13 @@
-import {ArraySchema, MapSchema} from '@colyseus/schema';
 import {GenerationNum} from '@pkmn/types';
 
 export interface TeamGeneratorState {
-  options: TeamGeneratorOptions;
-  players: MapSchema<Player>;
+  options: Options;
+  players: Record<string, Player>;
   currentPool: number;
   currentPoolTime: number;
 }
 
-export interface TeamGeneratorOptions {
+export interface Options {
   teamSize: number;
   poolSize: number;
   poolSelectionTime: number;
@@ -21,8 +20,8 @@ export interface TeamGeneratorOptions {
 export interface Player {
   id: string;
   name: string;
-  team: ArraySchema<Pokemon>;
-  pool: ArraySchema<Pokemon>;
+  team: Pokemon[];
+  pool: Pokemon[];
   ready: boolean;
   connected: boolean;
 }

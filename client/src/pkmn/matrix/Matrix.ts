@@ -37,16 +37,24 @@ export class Matrix<T extends MatrixValue> {
     value: GroupedMatrixValue<T, keyof T, unknown> | T[] = this.values
   ): GroupedMatrixValue<T, keyof T, unknown> {
     const key = keys[0];
-    const rest = keys.slice(1);
+    let grouped;
 
-    return flow(
-      groupBy(key),
-      mapValues(
-        rest.length > 0
-          ? (values: GroupedMatrixValue<T, keyof T, unknown>) =>
-              this.groupByRecursive(rest, values)
-          : identity
-      )
-    )(value);
+    if (key) {
+      const rest = keys.slice(1);
+
+      grouped = flow(
+        groupBy(key),
+        mapValues(
+          rest.length > 0
+            ? (values: GroupedMatrixValue<T, keyof T, unknown>) =>
+                this.groupByRecursive(rest, values)
+            : identity
+        )
+      )(value);
+    } else {
+      grouped = value;
+    }
+
+    return grouped;
   }
 }

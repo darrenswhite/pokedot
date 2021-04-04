@@ -1,13 +1,10 @@
 import {Button, Grid, TextField} from '@material-ui/core';
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 
-export interface PlayerNameProps {
-  onSubmit: (name: string) => void;
-}
+import {RoomContext} from './RoomProvider';
 
-export const PlayerName: React.FC<PlayerNameProps> = ({
-  onSubmit,
-}: PlayerNameProps) => {
+export const PlayerName: React.FC = () => {
+  const {room} = useContext(RoomContext);
   const [name, setName] = useState<string>('');
   const [nameError, setNameError] = useState<string>('');
 
@@ -15,7 +12,9 @@ export const PlayerName: React.FC<PlayerNameProps> = ({
     setNameError('');
 
     if (name.length > 0) {
-      onSubmit(name);
+      room.send('SET_PLAYER_NAME', {
+        name,
+      });
     } else {
       setNameError('Name is required');
     }

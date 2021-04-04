@@ -4,15 +4,11 @@ import React, {useContext, useState} from 'react';
 
 import {createRoom, useRoomListeners} from '../../hooks/useRoom';
 
-import {RoomContext} from './RoomProvider';
-import {TeamGeneratorOptions} from './TeamGeneratorState';
-
-const DEFAULT_TEAM_SIZE = 6;
-const DEFAULT_POOL_SIZE = 3;
-const DEFAULT_POOL_SELECTION_TIME = 30000;
+import {RoomContext, initialState} from './RoomProvider';
+import {Options} from './TeamGeneratorState';
 
 interface Slider {
-  field: keyof TeamGeneratorOptions;
+  field: keyof Options;
   label: string;
   min?: number;
   max?: number;
@@ -31,15 +27,7 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
 }: CreateRoomProps) => {
   const {client, setRoom, setState} = useContext(RoomContext);
   const router = useRouter();
-  const [options, setOptions] = useState<TeamGeneratorOptions>({
-    teamSize: DEFAULT_TEAM_SIZE,
-    poolSize: DEFAULT_POOL_SIZE,
-    poolSelectionTime: DEFAULT_POOL_SELECTION_TIME,
-    legendaries: 0,
-    mythicals: 0,
-    exclusivePools: false,
-    gen: 8,
-  });
+  const [options, setOptions] = useState<Options>(initialState().options);
 
   const createNewRoom = () => {
     createRoom(client, 'team-generator', options)
@@ -90,7 +78,7 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
     },
   ];
 
-  const setOptionValue = (key: keyof TeamGeneratorOptions) => {
+  const setOptionValue = (key: keyof Options) => {
     return (_: React.ChangeEvent<unknown>, newValue: unknown) => {
       setOptions({
         ...options,

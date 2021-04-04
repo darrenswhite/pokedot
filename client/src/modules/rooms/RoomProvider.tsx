@@ -8,19 +8,36 @@ import {TeamGeneratorState} from './TeamGeneratorState';
 
 const client = new Client(serverUrl);
 
+export const initialRoom = new Room('');
+
+export const initialState = (): TeamGeneratorState => ({
+  options: {
+    teamSize: 6,
+    poolSize: 3,
+    poolSelectionTime: 30000,
+    legendaries: 0,
+    mythicals: 0,
+    exclusivePools: false,
+    gen: 8,
+  },
+  players: {},
+  currentPool: -1,
+  currentPoolTime: -1,
+});
+
 export interface RoomContextProps {
   client: Client;
-  room: Room<TeamGeneratorState> | null;
-  setRoom: (room: Room<TeamGeneratorState> | null) => void;
-  state: TeamGeneratorState | null;
-  setState: (state: TeamGeneratorState | null) => void;
+  room: Room<TeamGeneratorState>;
+  setRoom: (room: Room<TeamGeneratorState>) => void;
+  state: TeamGeneratorState;
+  setState: (state: TeamGeneratorState) => void;
 }
 
 export const RoomContext = createContext<RoomContextProps>({
   client: client,
-  room: null,
+  room: initialRoom,
   setRoom: noop,
-  state: null,
+  state: initialState(),
   setState: noop,
 });
 
@@ -31,8 +48,8 @@ export interface RoomProviderProps {
 export const RoomProvider: React.FC<RoomProviderProps> = ({
   children,
 }: RoomProviderProps) => {
-  const [room, setRoom] = useState<Room<TeamGeneratorState> | null>(null);
-  const [state, setState] = useState<TeamGeneratorState | null>(null);
+  const [room, setRoom] = useState<Room<TeamGeneratorState>>(initialRoom);
+  const [state, setState] = useState<TeamGeneratorState>(initialState());
 
   return (
     <RoomContext.Provider value={{client, room, setRoom, state, setState}}>

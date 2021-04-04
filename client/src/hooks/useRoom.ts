@@ -1,12 +1,13 @@
+import {Schema} from '@colyseus/schema';
 import {Client, Room} from 'colyseus.js';
-import {cloneDeep} from 'lodash/fp';
 import {useContext, useEffect, useState} from 'react';
 
-import {RoomContext} from '../modules/rooms/RoomProvider';
 import {
-  TeamGeneratorOptions,
-  TeamGeneratorState,
-} from '../modules/rooms/TeamGeneratorState';
+  RoomContext,
+  initialRoom,
+  initialState,
+} from '../modules/rooms/RoomProvider';
+import {Options, TeamGeneratorState} from '../modules/rooms/TeamGeneratorState';
 
 export const ROOM_ID_LENGTH = 4;
 
@@ -14,17 +15,18 @@ export const LOCAL_STORAGE_KEY_ROOM_ID = 'pokedot-room-id';
 export const LOCAL_STORAGE_KEY_SESSION_ID = 'pokedot-session-id';
 export const LOCAL_STORAGE_KEY_ROOM_SESSION = 'pokedot-room-session';
 
-export interface UseRoomReturnType {
+export interface UseJoinRoomReturnType {
   client: Client;
-  room: Room<TeamGeneratorState> | null;
-  state: TeamGeneratorState | null;
+  room: Room<TeamGeneratorState>;
+  state: TeamGeneratorState;
+  isLoading: boolean;
   error: string | null;
 }
 
 export const createRoom = async (
   client: Client,
   roomName: string,
-  options: TeamGeneratorOptions
+  options: Options
 ): Promise<Room<TeamGeneratorState>> => {
   let room;
 
@@ -42,32 +44,46 @@ export const createRoom = async (
   return room;
 };
 
-export const useJoinRoom = (roomId: string): UseRoomReturnType => {
+export const useJoinRoom = (
+  unnormalizedRoomId: string
+): UseJoinRoomReturnType => {
   const {client, room, setRoom, state, setState} = useContext(RoomContext);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const roomId = normalizeRoomId(unnormalizedRoomId);
 
   useEffect(() => {
-    if (roomId.length == ROOM_ID_LENGTH && (!room || room.id !== roomId)) {
-      if (room) {
+    setIsLoading(true);
+    setError(null);
+
+    if (roomId.length !== ROOM_ID_LENGTH) {
+      setError('Invalid room code format.');
+      setIsLoading(false);
+    } else if (room.id === roomId) {
+      setIsLoading(false);
+    } else {
+      if (room !== initialRoom) {
         console.log(`Leaving current room ${room.id}.`);
         room.leave();
-        setRoom(null);
       }
 
-      setError(null);
+      setRoom(initialRoom);
+      setState(initialState());
 
       rejoinOrJoinRoom(client, roomId)
         .then(room => {
           setRoom(room);
           setState(room.state);
+          setIsLoading(false);
         })
         .catch(err => {
           setError(err);
+          setIsLoading(false);
         });
     }
   }, [room, client, roomId, setRoom, setState]);
 
-  return {client, room, state, error};
+  return {client, room, state, isLoading, error};
 };
 
 export const useRoomListeners = (): void => {
@@ -82,7 +98,7 @@ export const useRoomListeners = (): void => {
         console.error(`Room error: ${err}`);
       });
       room.onStateChange(state => {
-        setState(cloneDeep(state));
+        setState(((state as unknown) as Schema).toJSON() as TeamGeneratorState);
       });
 
       return () => {
@@ -94,11 +110,9 @@ export const useRoomListeners = (): void => {
 
 const rejoinOrJoinRoom = async (
   client: Client,
-  unnormalizedRoomId: string
+  roomId: string
 ): Promise<Room<TeamGeneratorState>> => {
   let room;
-
-  const roomId = normalizeRoomId(unnormalizedRoomId);
 
   const existingRoomId = getRoomIdCache();
   const existingSessionId = getSessionIdCache();
@@ -125,22 +139,16 @@ const rejoinOrJoinRoom = async (
 
 const joinRoom = async (
   client: Client,
-  unnormalizedRoomId: string
+  roomId: string
 ): Promise<Room<TeamGeneratorState>> => {
   let room;
 
-  const roomId = normalizeRoomId(unnormalizedRoomId);
+  try {
+    room = await client.joinById<TeamGeneratorState>(roomId);
 
-  if (roomId.length === ROOM_ID_LENGTH) {
-    try {
-      room = await client.joinById<TeamGeneratorState>(roomId);
-
-      addRoomSessionCache(room);
-    } catch (e) {
-      throw new Error(`Failed to join room ${roomId}: ${e}`);
-    }
-  } else {
-    throw new Error(`Invalid room code format: ${roomId}.`);
+    addRoomSessionCache(room);
+  } catch (e) {
+    throw new Error(`Failed to join room ${roomId}: ${e}`);
   }
 
   return room;

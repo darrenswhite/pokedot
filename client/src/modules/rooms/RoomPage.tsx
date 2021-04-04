@@ -4,18 +4,24 @@ import React from 'react';
 
 import {useJoinRoom, useRoomListeners} from '../../hooks/useRoom';
 
-import {RoomInstance} from './RoomInstance';
+import {PlayerName} from './PlayerName';
+import {PlayerReady} from './PlayerReady';
+import {PoolSelections} from './PoolSelections';
+import {Summary} from './Summary';
 
 export const RoomPage: React.FC = () => {
   const {query} = useRouter();
   const roomId = typeof query.roomId === 'string' ? query.roomId : '';
-  const {room, state, error} = useJoinRoom(roomId);
+  const {isLoading, error, room, state} = useJoinRoom(roomId);
+  const {currentPool, options, players} = state;
+  const player = players[room.sessionId];
+  const showPoolSelections = currentPool !== -1;
+  const showSummary = currentPool === options?.teamSize;
   let content;
-  let player;
 
   useRoomListeners();
 
-  if (error) {
+  if (error || isLoading || !player) {
     content = (
       <Grid
         container
@@ -24,25 +30,18 @@ export const RoomPage: React.FC = () => {
         style={{height: '100%'}}
       >
         <Grid item>
-          <Typography>{error}</Typography>
+          {error ? <Typography>{error}</Typography> : <CircularProgress />}
         </Grid>
       </Grid>
     );
-  } else if (room && state && (player = state.players.get(room.sessionId))) {
-    content = <RoomInstance room={room} state={state} player={player} />;
+  } else if (player.name === 'Anonymous') {
+    content = <PlayerName />;
+  } else if (showSummary) {
+    content = <Summary />;
+  } else if (showPoolSelections) {
+    content = <PoolSelections />;
   } else {
-    content = (
-      <Grid
-        container
-        justify="center"
-        alignContent="center"
-        style={{height: '100%'}}
-      >
-        <Grid item>
-          <CircularProgress />
-        </Grid>
-      </Grid>
-    );
+    content = <PlayerReady />;
   }
 
   return content;

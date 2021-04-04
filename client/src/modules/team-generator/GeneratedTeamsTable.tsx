@@ -36,7 +36,7 @@ const mapSpeciesValue = (
   return value => {
     const entry = (value as GeneratedTeamsMatrixProps[])[0];
 
-    return entry.index <= revealed ? entry.info?.species : '';
+    return entry && entry.index <= revealed ? entry.info?.species : '';
   };
 };
 

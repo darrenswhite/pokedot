@@ -22,7 +22,11 @@ export class SetPlayerPoolSelectionCommand extends TeamGeneratorCommand<SetPlaye
     const player = this.state.players.get(sessionId);
 
     if (player && index < player.pool.length) {
-      player.team[currentPool] = player.pool[index];
+      const choice = player.pool.at(index);
+
+      if (choice) {
+        player.team.setAt(currentPool, choice);
+      }
     }
   }
 }
