@@ -78,8 +78,9 @@ export const useJoinRoom = (
           setState(room.state);
           setIsLoading(false);
         })
-        .catch(err => {
-          setError(err);
+        .catch(e => {
+          console.error(e);
+          setError(`Failed to join room.`);
           setIsLoading(false);
         });
     }
@@ -150,7 +151,7 @@ const joinRoom = async (
 
     addRoomSessionCache(room);
   } catch (e) {
-    throw new Error(`Failed to join room ${roomId}: ${e}`);
+    throw new Error(`Failed to join room ${roomId}. ${e}`);
   }
 
   return room;

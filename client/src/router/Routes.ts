@@ -1,4 +1,4 @@
-import {find, flow, values} from 'lodash/fp';
+import {findLast, flow, values} from 'lodash/fp';
 import dynamic from 'next/dynamic';
 import {NextRouter} from 'next/router';
 
@@ -34,6 +34,6 @@ export const Routes = {
 export const getCurrentRoute = (router: NextRouter): Route | undefined => {
   return flow(
     values,
-    find(route => router.pathname === route.path)
+    findLast(route => router.pathname.startsWith(route.path))
   )(Routes);
 };
