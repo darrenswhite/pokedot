@@ -55,7 +55,7 @@ export const PoolCard: React.FC<PoolCardProps> = ({
         </CardMedia>
       </CardActionArea>
 
-      <CardActions style={{justifyContent: 'center'}}>
+      <CardActions>
         <Button size="small" color="primary" onClick={onSelect}>
           Choose
         </Button>

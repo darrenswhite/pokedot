@@ -1,8 +1,17 @@
 import {Button, Grid} from '@material-ui/core';
+import dynamic from 'next/dynamic';
 import React, {useState} from 'react';
 
-import {CreateRoom} from './CreateRoom';
-import {JoinRoom} from './JoinRoom';
+import {CreateRoomProps} from './CreateRoom';
+import {JoinRoomProps} from './JoinRoom';
+
+const CreateRoom = dynamic<CreateRoomProps>(() =>
+  import('./CreateRoom').then(m => m.CreateRoom)
+);
+
+const JoinRoom = dynamic<JoinRoomProps>(() =>
+  import('./JoinRoom').then(m => m.JoinRoom)
+);
 
 export const RoomsPage: React.FC = () => {
   const [create, setCreate] = useState(false);

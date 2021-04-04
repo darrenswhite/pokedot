@@ -1,13 +1,25 @@
 import {CircularProgress, Grid, Typography} from '@material-ui/core';
+import dynamic from 'next/dynamic';
 import {useRouter} from 'next/router';
 import React from 'react';
 
 import {useJoinRoom, useRoomListeners} from '../../hooks/useRoom';
 
-import {PlayerName} from './PlayerName';
-import {PlayerReady} from './PlayerReady';
-import {PoolSelections} from './PoolSelections';
-import {Summary} from './Summary';
+const PlayerName = dynamic<unknown>(() =>
+  import('./PlayerName').then(m => m.PlayerName)
+);
+
+const PlayerReady = dynamic<unknown>(() =>
+  import('./PlayerReady').then(m => m.PlayerReady)
+);
+
+const PoolSelections = dynamic<unknown>(() =>
+  import('./PoolSelections').then(m => m.PoolSelections)
+);
+
+const Summary = dynamic<unknown>(() =>
+  import('./Summary').then(m => m.Summary)
+);
 
 export const RoomPage: React.FC = () => {
   const {query} = useRouter();

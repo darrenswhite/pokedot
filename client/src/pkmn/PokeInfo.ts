@@ -25,107 +25,6 @@ export const STAT_NAMES: StatsTable<string> = {
   spe: 'Spe',
 };
 
-const MYTHICALS = [
-  'mew',
-  'celebi',
-  'jirachi',
-  'deoxys',
-  'phione',
-  'manaphy',
-  'darkrai',
-  'shaymin',
-  'arceus',
-  'victini',
-  'keldeo',
-  'meloetta',
-  'genesect',
-  'diancie',
-  'hoopa',
-  'volcanion',
-  'magearna',
-  'marshadow',
-  'zeraora',
-  'meltan',
-  'melmetal',
-  'zarude',
-];
-
-const LEGENDS = [
-  'mewtwo',
-  'lugia',
-  'hooh',
-  'kyogre',
-  'groudon',
-  'rayquaza',
-  'dialga',
-  'palkia',
-  'giratina',
-  'reshiram',
-  'zekrom',
-  'kyurem',
-  'xerneas',
-  'yveltal',
-  'zygarde',
-  'cosmog',
-  'cosmoem',
-  'solgaleo',
-  'lunala',
-  'necrozma',
-  'zacian',
-  'zamazenta',
-  'eternatus',
-  'calyrex',
-];
-
-const SUB_LEGENDS = [
-  'articuno',
-  'zapdos',
-  'moltres',
-  'raikou',
-  'entei',
-  'suicune',
-  'regirock',
-  'regice',
-  'registeel',
-  'latias',
-  'latios',
-  'uxie',
-  'mesprit',
-  'azelf',
-  'heatran',
-  'regigigas',
-  'cresselia',
-  'cobalion',
-  'terrakion',
-  'virizion',
-  'tornadus',
-  'thundurus',
-  'landorus',
-  'typenull',
-  'silvally',
-  'tapukoko',
-  'tapulele',
-  'tapubulu',
-  'tapufini',
-  'nihilego',
-  'buzzwole',
-  'pheromosa',
-  'xurkitree',
-  'celesteela',
-  'kartana',
-  'guzzlord',
-  'poipole',
-  'naganadel',
-  'stakataka',
-  'blacephalon',
-  'kubfu',
-  'urshifu',
-  'regieleki',
-  'regidrago',
-  'glastrier',
-  'spectrier',
-];
-
 export class PokeInfo {
   private specie: Specie;
   resistances: TypeChart;
@@ -213,14 +112,6 @@ export class PokeInfo {
 
   get id(): string {
     return this.specie.id;
-  }
-
-  get isLegendary(): boolean {
-    return LEGENDS.includes(this.id) || SUB_LEGENDS.includes(this.id);
-  }
-
-  get isMythical(): boolean {
-    return MYTHICALS.includes(this.id);
   }
 
   private static createCoverageTypeChart(
