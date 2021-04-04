@@ -1,5 +1,6 @@
 import {Client} from 'colyseus';
 
+import {StartGeneratorCommand} from './StartGeneratorCommand';
 import {TeamGeneratorCommand} from './TeamGeneratorCommand';
 
 export interface OnLeaveCommandPayload {
@@ -11,7 +12,7 @@ export interface OnLeaveCommandPayload {
 export class OnLeaveCommand extends TeamGeneratorCommand<OnLeaveCommandPayload> {
   async execute(
     {client, sessionId, consented}: OnLeaveCommandPayload = this.payload
-  ): Promise<void> {
+  ): Promise<TeamGeneratorCommand[]> {
     const player = this.state.players.get(sessionId);
 
     if (player) {
@@ -41,5 +42,7 @@ export class OnLeaveCommand extends TeamGeneratorCommand<OnLeaveCommandPayload> 
         );
       }
     }
+
+    return [new StartGeneratorCommand()];
   }
 }

@@ -6,9 +6,9 @@ import {TeamGeneratorCommand} from './TeamGeneratorCommand';
 
 export class StartGeneratorCommand extends TeamGeneratorCommand {
   validate(): boolean {
-    return every(
-      player => player.ready,
-      Array.from(this.state.players.values())
+    return (
+      every(player => player.ready, Array.from(this.state.players.values())) &&
+      this.state.currentPool === -1
     );
   }
 

@@ -6,14 +6,23 @@ import {
   ListItemText,
   ListSubheader,
   Paper,
+  makeStyles,
 } from '@material-ui/core';
 import {Check, Clear} from '@material-ui/icons';
+import clsx from 'clsx';
 import React, {useContext} from 'react';
 
 import {RoomContext} from './RoomProvider';
 import {Player} from './TeamGeneratorState';
 
+const useStyles = makeStyles(() => ({
+  disconnected: {
+    textDecoration: 'line-through',
+  },
+}));
+
 export const PlayerList: React.FC = () => {
+  const classes = useStyles();
   const {state} = useContext(RoomContext);
   const currentPool = state.currentPool;
   const players = Object.values(state.players);
@@ -39,12 +48,18 @@ export const PlayerList: React.FC = () => {
         }
       >
         <Divider />
+
         {players.map(player => (
           <ListItem key={player.id}>
             <ListItemIcon>
               {isPlayerReady(player) ? <Check /> : <Clear />}
             </ListItemIcon>
-            <ListItemText>{player.name}</ListItemText>
+
+            <ListItemText
+              className={clsx({[classes.disconnected]: !player.connected})}
+            >
+              {player.name}
+            </ListItemText>
           </ListItem>
         ))}
       </List>
