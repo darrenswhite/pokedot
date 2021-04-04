@@ -1,4 +1,12 @@
-import {Button, Grid, Slider, Switch, Typography} from '@material-ui/core';
+import {
+  Button,
+  CircularProgress,
+  Grid,
+  Slider,
+  Switch,
+  Typography,
+} from '@material-ui/core';
+import {Alert} from '@material-ui/lab';
 import {useRouter} from 'next/router';
 import React, {useContext, useState} from 'react';
 
@@ -28,16 +36,34 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
   const {client, setRoom, setState} = useContext(RoomContext);
   const router = useRouter();
   const [options, setOptions] = useState<Options>(initialState().options);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const createNewRoom = () => {
+    setError(null);
+    setIsLoading(true);
+
     createRoom(client, 'team-generator', options)
       .then(room => {
         setRoom(room);
         setState(room.state);
-        router.push(`/team-generator/${room.id}`);
+        router
+          .push(`/team-generator/${room.id}`)
+          .then(() => {
+            setIsLoading(false);
+          })
+          .catch(e => {
+            console.error(
+              `Failed to navigate to team generator room ${room.id}.`,
+              e
+            );
+            setError('Failed to join newly created room.');
+            setIsLoading(false);
+          });
       })
       .catch(() => {
-        // TODO display friendly error
+        setError('Failed to create room.');
+        setIsLoading(false);
       });
   };
 
@@ -60,7 +86,7 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
       field: 'poolSelectionTime',
       label: 'Pool Selection Time',
       min: 10000,
-      max: 60000,
+      max: 120000,
       step: 10000,
       valueLabelFormat: value => value / 1000 + 's',
     },
@@ -144,6 +170,24 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
         </Grid>
       </Grid>
 
+      {error && (
+        <Grid item container justify="center">
+          <Grid item xs={12} sm={4} md={3} lg={2} xl={1}>
+            <Alert variant="outlined" severity="error">
+              {error}
+            </Alert>
+          </Grid>
+        </Grid>
+      )}
+
+      {isLoading && (
+        <Grid item container justify="center">
+          <Grid item>
+            <CircularProgress size={24} />
+          </Grid>
+        </Grid>
+      )}
+
       <Grid item container justify="center">
         <Grid item xs={12} sm={4} md={3} lg={2} xl={1}>
           <Button
@@ -151,6 +195,7 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
             variant="contained"
             color="primary"
             fullWidth
+            disabled={isLoading}
           >
             Create room
           </Button>

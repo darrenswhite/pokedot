@@ -1,4 +1,11 @@
-import {Button, Grid, TextField, makeStyles} from '@material-ui/core';
+import {
+  Button,
+  CircularProgress,
+  Grid,
+  TextField,
+  makeStyles,
+} from '@material-ui/core';
+import {Alert} from '@material-ui/lab';
 import {useRouter} from 'next/router';
 import React, {useState} from 'react';
 
@@ -23,9 +30,26 @@ export const JoinRoom: React.FC<JoinRoomProps> = ({onBack}: JoinRoomProps) => {
   const classes = useStyles();
   const router = useRouter();
   const [roomId, setRoomId] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const joinRoom = () => {
-    router.push(`/team-generator/${roomId}`);
+    setError(null);
+    setIsLoading(true);
+
+    router
+      .push(`/team-generator/${roomId}`)
+      .then(() => {
+        setIsLoading(false);
+      })
+      .catch(e => {
+        console.error(
+          `Failed to navigate to team generator room ${roomId}.`,
+          e
+        );
+        setError('Failed to join room.');
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -51,6 +75,24 @@ export const JoinRoom: React.FC<JoinRoomProps> = ({onBack}: JoinRoomProps) => {
         </Grid>
       </Grid>
 
+      {error && (
+        <Grid item container justify="center">
+          <Grid item xs={12} sm={4} md={3} lg={2} xl={1}>
+            <Alert variant="outlined" severity="error">
+              {error}
+            </Alert>
+          </Grid>
+        </Grid>
+      )}
+
+      {isLoading && (
+        <Grid item container justify="center">
+          <Grid item>
+            <CircularProgress size={24} />
+          </Grid>
+        </Grid>
+      )}
+
       <Grid item container justify="center">
         <Grid item xs={12} sm={4} md={3} lg={2} xl={1}>
           <Button
@@ -58,6 +100,7 @@ export const JoinRoom: React.FC<JoinRoomProps> = ({onBack}: JoinRoomProps) => {
             variant="contained"
             color="primary"
             fullWidth
+            disabled={isLoading}
           >
             Join room
           </Button>
