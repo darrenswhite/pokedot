@@ -8,6 +8,6 @@ export const Theme = createMuiTheme({
     },
   },
   typography: {
-    fontFamily: 'Inter,Sans-Serif',
+    fontFamily: 'Inter,sans-serif',
   },
 });

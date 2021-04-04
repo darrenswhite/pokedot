@@ -1,11 +1,19 @@
-import {Button, Grid, Typography} from '@material-ui/core';
+import {Button, Grid, Typography, makeStyles} from '@material-ui/core';
 import React, {useContext} from 'react';
 
 import {RoomContext} from './RoomProvider';
 import {TeamGeneratorContainer} from './TeamGeneratorContainer';
 
+const useStyles = makeStyles(() => ({
+  roomId: {
+    fontFamily: 'Roboto Mono,monospace',
+  },
+}));
+
 export const PlayerReady: React.FC = () => {
-  const {room} = useContext(RoomContext);
+  const {room, state} = useContext(RoomContext);
+  const classes = useStyles();
+  const ready = state.players[room.sessionId]?.ready;
 
   const setPlayerReady = () => room.send('SET_PLAYER_READY');
 
@@ -13,7 +21,7 @@ export const PlayerReady: React.FC = () => {
     <TeamGeneratorContainer
       header={
         <Typography variant="h5" component="h2" align="center" gutterBottom>
-          Room code: {room.id}
+          Room code: <span className={classes.roomId}>{room.id}</span>
         </Typography>
       }
     >
@@ -24,6 +32,7 @@ export const PlayerReady: React.FC = () => {
             variant="contained"
             color="primary"
             fullWidth
+            disabled={ready}
           >
             Ready
           </Button>
