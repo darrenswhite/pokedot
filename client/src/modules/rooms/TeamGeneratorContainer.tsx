@@ -20,7 +20,7 @@ export const TeamGeneratorContainer: React.FC<TeamGeneratorContainerProps> = ({
           {header}
         </Grid>
 
-        <Grid item xs={12} justify="center">
+        <Grid item xs={12}>
           {children}
         </Grid>
       </Grid>

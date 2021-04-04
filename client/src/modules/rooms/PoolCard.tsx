@@ -3,6 +3,7 @@ import {
   Card,
   CardActionArea,
   CardActions,
+  CardHeader,
   CardMedia,
   makeStyles,
 } from '@material-ui/core';
@@ -42,13 +43,14 @@ export const PoolCard: React.FC<PoolCardProps> = ({
         [classes.selected]: selected,
       })}
     >
+      <CardHeader title={pokemon.name} />
+
       <CardActionArea>
         <CardMedia>
           <SpeciesImage
             name={pokemon.name}
             type={SpeciesImageType.SPRITE}
             moreInfo
-            showTooltip
           />
         </CardMedia>
       </CardActionArea>

@@ -45,10 +45,11 @@ export const SpeciesImage: React.FC<SpeciesImageProps> = ({
 }: SpeciesImageProps) => {
   const classes = useStyle();
   const {setOpen, setSpecies} = useContext(SpeciesContext);
+  const validName = name && name.length > 0;
   let image;
 
   const showMoreInfo = () => {
-    if (moreInfo) {
+    if (moreInfo && validName) {
       setSpecies(name);
       setOpen(true);
     }
@@ -61,8 +62,9 @@ export const SpeciesImage: React.FC<SpeciesImageProps> = ({
       <span
         style={icon.css}
         className={clsx({
-          [classes.image]: moreInfo,
+          [classes.image]: moreInfo && validName,
         })}
+        onClick={showMoreInfo}
       />
     );
   };
@@ -71,13 +73,18 @@ export const SpeciesImage: React.FC<SpeciesImageProps> = ({
     const sprite = Sprites.getDexPokemon(name);
 
     return (
-      <div className={classes.spriteContainer}>
+      <div
+        className={clsx({
+          [classes.image]: moreInfo && validName,
+          [classes.spriteContainer]: true,
+        })}
+        onClick={showMoreInfo}
+      >
         <img
           src={sprite.url}
           width={sprite.w}
           height={sprite.h}
           className={clsx({
-            [classes.image]: moreInfo,
             [classes.pixelated]: sprite.pixelated,
           })}
         />
@@ -94,15 +101,6 @@ export const SpeciesImage: React.FC<SpeciesImageProps> = ({
   }
 
   return (
-    <Tooltip title={showTooltip ? name : ''}>
-      <div
-        className={clsx({
-          [classes.image]: moreInfo,
-        })}
-        onClick={showMoreInfo}
-      >
-        {image}
-      </div>
-    </Tooltip>
+    <Tooltip title={showTooltip && validName ? name : ''}>{image}</Tooltip>
   );
 };
