@@ -1,4 +1,4 @@
-import {Box, Drawer} from '@material-ui/core';
+import {Box, CircularProgress, Drawer, Grid} from '@material-ui/core';
 import React, {useContext, useEffect, useState} from 'react';
 
 import {PokeInfo} from '../../pkmn/PokeInfo';
@@ -13,6 +13,12 @@ export const SpeciesBottomDrawer: React.FC = () => {
 
   if (info) {
     content = <SpeciesInfo info={info} />;
+  } else {
+    content = (
+      <Grid container justify="center">
+        <CircularProgress />
+      </Grid>
+    );
   }
 
   useEffect(() => {

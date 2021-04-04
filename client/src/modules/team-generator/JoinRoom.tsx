@@ -25,7 +25,7 @@ export const JoinRoom: React.FC<JoinRoomProps> = ({onBack}: JoinRoomProps) => {
   const [roomId, setRoomId] = useState<string>('');
 
   const joinRoom = () => {
-    router.push(`/rooms/${roomId}`);
+    router.push(`/team-generator/${roomId}`);
   };
 
   return (

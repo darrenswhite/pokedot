@@ -34,7 +34,7 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
       .then(room => {
         setRoom(room);
         setState(room.state);
-        router.push(`/rooms/${room.id}`);
+        router.push(`/team-generator/${room.id}`);
       })
       .catch(() => {
         // TODO display friendly error
