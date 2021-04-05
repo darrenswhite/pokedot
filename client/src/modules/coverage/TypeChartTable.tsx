@@ -8,8 +8,8 @@ import {
   TypeChartMatrixProps,
 } from '../../pkmn/matrix/TypeChartMatrix';
 import {PartialPokemonSet} from '../../pkmn/PokeInfo';
-import {SpeciesImage, SpeciesImageType} from '../pokemon-info/SpeciesImage';
-import {TypeImage} from '../pokemon-info/TypeImage';
+import {SpeciesImage, SpeciesImageType} from '../species-info/SpeciesImage';
+import {TypeImage} from '../species-info/TypeImage';
 import {PCol} from '../table/model/PCol';
 import {PValue} from '../table/model/PRow';
 import {PMatrixTable} from '../table/PMatrixTable';

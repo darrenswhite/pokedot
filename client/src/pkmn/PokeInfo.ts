@@ -29,15 +29,18 @@ export class PokeInfo {
   private specie: Specie;
   resistances: TypeChart;
   coverage: TypeChart;
+  moves: Move[];
 
   private constructor(
     specie: Specie,
     resistances: TypeChart,
-    coverage: TypeChart
+    coverage: TypeChart,
+    moves: Move[]
   ) {
     this.specie = specie;
     this.resistances = resistances;
     this.coverage = coverage;
+    this.moves = moves;
   }
 
   static async forSpecies(
@@ -59,8 +62,9 @@ export class PokeInfo {
       const types = specie.types;
       const resistances = PokeInfo.createResistanceTypeChart(generation, types);
       const coverage = PokeInfo.createCoverageTypeChart(generation, set.moves);
+      const moves = await PokeInfo.getMoves(generation, specie);
 
-      return new PokeInfo(specie, resistances, coverage);
+      return new PokeInfo(specie, resistances, coverage, moves);
     } else {
       throw new Error(`Unknown species: ${species}`);
     }
@@ -112,6 +116,19 @@ export class PokeInfo {
 
   get id(): string {
     return this.specie.id;
+  }
+
+  private static async getMoves(
+    generation: Generation,
+    specie: Specie
+  ): Promise<Move[]> {
+    const learnset = await generation.learnsets.learnable(specie.id);
+    const moveIds = Object.keys(learnset || {});
+    const moves = moveIds
+      .map(moveId => generation.moves.get(moveId))
+      .filter(move => !!move) as Move[];
+
+    return moves;
   }
 
   private static createCoverageTypeChart(

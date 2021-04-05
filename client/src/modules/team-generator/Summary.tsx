@@ -5,7 +5,7 @@ import {
   GeneratedTeamsMatrix,
   GeneratedTeamsMatrixProps,
 } from '../../pkmn/matrix/GeneratedTeamsMatrix';
-import {SpeciesImage, SpeciesImageType} from '../pokemon-info/SpeciesImage';
+import {SpeciesImage, SpeciesImageType} from '../species-info/SpeciesImage';
 import {PCol} from '../table/model/PCol';
 import {PValue} from '../table/model/PRow';
 import {PMatrixTable} from '../table/PMatrixTable';

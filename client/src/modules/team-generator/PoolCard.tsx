@@ -10,7 +10,7 @@ import {
 import clsx from 'clsx';
 import React from 'react';
 
-import {SpeciesImage, SpeciesImageType} from '../pokemon-info/SpeciesImage';
+import {SpeciesImage, SpeciesImageType} from '../species-info/SpeciesImage';
 
 import {Pokemon} from './TeamGeneratorState';
 

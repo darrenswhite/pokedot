@@ -2,18 +2,18 @@ import {Container, makeStyles} from '@material-ui/core';
 import dynamic from 'next/dynamic';
 import React from 'react';
 
-import {SpeciesProviderProps} from '../pokemon-info/SpeciesProvider';
+import {SpeciesProviderProps} from '../species-info/SpeciesProvider';
 import {RoomProvider} from '../team-generator/RoomProvider';
 
 import {Footer} from './Footer';
 import {Header} from './Header';
 
 const SpeciesBottomDrawer = dynamic<unknown>(() =>
-  import('../pokemon-info/SpeciesBottomDrawer').then(m => m.SpeciesBottomDrawer)
+  import('../species-info/SpeciesBottomDrawer').then(m => m.SpeciesBottomDrawer)
 );
 
 const SpeciesProvider = dynamic<SpeciesProviderProps>(() =>
-  import('../pokemon-info/SpeciesProvider').then(m => m.SpeciesProvider)
+  import('../species-info/SpeciesProvider').then(m => m.SpeciesProvider)
 );
 
 type PageContainerProps = {

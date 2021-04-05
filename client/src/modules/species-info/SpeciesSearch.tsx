@@ -5,7 +5,7 @@ import {
   createFilterOptions,
 } from '@material-ui/lab';
 import {findAll} from 'highlight-words-core';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 
 import {PartialPokemonSet, PokeInfo} from '../../pkmn/PokeInfo';
 
@@ -45,13 +45,15 @@ const renderOption = (
 };
 
 export interface PokemonSearchProps {
-  onSelect: (pokemonSets: PartialPokemonSet[]) => void;
+  onChange: (pokemonSets: PartialPokemonSet) => void;
 }
 
 export const SpeciesSearch: React.FC<PokemonSearchProps> = ({
-  onSelect,
+  onChange,
 }: PokemonSearchProps) => {
   const [species, setSpecies] = useState<string[]>([]);
+  const [text, setText] = useState<string>('');
+  const inputRef = useRef<HTMLInputElement>(null);
   const filterOptions = createFilterOptions<string>({
     limit: 5,
   });
@@ -62,7 +64,10 @@ export const SpeciesSearch: React.FC<PokemonSearchProps> = ({
 
   return (
     <Autocomplete
+      value={null}
       options={species}
+      inputValue={text}
+      onInputChange={(_, value) => setText(value)}
       filterOptions={filterOptions}
       size="small"
       renderInput={params => (
@@ -72,19 +77,21 @@ export const SpeciesSearch: React.FC<PokemonSearchProps> = ({
           label="Select Pokémon"
           placeholder="Enter name..."
           size="small"
+          inputRef={inputRef}
         />
       )}
       renderOption={renderOption}
-      onChange={(_, values: string[]) => {
-        onSelect(
-          values.map(value => ({
-            species: value,
-          }))
-        );
+      onClose={() => {
+        setText('');
       }}
-      limitTags={3}
-      multiple
-      disableCloseOnSelect
+      onChange={(_, value: string | null) => {
+        if (value) {
+          onChange({
+            species: value,
+          });
+        }
+      }}
+      blurOnSelect
     />
   );
 };

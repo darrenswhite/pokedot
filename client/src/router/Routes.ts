@@ -14,11 +14,6 @@ export const Routes = {
     path: '/',
     icon: dynamic(() => import('@material-ui/icons/Home')),
   },
-  POKEMON_INFO: {
-    displayName: 'Pokémon Info',
-    path: '/pokemon-info',
-    icon: dynamic(() => import('@material-ui/icons/Search')),
-  },
   TEAM_ANALYSIS: {
     displayName: 'Team Analysis',
     path: '/team-analysis',

@@ -6,8 +6,14 @@ import {PartialPokemonSet} from '../../pkmn/PokeInfo';
 import {DefensiveTableProps} from '../coverage/DefensiveTable';
 import {OffensiveTableProps} from '../coverage/OffensiveTable';
 import {SummaryCardProps} from '../coverage/SummaryCard';
+import {SpeciesSearch} from '../species-info/SpeciesSearch';
 
+import {PokemonCardProps} from './PokemonCard';
 import {TeamParser} from './TeamParser';
+
+const PokemonCard = dynamic<PokemonCardProps>(() =>
+  import('./PokemonCard').then(m => m.PokemonCard)
+);
 
 const DefensiveTable = dynamic<DefensiveTableProps>(() =>
   import('../coverage/DefensiveTable').then(m => m.DefensiveTable)
@@ -26,6 +32,25 @@ const TeamAnalysis: React.FC = () => {
   let defensiveTable;
   let offensiveTable;
   let summaryCard;
+
+  const addPokemon = (pokemon: PartialPokemonSet) => {
+    if (
+      pokemonSets.length < 6 &&
+      !pokemonSets.find(p => p.species === pokemon.species)
+    ) {
+      setPokemonSets([...pokemonSets, pokemon as PartialPokemonSet]);
+    }
+  };
+
+  const removePokemon = (index: number) => {
+    setPokemonSets(pokemonSets.filter((_, i) => i !== index));
+  };
+
+  const updatePokemon = (index: number, updated: PartialPokemonSet) => {
+    setPokemonSets(
+      pokemonSets.map((pokemon, i) => (i === index ? updated : pokemon))
+    );
+  };
 
   if (pokemonSets.length > 0) {
     defensiveTable = (
@@ -50,7 +75,7 @@ const TeamAnalysis: React.FC = () => {
   }
 
   return (
-    <Grid container justify="center">
+    <Grid container justify="center" spacing={4}>
       <Grid
         container
         item
@@ -63,9 +88,37 @@ const TeamAnalysis: React.FC = () => {
         spacing={4}
       >
         <Grid item xs={12}>
-          <TeamParser onParse={setPokemonSets} />
+          <SpeciesSearch onChange={addPokemon} />
         </Grid>
 
+        <Grid item xs={12}>
+          <TeamParser onParse={setPokemonSets} />
+        </Grid>
+      </Grid>
+
+      <Grid container item xs={12} justify="center" spacing={4}>
+        {pokemonSets.map((pokemon, index) => (
+          <Grid key={pokemon.species} item>
+            <PokemonCard
+              pokemon={pokemon}
+              onRemove={() => removePokemon(index)}
+              onUpdate={pokemon => updatePokemon(index, pokemon)}
+            />
+          </Grid>
+        ))}
+      </Grid>
+
+      <Grid
+        container
+        item
+        xs={12}
+        sm={12}
+        md={8}
+        lg={6}
+        xl={4}
+        justify="center"
+        spacing={4}
+      >
         <Grid item xs={12}>
           {defensiveTable}
         </Grid>
