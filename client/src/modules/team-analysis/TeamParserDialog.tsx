@@ -6,19 +6,22 @@ import {
   DialogContentText,
   DialogTitle,
   TextField,
+  Typography,
 } from '@material-ui/core';
-import {Team} from '@pkmn/sets';
-import React, {useRef, useState} from 'react';
+import {PokemonSet, Team} from '@pkmn/sets';
+import React, {useEffect, useRef, useState} from 'react';
 
 import {PartialPokemonSet} from '../../pkmn/PokeInfo';
 
 export interface TeamParserDialogProps {
+  value: PartialPokemonSet[];
   open: boolean;
   onClose: () => void;
   onParse: (pokemonSets: PartialPokemonSet[]) => void;
 }
 
 export const TeamParserDialog: React.FC<TeamParserDialogProps> = ({
+  value,
   open,
   onClose,
   onParse,
@@ -33,12 +36,17 @@ export const TeamParserDialog: React.FC<TeamParserDialogProps> = ({
     }
   };
 
+  useEffect(() => {
+    setTeam(new Team(value as Readonly<PokemonSet[]>).toString());
+  }, [value]);
+
   const parseTeam = () => {
     if (team) {
       const parsedTeam = Team.fromString(team);
 
       if (parsedTeam) {
         setParseError('');
+        setTeam('');
         onParse(parsedTeam.team as PartialPokemonSet[]);
         onClose();
       } else {
@@ -52,11 +60,16 @@ export const TeamParserDialog: React.FC<TeamParserDialogProps> = ({
 
   return (
     <Dialog open={open} onClose={onClose} onEntered={focusTeamInput}>
-      <DialogTitle>Import team</DialogTitle>
+      <DialogTitle>Import / Export Showdown Team</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Import a team from Pokémon Showdown teambuilder. Export the team, then
-          copy and paste it here.
+          To import a team: Export a team from Pokémon Showdown Teambuilder,
+          then copy and paste it here.
+        </DialogContentText>
+
+        <DialogContentText>
+          To export a team: Copy the text below and import it into Pokémon
+          Showdown Teambuilder.
         </DialogContentText>
 
         <TextField

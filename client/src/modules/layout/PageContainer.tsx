@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import React from 'react';
 
 import {SpeciesProviderProps} from '../species-info/SpeciesProvider';
+import {TeamProvider} from '../team-analysis/TeamProvider';
 import {RoomProvider} from '../team-generator/RoomProvider';
 
 import {Footer} from './Footer';
@@ -57,13 +58,15 @@ export const PageContainer: React.FC<PageContainerProps> = ({
 
         <RoomProvider>
           <SpeciesProvider>
-            <main className={classes.main}>
-              <Container maxWidth={false} className={classes.container}>
-                {children}
-              </Container>
-            </main>
+            <TeamProvider>
+              <main className={classes.main}>
+                <Container maxWidth={false} className={classes.container}>
+                  {children}
+                </Container>
+              </main>
 
-            <SpeciesBottomDrawer />
+              <SpeciesBottomDrawer />
+            </TeamProvider>
           </SpeciesProvider>
         </RoomProvider>
 

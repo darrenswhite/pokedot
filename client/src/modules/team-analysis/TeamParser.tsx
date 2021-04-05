@@ -1,5 +1,5 @@
-import {Button, Grid} from '@material-ui/core';
-import {Add} from '@material-ui/icons';
+import {Button} from '@material-ui/core';
+import {ImportExport} from '@material-ui/icons';
 import dynamic from 'next/dynamic';
 import React, {useState} from 'react';
 
@@ -12,10 +12,12 @@ const TeamParserDialog = dynamic<TeamParserDialogProps>(() =>
 );
 
 export interface TeamParserProps {
+  value: PartialPokemonSet[];
   onParse: (pokemonSets: PartialPokemonSet[]) => void;
 }
 
 export const TeamParser: React.FC<TeamParserProps> = ({
+  value,
   onParse,
 }: TeamParserProps) => {
   const [open, setOpen] = useState(false);
@@ -25,16 +27,22 @@ export const TeamParser: React.FC<TeamParserProps> = ({
 
   return (
     <>
-      <TeamParserDialog open={open} onClose={closeDialog} onParse={onParse} />
+      <TeamParserDialog
+        value={value}
+        open={open}
+        onClose={closeDialog}
+        onParse={onParse}
+      />
 
-      <Grid container justify="center">
-        <Grid item>
-          <Button variant="contained" onClick={openDialog} color="primary">
-            <Add />
-            Import from showdown
-          </Button>
-        </Grid>
-      </Grid>
+      <Button
+        variant="contained"
+        onClick={openDialog}
+        color="primary"
+        fullWidth
+      >
+        <ImportExport />
+        Import / Export Showdown
+      </Button>
     </>
   );
 };

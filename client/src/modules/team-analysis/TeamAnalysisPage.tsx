@@ -1,15 +1,16 @@
-import {Grid} from '@material-ui/core';
+import {Card, CardContent, CardHeader, Grid} from '@material-ui/core';
 import dynamic from 'next/dynamic';
-import React, {useState} from 'react';
+import React, {useContext} from 'react';
 
 import {PartialPokemonSet} from '../../pkmn/PokeInfo';
 import {DefensiveTableProps} from '../coverage/DefensiveTable';
 import {OffensiveTableProps} from '../coverage/OffensiveTable';
 import {SummaryCardProps} from '../coverage/SummaryCard';
-import {SpeciesSearch} from '../species-info/SpeciesSearch';
 
 import {PokemonCardProps} from './PokemonCard';
+import {SpeciesSearch} from './SpeciesSearch';
 import {TeamParser} from './TeamParser';
+import {TeamContext} from './TeamProvider';
 
 const PokemonCard = dynamic<PokemonCardProps>(() =>
   import('./PokemonCard').then(m => m.PokemonCard)
@@ -28,76 +29,29 @@ const SummaryCard = dynamic<SummaryCardProps>(() =>
 );
 
 const TeamAnalysis: React.FC = () => {
-  const [pokemonSets, setPokemonSets] = useState<PartialPokemonSet[]>([]);
-  let defensiveTable;
-  let offensiveTable;
-  let summaryCard;
+  const {team, setTeam} = useContext(TeamContext);
+  let notice;
+  let teamCards;
+  let analysis;
 
   const addPokemon = (pokemon: PartialPokemonSet) => {
-    if (
-      pokemonSets.length < 6 &&
-      !pokemonSets.find(p => p.species === pokemon.species)
-    ) {
-      setPokemonSets([...pokemonSets, pokemon as PartialPokemonSet]);
+    if (team.length < 6 && !team.find(p => p.species === pokemon.species)) {
+      setTeam([...team, pokemon as PartialPokemonSet]);
     }
   };
 
   const removePokemon = (index: number) => {
-    setPokemonSets(pokemonSets.filter((_, i) => i !== index));
+    setTeam(team.filter((_, i) => i !== index));
   };
 
   const updatePokemon = (index: number, updated: PartialPokemonSet) => {
-    setPokemonSets(
-      pokemonSets.map((pokemon, i) => (i === index ? updated : pokemon))
-    );
+    setTeam(team.map((pokemon, i) => (i === index ? updated : pokemon)));
   };
 
-  if (pokemonSets.length > 0) {
-    defensiveTable = (
-      <DefensiveTable
-        pokemonSets={pokemonSets}
-        columnField="species"
-        idField="effectiveness"
-        valueField="type"
-      />
-    );
-    offensiveTable = (
-      <OffensiveTable
-        pokemonSets={pokemonSets}
-        columnField="species"
-        idField="effectiveness"
-        valueField="type"
-      />
-    );
-    summaryCard = (
-      <SummaryCard pokemonSets={pokemonSets} showOffensiveSummary />
-    );
-  }
-
-  return (
-    <Grid container justify="center" spacing={4}>
-      <Grid
-        container
-        item
-        xs={12}
-        sm={12}
-        md={8}
-        lg={6}
-        xl={4}
-        justify="center"
-        spacing={4}
-      >
-        <Grid item xs={12}>
-          <SpeciesSearch onChange={addPokemon} />
-        </Grid>
-
-        <Grid item xs={12}>
-          <TeamParser onParse={setPokemonSets} />
-        </Grid>
-      </Grid>
-
+  if (team.length > 0) {
+    teamCards = (
       <Grid container item xs={12} justify="center" spacing={4}>
-        {pokemonSets.map((pokemon, index) => (
+        {team.map((pokemon, index) => (
           <Grid key={pokemon.species} item>
             <PokemonCard
               pokemon={pokemon}
@@ -107,7 +61,9 @@ const TeamAnalysis: React.FC = () => {
           </Grid>
         ))}
       </Grid>
+    );
 
+    analysis = (
       <Grid
         container
         item
@@ -120,17 +76,76 @@ const TeamAnalysis: React.FC = () => {
         spacing={4}
       >
         <Grid item xs={12}>
-          {defensiveTable}
+          <DefensiveTable
+            pokemonSets={team}
+            columnField="species"
+            idField="effectiveness"
+            valueField="type"
+          />
         </Grid>
 
         <Grid item xs={12}>
-          {offensiveTable}
+          <OffensiveTable
+            pokemonSets={team}
+            columnField="species"
+            idField="effectiveness"
+            valueField="type"
+          />
         </Grid>
 
         <Grid item xs={12} sm={6}>
-          {summaryCard}
+          <SummaryCard pokemonSets={team} showOffensiveSummary />
         </Grid>
       </Grid>
+    );
+  } else {
+    notice = (
+      <Grid container item xs={12} justify="center">
+        <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
+          <Card>
+            <CardHeader title="No Pokémon added." />
+
+            <CardContent>
+              To start, use the search above to find a Pokémon to add to your
+              team, or import a team from Pokémon Showdown Teambuilder.
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+    );
+  }
+
+  return (
+    <Grid container justify="center" spacing={2}>
+      <Grid item>
+        <TeamParser value={team} onParse={setTeam} />
+      </Grid>
+
+      <Grid container item xs={12} justify="center">
+        <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
+          <SpeciesSearch onChange={addPokemon} />
+        </Grid>
+      </Grid>
+
+      {notice}
+
+      <Grid
+        container
+        item
+        xs={12}
+        sm={12}
+        md={8}
+        lg={6}
+        xl={4}
+        justify="center"
+        alignItems="center"
+        spacing={4}
+        direction="column"
+      ></Grid>
+
+      {teamCards}
+
+      {analysis}
     </Grid>
   );
 };

@@ -8,8 +8,7 @@ import {findAll} from 'highlight-words-core';
 import React, {useEffect, useRef, useState} from 'react';
 
 import {PartialPokemonSet, PokeInfo} from '../../pkmn/PokeInfo';
-
-import {SpeciesImage, SpeciesImageType} from './SpeciesImage';
+import {SpeciesImage, SpeciesImageType} from '../species-info/SpeciesImage';
 
 const renderOption = (
   option: string,
@@ -78,6 +77,7 @@ export const SpeciesSearch: React.FC<PokemonSearchProps> = ({
           placeholder="Enter name..."
           size="small"
           inputRef={inputRef}
+          fullWidth
         />
       )}
       renderOption={renderOption}
@@ -91,7 +91,7 @@ export const SpeciesSearch: React.FC<PokemonSearchProps> = ({
           });
         }
       }}
-      blurOnSelect
+      fullWidth
     />
   );
 };
