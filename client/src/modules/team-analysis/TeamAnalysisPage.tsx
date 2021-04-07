@@ -34,7 +34,7 @@ const createPokemon = (pokemon: PartialPokemonSet): PokemonSet => {
     name: pokemon.name ?? '',
     species: pokemon.species,
     item: pokemon.item ?? '',
-    ability: pokemon.ability ?? '', // default to first ability
+    ability: pokemon.ability ?? '',
     moves: pokemon.moves
       ? [
           pokemon.moves[0] ?? '',

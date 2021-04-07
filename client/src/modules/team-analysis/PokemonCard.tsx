@@ -13,6 +13,7 @@ import React, {useContext, useEffect, useReducer} from 'react';
 import {GenerationContext} from '../generation/GenerationProvider';
 import {SpeciesImage, SpeciesImageType} from '../species-info/SpeciesImage';
 
+import {PokemonAbilityInput} from './PokemonAbilityInput';
 import {PokemonLevelInput} from './PokemonLevelInput';
 import {PokemonMoveInput} from './PokemonMoveInput';
 import {PokemonStatInput} from './PokemonStatInput';
@@ -22,6 +23,7 @@ export enum PokemonActionType {
   SET_MOVE,
   SET_EV,
   SET_IV,
+  SET_ABILITY,
 }
 
 export interface SetLevelAction {
@@ -47,11 +49,17 @@ export interface SetIVAction {
   value: number;
 }
 
+export interface SetAbilityAction {
+  type: PokemonActionType.SET_ABILITY;
+  ability: string;
+}
+
 export type PokemonAction =
   | SetLevelAction
   | SetMoveAction
   | SetEVAction
-  | SetIVAction;
+  | SetIVAction
+  | SetAbilityAction;
 
 const reducer = (state: PokemonSet, action: PokemonAction) => {
   switch (action.type) {
@@ -70,6 +78,10 @@ const reducer = (state: PokemonSet, action: PokemonAction) => {
     case PokemonActionType.SET_IV:
       return produce(state, draft => {
         draft.ivs[action.stat] = action.value;
+      });
+    case PokemonActionType.SET_ABILITY:
+      return produce(state, draft => {
+        draft.ability = action.ability;
       });
     default:
       return state;
@@ -95,7 +107,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
   return (
     <Card>
       <CardHeader
-        title={pokemon.name ?? pokemon.species}
+        title={pokemon.name.length > 0 ? pokemon.name : pokemon.species}
         avatar={
           <SpeciesImage
             name={pokemon.species}
@@ -108,7 +120,15 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
       <Grid container wrap="nowrap">
         <Grid item>
           <CardContent>
-            <PokemonLevelInput pokemon={pokemon} dispatch={dispatch} />
+            <Grid container spacing={1}>
+              <Grid item>
+                <PokemonAbilityInput pokemon={pokemon} dispatch={dispatch} />
+              </Grid>
+
+              <Grid item>
+                <PokemonLevelInput pokemon={pokemon} dispatch={dispatch} />
+              </Grid>
+            </Grid>
 
             <Grid container spacing={1}>
               <Grid item>
