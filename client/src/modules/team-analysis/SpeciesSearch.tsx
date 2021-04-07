@@ -5,9 +5,9 @@ import {
   createFilterOptions,
 } from '@material-ui/lab';
 import {findAll} from 'highlight-words-core';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 
-import {PokeInfo} from '../../pkmn/PokeInfo';
+import {GenerationContext} from '../generation/GenerationProvider';
 import {SpeciesImage, SpeciesImageType} from '../species-info/SpeciesImage';
 
 const renderOption = (
@@ -50,6 +50,7 @@ export interface PokemonSearchProps {
 export const SpeciesSearch: React.FC<PokemonSearchProps> = ({
   onChange,
 }: PokemonSearchProps) => {
+  const {generation} = useContext(GenerationContext);
   const [species, setSpecies] = useState<string[]>([]);
   const [text, setText] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
@@ -58,8 +59,10 @@ export const SpeciesSearch: React.FC<PokemonSearchProps> = ({
   });
 
   useEffect(() => {
-    PokeInfo.species().then(setSpecies);
-  }, []);
+    if (generation) {
+      setSpecies(Array.from(generation.species).map(specie => specie.name));
+    }
+  }, [generation]);
 
   return (
     <Autocomplete

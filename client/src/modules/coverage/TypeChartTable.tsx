@@ -1,13 +1,15 @@
 import {Grid, makeStyles} from '@material-ui/core';
+import {Generation} from '@pkmn/data';
 import {TypeName} from '@pkmn/types';
-import React, {ReactElement, useEffect, useState} from 'react';
+import React, {ReactElement, useContext, useEffect, useState} from 'react';
 
 import {Matrix} from '../../pkmn/matrix/Matrix';
 import {
   TypeChartMatrix,
   TypeChartMatrixProps,
 } from '../../pkmn/matrix/TypeChartMatrix';
-import {PartialPokemonSet} from '../../pkmn/PokeInfo';
+import {PartialPokemonSet} from '../../pkmn/PartialPokemonSet';
+import {GenerationContext} from '../generation/GenerationProvider';
 import {SpeciesImage, SpeciesImageType} from '../species-info/SpeciesImage';
 import {TypeImage} from '../species-info/TypeImage';
 import {PCol} from '../table/model/PCol';
@@ -103,6 +105,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export type TypeChartMatrixConstructor = (
+  generation: Generation,
   pokemonSets: PartialPokemonSet[]
 ) => Promise<TypeChartMatrix>;
 
@@ -121,6 +124,7 @@ export const TypeChartTable: React.FC<TypeChartTableProps> = ({
   valueField,
   matrixConstructor,
 }: TypeChartTableProps) => {
+  const {generation} = useContext(GenerationContext);
   const classes = useStyles();
   const [matrix, setMatrix] = useState<Matrix<TypeChartMatrixProps>>(
     new Matrix<TypeChartMatrixProps>([])
@@ -130,8 +134,10 @@ export const TypeChartTable: React.FC<TypeChartTableProps> = ({
   );
 
   useEffect(() => {
-    matrixConstructor(pokemonSets).then(setMatrix);
-  }, [matrixConstructor, pokemonSets]);
+    if (generation) {
+      matrixConstructor(generation, pokemonSets).then(setMatrix);
+    }
+  }, [matrixConstructor, generation, pokemonSets]);
 
   const columnFieldOverrides: Partial<PCol> = {
     renderCell: renderCell(columnField),

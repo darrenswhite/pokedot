@@ -1,11 +1,9 @@
 import {Grid, Typography, colors, makeStyles} from '@material-ui/core';
+import {Specie} from '@pkmn/data';
 import {StatName, StatsTable} from '@pkmn/types';
-import React, {ReactElement} from 'react';
+import React, {useContext} from 'react';
 
-import {PokeInfo, STAT_NAMES} from '../../pkmn/PokeInfo';
-
-import {SpeciesImage, SpeciesImageType} from './SpeciesImage';
-import {TypeImage} from './TypeImage';
+import {GenerationContext} from '../generation/GenerationProvider';
 
 const MAX_STAT = 255;
 const STAT_COLORS: StatsTable<Record<number, string>> = {
@@ -35,38 +33,16 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const renderHeader = (info: PokeInfo): ReactElement => {
-  return (
-    <>
-      <Grid container justify="center">
-        <Grid item>
-          <Typography variant="h5">
-            #{info?.num} {info.species}
-          </Typography>
-        </Grid>
-      </Grid>
+export interface SpecieStatsProps {
+  specie: Specie;
+}
 
-      <Grid container justify="center">
-        {info.types.map(type => (
-          <Grid item key={type}>
-            <TypeImage type={type} />
-          </Grid>
-        ))}
-      </Grid>
+export const SpecieStats: React.FC<SpecieStatsProps> = ({
+  specie,
+}: SpecieStatsProps) => {
+  const {generation} = useContext(GenerationContext);
+  const classes = useStyles();
 
-      <Grid container justify="center">
-        <Grid item>
-          <SpeciesImage name={info.species} type={SpeciesImageType.SPRITE} />
-        </Grid>
-      </Grid>
-    </>
-  );
-};
-
-const renderStats = (
-  info: PokeInfo,
-  classes: ReturnType<typeof useStyles>
-): ReactElement => {
   return (
     <>
       <Grid container justify="center">
@@ -77,15 +53,17 @@ const renderStats = (
 
       <Grid container justify="center" spacing={1}>
         <Grid item>
-          {Object.keys(info.baseStats).map(stat => (
+          {Object.keys(specie.baseStats).map(stat => (
             <div key={stat} className={`${classes.stat} ${classes.statName}`}>
-              {STAT_NAMES[stat as StatName]}
+              {generation
+                ? generation.stats.display(stat as StatName)
+                : stat.toUpperCase()}
             </div>
           ))}
         </Grid>
 
         <Grid item xs>
-          {Object.entries(info.baseStats).map(([stat, value]) => {
+          {Object.entries(specie.baseStats).map(([stat, value]) => {
             const width = (value / MAX_STAT) * 100;
             const backgroundColor = STAT_COLORS[stat as StatName][700];
             const backgroundColorLighter = STAT_COLORS[stat as StatName][300];
@@ -112,25 +90,6 @@ const renderStats = (
             );
           })}
         </Grid>
-      </Grid>
-    </>
-  );
-};
-
-export interface SpeciesInfoProps {
-  info: PokeInfo;
-}
-
-export const SpeciesInfo: React.FC<SpeciesInfoProps> = ({
-  info,
-}: SpeciesInfoProps) => {
-  const classes = useStyles();
-
-  return (
-    <>
-      <Grid container justify="center" spacing={2}>
-        <Grid item>{renderHeader(info)}</Grid>
-        <Grid item>{renderStats(info, classes)}</Grid>
       </Grid>
     </>
   );

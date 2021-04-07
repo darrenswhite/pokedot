@@ -1,35 +1,43 @@
 import {Box, CircularProgress, Drawer, Grid} from '@material-ui/core';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext} from 'react';
 
-import {PokeInfo} from '../../pkmn/PokeInfo';
+import {useSpecie} from '../../hooks/useSpecies';
 
-import {SpeciesInfo} from './SpeciesInfo';
+import {SpecieHeader} from './SpecieHeader';
 import {SpeciesContext} from './SpeciesProvider';
+import {SpecieStats} from './SpecieStats';
 
 export const SpeciesBottomDrawer: React.FC = () => {
   const {open, setOpen, species} = useContext(SpeciesContext);
-  const [info, setInfo] = useState<PokeInfo | undefined>();
+  const specie = useSpecie(species);
   let content;
 
-  if (info) {
-    content = <SpeciesInfo info={info} />;
+  if (specie) {
+    content = (
+      <>
+        <Grid item>
+          <SpecieHeader specie={specie} />
+        </Grid>
+        <Grid item>
+          <SpecieStats specie={specie} />
+        </Grid>
+      </>
+    );
   } else {
     content = (
-      <Grid container justify="center">
+      <Grid item>
         <CircularProgress />
       </Grid>
     );
   }
 
-  useEffect(() => {
-    if (species.length > 0) {
-      PokeInfo.forSpecies(species).then(setInfo);
-    }
-  }, [species]);
-
   return (
     <Drawer anchor="bottom" open={open} onClose={() => setOpen(false)}>
-      <Box p={4}>{content}</Box>
+      <Box p={4}>
+        <Grid container justify="center" spacing={2}>
+          {content}
+        </Grid>
+      </Box>
     </Drawer>
   );
 };

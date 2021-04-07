@@ -5,6 +5,7 @@ import {SummaryCard, SummaryCardProps} from '../modules/coverage/SummaryCard';
 
 export default {
   title: 'SummaryCard',
+  component: SummaryCard,
   args: {
     pokemonSets: [
       {
@@ -33,13 +34,6 @@ export default {
       },
     ],
     showOffensiveSummary: true,
-  },
-  argTypes: {
-    pokemonSets: {
-      control: {
-        type: 'object',
-      },
-    },
   },
 };
 

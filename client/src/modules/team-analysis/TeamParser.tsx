@@ -3,7 +3,7 @@ import {ImportExport} from '@material-ui/icons';
 import dynamic from 'next/dynamic';
 import React, {useState} from 'react';
 
-import {PartialPokemonSet} from '../../pkmn/PokeInfo';
+import {PartialPokemonSet} from '../../pkmn/PartialPokemonSet';
 
 import {TeamParserDialogProps} from './TeamParserDialog';
 

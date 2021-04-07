@@ -3,7 +3,7 @@ import {PokemonSet} from '@pkmn/types';
 import dynamic from 'next/dynamic';
 import React, {useContext} from 'react';
 
-import {PartialPokemonSet} from '../../pkmn/PokeInfo';
+import {PartialPokemonSet} from '../../pkmn/PartialPokemonSet';
 import {DefensiveTableProps} from '../coverage/DefensiveTable';
 import {OffensiveTableProps} from '../coverage/OffensiveTable';
 import {SummaryCardProps} from '../coverage/SummaryCard';
@@ -11,7 +11,7 @@ import {SummaryCardProps} from '../coverage/SummaryCard';
 import {PokemonCardProps} from './PokemonCard';
 import {SpeciesSearch} from './SpeciesSearch';
 import {TeamParser} from './TeamParser';
-import {TeamContext} from './TeamProvider';
+import {TeamActionType, TeamContext} from './TeamProvider';
 
 const PokemonCard = dynamic<PokemonCardProps>(() =>
   import('./PokemonCard').then(m => m.PokemonCard)
@@ -29,88 +29,106 @@ const SummaryCard = dynamic<SummaryCardProps>(() =>
   import('../coverage/SummaryCard').then(m => m.SummaryCard)
 );
 
+const createPokemon = (pokemon: PartialPokemonSet): PokemonSet => {
+  return {
+    name: pokemon.name ?? '',
+    species: pokemon.species,
+    item: pokemon.item ?? '',
+    ability: pokemon.ability ?? '', // default to first ability
+    moves: pokemon.moves
+      ? [
+          pokemon.moves[0] ?? '',
+          pokemon.moves[1] ?? '',
+          pokemon.moves[2] ?? '',
+          pokemon.moves[3] ?? '',
+        ]
+      : ['', '', '', ''],
+    nature: pokemon.nature ?? '',
+    gender: pokemon.gender ?? '',
+    evs: pokemon.evs
+      ? {
+          hp: pokemon.evs.hp ?? 0,
+          atk: pokemon.evs.atk ?? 0,
+          def: pokemon.evs.def ?? 0,
+          spa: pokemon.evs.spa ?? 0,
+          spd: pokemon.evs.spd ?? 0,
+          spe: pokemon.evs.spe ?? 0,
+        }
+      : {hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0},
+    ivs: pokemon.ivs
+      ? {
+          hp: pokemon.ivs.hp ?? 31,
+          atk: pokemon.ivs.atk ?? 31,
+          def: pokemon.ivs.def ?? 31,
+          spa: pokemon.ivs.spa ?? 31,
+          spd: pokemon.ivs.spd ?? 31,
+          spe: pokemon.ivs.spe ?? 31,
+        }
+      : {hp: 31, atk: 31, def: 31, spa: 31, spd: 31, spe: 31},
+    level: pokemon.level ?? 50,
+    shiny: pokemon.shiny ?? false,
+    happiness: pokemon.happiness ?? 255,
+    pokeball: pokemon.pokeball ?? '',
+    hpType: pokemon.hpType ?? '',
+    gigantamax: pokemon.gigantamax ?? false,
+  };
+};
+
 const TeamAnalysis: React.FC = () => {
-  const {team, setTeam} = useContext(TeamContext);
+  const {state, dispatch} = useContext(TeamContext);
   let notice;
   let teamCards;
   let analysis;
 
-  const createPokemon = (pokemon: PartialPokemonSet): PokemonSet => {
-    return {
-      name: pokemon.name ?? '',
-      species: pokemon.species,
-      item: pokemon.item ?? '',
-      ability: pokemon.ability ?? '', // default to first ability
-      moves: pokemon.moves
-        ? [
-            pokemon.moves[0] ?? '',
-            pokemon.moves[1] ?? '',
-            pokemon.moves[2] ?? '',
-            pokemon.moves[3] ?? '',
-          ]
-        : ['', '', '', ''],
-      nature: pokemon.nature ?? '',
-      gender: pokemon.gender ?? '',
-      evs: pokemon.evs
-        ? {
-            hp: pokemon.evs.hp ?? 0,
-            atk: pokemon.evs.atk ?? 0,
-            def: pokemon.evs.def ?? 0,
-            spa: pokemon.evs.spa ?? 0,
-            spd: pokemon.evs.spd ?? 0,
-            spe: pokemon.evs.spe ?? 0,
-          }
-        : {hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0},
-      ivs: pokemon.ivs
-        ? {
-            hp: pokemon.ivs.hp ?? 31,
-            atk: pokemon.ivs.atk ?? 31,
-            def: pokemon.ivs.def ?? 31,
-            spa: pokemon.ivs.spa ?? 31,
-            spd: pokemon.ivs.spd ?? 31,
-            spe: pokemon.ivs.spe ?? 31,
-          }
-        : {hp: 31, atk: 31, def: 31, spa: 31, spd: 31, spe: 31},
-      level: pokemon.level ?? 50,
-      shiny: pokemon.shiny ?? false,
-      happiness: pokemon.happiness ?? 0,
-      pokeball: pokemon.pokeball ?? '',
-      hpType: pokemon.hpType ?? '',
-      gigantamax: pokemon.gigantamax ?? false,
-    };
+  const setTeam = (pokemon: PartialPokemonSet[]) => {
+    dispatch({
+      type: TeamActionType.SET_TEAM,
+      pokemon: pokemon.map(createPokemon),
+    });
   };
 
   const addPokemon = (species: string) => {
-    if (team.length < 6 && !team.find(p => p.species === species)) {
+    if (state.team.length < 6) {
       const pokemon = createPokemon({
         species,
       });
 
-      setTeam([...team, pokemon]);
+      dispatch({
+        type: TeamActionType.ADD_POKEMON,
+        pokemon,
+      });
     }
   };
 
-  const addAllPokemon = (pokemon: PartialPokemonSet[]) => {
-    setTeam(pokemon.map(createPokemon));
-  };
-
   const removePokemon = (index: number) => {
-    setTeam([...team.slice(0, index), ...team.slice(index + 1)]);
+    dispatch({
+      type: TeamActionType.REMOVE_POKEMON,
+      index,
+    });
   };
 
-  const updatePokemon = (index: number, updated: PokemonSet) => {
-    setTeam([...team.slice(0, index), updated, ...team.slice(index + 1)]);
+  const updatePokemon = (index: number, pokemon: PokemonSet) => {
+    dispatch({
+      type: TeamActionType.UPDATE_POKEMON,
+      index,
+      pokemon,
+    });
   };
 
-  if (team.length > 0) {
+  if (state.team.length > 0) {
     teamCards = (
       <Grid container item xs={12} justify="center" spacing={4}>
-        {team.map((pokemon, index) => (
+        {state.team.map((pokemon, index) => (
           <Grid key={pokemon.species} item>
             <PokemonCard
               pokemon={pokemon}
-              onRemove={() => removePokemon(index)}
-              onUpdate={pokemon => updatePokemon(index, pokemon)}
+              onChange={pokemon => {
+                if (pokemon) {
+                  updatePokemon(index, pokemon);
+                } else {
+                  removePokemon(index);
+                }
+              }}
             />
           </Grid>
         ))}
@@ -131,7 +149,7 @@ const TeamAnalysis: React.FC = () => {
       >
         <Grid item xs={12}>
           <DefensiveTable
-            pokemonSets={team}
+            pokemonSets={state.team}
             columnField="species"
             idField="effectiveness"
             valueField="type"
@@ -140,7 +158,7 @@ const TeamAnalysis: React.FC = () => {
 
         <Grid item xs={12}>
           <OffensiveTable
-            pokemonSets={team}
+            pokemonSets={state.team}
             columnField="species"
             idField="effectiveness"
             valueField="type"
@@ -148,7 +166,7 @@ const TeamAnalysis: React.FC = () => {
         </Grid>
 
         <Grid item xs={12} sm={6}>
-          <SummaryCard pokemonSets={team} showOffensiveSummary />
+          <SummaryCard pokemonSets={state.team} showOffensiveSummary />
         </Grid>
       </Grid>
     );
@@ -172,7 +190,7 @@ const TeamAnalysis: React.FC = () => {
   return (
     <Grid container justify="center" spacing={2}>
       <Grid item>
-        <TeamParser value={team} onParse={addAllPokemon} />
+        <TeamParser value={state.team} onParse={setTeam} />
       </Grid>
 
       <Grid container item xs={12} justify="center">

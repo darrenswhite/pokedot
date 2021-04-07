@@ -1,38 +1,51 @@
 import {Box, TextField} from '@material-ui/core';
 import {Autocomplete, createFilterOptions} from '@material-ui/lab';
-import {PokemonSet} from '@pkmn/dex-types';
-import React from 'react';
+import {Generation, Move, PokemonSet, Specie} from '@pkmn/data';
+import React, {useContext, useEffect, useState} from 'react';
 
-import {PokeInfo} from '../../pkmn/PokeInfo';
+import {useSpecie} from '../../hooks/useSpecies';
+import {GenerationContext} from '../generation/GenerationProvider';
+
+import {PokemonAction, PokemonActionType} from './PokemonCard';
+
+const getMoves = async (
+  generation: Generation,
+  specie: Specie
+): Promise<Move[]> => {
+  const learnset = (await generation.learnsets.learnable(specie.id)) ?? {};
+  const moveIds = Object.keys(learnset || {});
+
+  return moveIds
+    .map(moveId => generation.moves.get(moveId))
+    .filter(move => !!move) as Move[];
+};
 
 export interface PokemonMoveInputProps {
   pokemon: PokemonSet;
-  updatePokemonValue: (key: keyof PokemonSet, value: unknown) => void;
-  info: PokeInfo;
+  dispatch: React.Dispatch<PokemonAction>;
   index: number;
 }
 
 export const PokemonMoveInput: React.FC<PokemonMoveInputProps> = ({
   pokemon,
-  updatePokemonValue,
-  info,
+  dispatch,
   index,
 }: PokemonMoveInputProps) => {
-  const moves = pokemon.moves;
+  const {generation} = useContext(GenerationContext);
+  const specie = useSpecie(pokemon.species);
+  const [moves, setMoves] = useState<Move[]>([]);
+  const options = moves.map(move => move.name);
   const filterOptions = createFilterOptions<string>({
     limit: 5,
   });
-  const options = info.moves.map(move => move.name);
-  const move = moves[index];
-  const nullableMove = move && move.length > 0 ? moves[index] : null;
+  const move = pokemon.moves[index];
+  const nullableMove = move && move.length > 0 ? move : null;
 
-  const updateMove = (_: React.ChangeEvent<unknown>, value: string | null) => {
-    updatePokemonValue('moves', [
-      ...moves.slice(0, index),
-      value ?? '',
-      ...moves.slice(index + 1),
-    ]);
-  };
+  useEffect(() => {
+    if (generation && specie) {
+      getMoves(generation, specie).then(setMoves);
+    }
+  }, [generation, specie]);
 
   return (
     <Box width="150px">
@@ -50,7 +63,13 @@ export const PokemonMoveInput: React.FC<PokemonMoveInputProps> = ({
             fullWidth
           />
         )}
-        onChange={updateMove}
+        onChange={(_, value) =>
+          dispatch({
+            type: PokemonActionType.SET_MOVE,
+            index,
+            move: value ?? '',
+          })
+        }
         fullWidth
       />
     </Box>

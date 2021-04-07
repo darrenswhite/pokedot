@@ -8,9 +8,9 @@ import {
   TextField,
 } from '@material-ui/core';
 import {PokemonSet, Team} from '@pkmn/sets';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
-import {PartialPokemonSet} from '../../pkmn/PokeInfo';
+import {PartialPokemonSet} from '../../pkmn/PartialPokemonSet';
 
 export interface TeamParserDialogProps {
   value: PartialPokemonSet[];
@@ -27,17 +27,12 @@ export const TeamParserDialog: React.FC<TeamParserDialogProps> = ({
 }: TeamParserDialogProps) => {
   const [team, setTeam] = useState<string>('');
   const [parseError, setParseError] = useState<string>();
-  const teamInputRef = useRef<HTMLInputElement>(null);
-
-  const focusTeamInput = () => {
-    if (teamInputRef.current) {
-      teamInputRef.current.focus();
-    }
-  };
 
   useEffect(() => {
-    setTeam(new Team(value as Readonly<PokemonSet[]>).toString());
-  }, [value]);
+    if (open) {
+      setTeam(new Team(value as Readonly<PokemonSet[]>).toString());
+    }
+  }, [value, open]);
 
   const parseTeam = () => {
     if (team) {
@@ -58,7 +53,7 @@ export const TeamParserDialog: React.FC<TeamParserDialogProps> = ({
   };
 
   return (
-    <Dialog open={open} onClose={onClose} onEntered={focusTeamInput}>
+    <Dialog open={open} onClose={onClose}>
       <DialogTitle>Import / Export Showdown Team</DialogTitle>
       <DialogContent>
         <DialogContentText>
@@ -78,7 +73,7 @@ export const TeamParserDialog: React.FC<TeamParserDialogProps> = ({
           helperText={parseError}
           error={!!parseError}
           rowsMax={10}
-          inputRef={teamInputRef}
+          autoFocus
           multiline
           fullWidth
         />

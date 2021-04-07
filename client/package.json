@@ -37,6 +37,7 @@
     "colyseus.js": "^0.14.8",
     "express": "^4.17.1",
     "highlight-words-core": "^1.2.2",
+    "immer": "^8.0.1",
     "lodash": "^4.17.21",
     "nanoid": "^3.1.22",
     "next": "^10.1.2",

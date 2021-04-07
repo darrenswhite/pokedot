@@ -7,133 +7,169 @@ import {
   Grid,
 } from '@material-ui/core';
 import {PokemonSet, StatName} from '@pkmn/dex-types';
-import React, {useEffect, useState} from 'react';
+import {produce} from 'immer';
+import React, {useContext, useEffect, useReducer} from 'react';
 
-import {PokeInfo, STAT_NAMES} from '../../pkmn/PokeInfo';
+import {GenerationContext} from '../generation/GenerationProvider';
 import {SpeciesImage, SpeciesImageType} from '../species-info/SpeciesImage';
 
 import {PokemonLevelInput} from './PokemonLevelInput';
 import {PokemonMoveInput} from './PokemonMoveInput';
 import {PokemonStatInput} from './PokemonStatInput';
 
+export enum PokemonActionType {
+  SET_LEVEL,
+  SET_MOVE,
+  SET_EV,
+  SET_IV,
+}
+
+export interface SetLevelAction {
+  type: PokemonActionType.SET_LEVEL;
+  level: number;
+}
+
+export interface SetMoveAction {
+  type: PokemonActionType.SET_MOVE;
+  index: number;
+  move: string;
+}
+
+export interface SetEVAction {
+  type: PokemonActionType.SET_EV;
+  stat: StatName;
+  value: number;
+}
+
+export interface SetIVAction {
+  type: PokemonActionType.SET_IV;
+  stat: StatName;
+  value: number;
+}
+
+export type PokemonAction =
+  | SetLevelAction
+  | SetMoveAction
+  | SetEVAction
+  | SetIVAction;
+
+const reducer = (state: PokemonSet, action: PokemonAction) => {
+  switch (action.type) {
+    case PokemonActionType.SET_LEVEL:
+      return produce(state, draft => {
+        draft.level = action.level;
+      });
+    case PokemonActionType.SET_MOVE:
+      return produce(state, draft => {
+        draft.moves[action.index] = action.move;
+      });
+    case PokemonActionType.SET_EV:
+      return produce(state, draft => {
+        draft.evs[action.stat] = action.value;
+      });
+    case PokemonActionType.SET_IV:
+      return produce(state, draft => {
+        draft.ivs[action.stat] = action.value;
+      });
+    default:
+      return state;
+  }
+};
+
 export interface PokemonCardProps {
   pokemon: PokemonSet;
-  onRemove: () => void;
-  onUpdate: (pokemon: PokemonSet) => void;
+  onChange: (pokemon: PokemonSet | null) => void;
 }
 
 export const PokemonCard: React.FC<PokemonCardProps> = ({
   pokemon,
-  onRemove,
-  onUpdate,
+  onChange,
 }: PokemonCardProps) => {
-  const [info, setInfo] = useState<PokeInfo | null>(null);
-  let content;
+  const {generation} = useContext(GenerationContext);
+  const [state, dispatch] = useReducer(reducer, pokemon);
 
   useEffect(() => {
-    PokeInfo.forPokemonSet(pokemon).then(info => setInfo(info));
-  }, [pokemon]);
+    onChange(state);
+  }, [onChange, state]);
 
-  const updatePokemonValue = (key: keyof PokemonSet, value: unknown) => {
-    onUpdate({
-      ...pokemon,
-      [key]: value,
-    });
-  };
+  return (
+    <Card>
+      <CardHeader
+        title={pokemon.name ?? pokemon.species}
+        avatar={
+          <SpeciesImage
+            name={pokemon.species}
+            type={SpeciesImageType.ICON}
+            moreInfo
+          />
+        }
+      />
 
-  if (info) {
-    content = (
-      <Card>
-        <CardHeader
-          title={info.species}
-          avatar={
-            <SpeciesImage
-              name={info.species}
-              type={SpeciesImageType.ICON}
-              moreInfo
-            />
-          }
-        />
+      <Grid container wrap="nowrap">
+        <Grid item>
+          <CardContent>
+            <PokemonLevelInput pokemon={pokemon} dispatch={dispatch} />
 
-        <Grid container wrap="nowrap">
-          <Grid item>
-            <CardContent>
-              <PokemonLevelInput
-                pokemon={pokemon}
-                updatePokemonValue={updatePokemonValue}
-              />
-
-              <Grid container spacing={1}>
-                <Grid item>
-                  <PokemonMoveInput
-                    pokemon={pokemon}
-                    updatePokemonValue={updatePokemonValue}
-                    info={info}
-                    index={0}
-                  />
-                </Grid>
-
-                <Grid item>
-                  <PokemonMoveInput
-                    pokemon={pokemon}
-                    updatePokemonValue={updatePokemonValue}
-                    info={info}
-                    index={1}
-                  />
-                </Grid>
+            <Grid container spacing={1}>
+              <Grid item>
+                <PokemonMoveInput
+                  pokemon={pokemon}
+                  dispatch={dispatch}
+                  index={0}
+                />
               </Grid>
 
-              <Grid container spacing={1}>
-                <Grid item>
-                  <PokemonMoveInput
-                    pokemon={pokemon}
-                    updatePokemonValue={updatePokemonValue}
-                    info={info}
-                    index={2}
-                  />
-                </Grid>
-
-                <Grid item>
-                  <PokemonMoveInput
-                    pokemon={pokemon}
-                    updatePokemonValue={updatePokemonValue}
-                    info={info}
-                    index={3}
-                  />
-                </Grid>
+              <Grid item>
+                <PokemonMoveInput
+                  pokemon={pokemon}
+                  dispatch={dispatch}
+                  index={1}
+                />
               </Grid>
-            </CardContent>
-          </Grid>
+            </Grid>
 
-          <Grid item>
-            <CardContent>
-              <Grid container spacing={1} direction="column">
-                {Object.entries(STAT_NAMES).map(([statKey, statName]) => (
-                  <Grid key={statKey} item>
-                    <PokemonStatInput
-                      pokemon={pokemon}
-                      updatePokemonValue={updatePokemonValue}
-                      info={info}
-                      statKey={statKey as StatName}
-                      statName={statName}
-                    />
-                  </Grid>
-                ))}
+            <Grid container spacing={1}>
+              <Grid item>
+                <PokemonMoveInput
+                  pokemon={pokemon}
+                  dispatch={dispatch}
+                  index={2}
+                />
               </Grid>
-            </CardContent>
-          </Grid>
+
+              <Grid item>
+                <PokemonMoveInput
+                  pokemon={pokemon}
+                  dispatch={dispatch}
+                  index={3}
+                />
+              </Grid>
+            </Grid>
+          </CardContent>
         </Grid>
 
-        <CardActions>
-          <Button size="small" color="primary" onClick={onRemove}>
-            Remove
-          </Button>
-        </CardActions>
-      </Card>
-    );
-  } else {
-    content = <span />;
-  }
+        <Grid item>
+          <CardContent>
+            <Grid container spacing={1} direction="column">
+              {Array.from(generation?.stats ?? []).map(stat => (
+                <Grid key={stat} item>
+                  <PokemonStatInput
+                    pokemon={pokemon}
+                    dispatch={dispatch}
+                    stat={stat}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          </CardContent>
+        </Grid>
+      </Grid>
 
-  return content;
+      <CardActions>
+        <Button size="small" color="primary" onClick={() => onChange(null)}>
+          Remove
+        </Button>
+      </CardActions>
+    </Card>
+  );
 };

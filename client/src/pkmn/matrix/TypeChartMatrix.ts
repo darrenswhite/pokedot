@@ -1,7 +1,8 @@
+import {Generation} from '@pkmn/data';
 import {TypeName} from '@pkmn/types';
 import {flow, map} from 'lodash/fp';
 
-import {PartialPokemonSet, PokeInfo, TypeChart} from '../PokeInfo';
+import {PartialPokemonSet} from '../PartialPokemonSet';
 
 import {Matrix} from './Matrix';
 
@@ -11,21 +12,24 @@ export interface TypeChartMatrixProps {
   effectiveness: number;
 }
 
-export type TypeChartFunction = (info: PokeInfo) => TypeChart;
+export type TypeChart = Record<TypeName, number>;
+
+export type TypeChartFunction = (
+  generation: Generation,
+  pokemon: PartialPokemonSet
+) => TypeChart;
 
 export abstract class TypeChartMatrix extends Matrix<TypeChartMatrixProps> {
   protected static async buildMatrix(
+    generation: Generation,
     pokemonSets: PartialPokemonSet[],
     typeChartFunction: TypeChartFunction
   ): Promise<TypeChartMatrixProps[]> {
-    const types = await PokeInfo.types();
-    const infos = await Promise.all(
-      pokemonSets.map(pokemon => PokeInfo.forPokemonSet(pokemon))
-    );
+    const types = Array.from(generation.types).map(type => type.name);
 
-    return infos.flatMap(info => {
-      const species = info.species;
-      const typeChart = typeChartFunction(info);
+    return pokemonSets.flatMap(pokemon => {
+      const species = pokemon.species;
+      const typeChart = typeChartFunction(generation, pokemon);
 
       return types.map(type => {
         const effectiveness = typeChart[type];

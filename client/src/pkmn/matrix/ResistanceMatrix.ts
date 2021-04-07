@@ -1,13 +1,39 @@
-import {PartialPokemonSet} from '../PokeInfo';
+import {Generation, TypeName} from '@pkmn/data';
 
-import {TypeChartMatrix} from './TypeChartMatrix';
+import {PartialPokemonSet} from '../PartialPokemonSet';
+
+import {TypeChart, TypeChartMatrix} from './TypeChartMatrix';
 
 export class ResistanceMatrix extends TypeChartMatrix {
   static async forPokemonSets(
+    generation: Generation,
     pokemonSets: PartialPokemonSet[]
   ): Promise<ResistanceMatrix> {
     return new ResistanceMatrix(
-      await ResistanceMatrix.buildMatrix(pokemonSets, info => info.resistances)
+      await ResistanceMatrix.buildMatrix(
+        generation,
+        pokemonSets,
+        ResistanceMatrix.createResistanceTypeChart
+      )
+    );
+  }
+
+  private static createResistanceTypeChart(
+    generation: Generation,
+    pokemon: PartialPokemonSet
+  ): TypeChart {
+    const types: TypeName[] =
+      generation.species.get(pokemon.species)?.types ?? [];
+
+    return Object.fromEntries(
+      Array.from(generation.types).map(type => {
+        const values: number[] = types.map(targetType =>
+          type.totalEffectiveness(targetType)
+        );
+        const total = values.reduce((prev, curr) => prev * curr, 1);
+
+        return [type, total];
+      })
     );
   }
 }

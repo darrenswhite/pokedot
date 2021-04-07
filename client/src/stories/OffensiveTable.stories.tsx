@@ -8,6 +8,7 @@ import {
 
 export default {
   title: 'OffensiveTable',
+  component: OffensiveTable,
   args: {
     pokemonSets: [
       {
@@ -40,28 +41,23 @@ export default {
     valueField: 'type',
   },
   argTypes: {
-    pokemonSets: {
-      control: {
-        type: 'object',
-      },
-    },
     columnField: {
       control: {
         type: 'select',
-        options: ['species', 'type', 'effectiveness'],
       },
+      options: ['species', 'type', 'effectiveness'],
     },
     idField: {
       control: {
         type: 'select',
-        options: ['species', 'type', 'effectiveness'],
       },
+      options: ['species', 'type', 'effectiveness'],
     },
     valueField: {
       control: {
         type: 'select',
-        options: ['species', 'type', 'effectiveness'],
       },
+      options: ['species', 'type', 'effectiveness'],
     },
   },
 };

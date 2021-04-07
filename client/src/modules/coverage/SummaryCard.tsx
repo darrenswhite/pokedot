@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import {TypeName} from '@pkmn/types';
 import {filter, flow, map, reduce, reject} from 'lodash/fp';
-import React, {ReactElement, useEffect, useState} from 'react';
+import React, {ReactElement, useContext, useEffect, useState} from 'react';
 
 import {CoverageMatrix} from '../../pkmn/matrix/CoverageMatrix';
 import {ResistanceMatrix} from '../../pkmn/matrix/ResistanceMatrix';
@@ -16,7 +16,8 @@ import {
   TypeChartMatrix,
   TypeChartMatrixProps,
 } from '../../pkmn/matrix/TypeChartMatrix';
-import {PartialPokemonSet, PokeInfo} from '../../pkmn/PokeInfo';
+import {PartialPokemonSet} from '../../pkmn/PartialPokemonSet';
+import {GenerationContext} from '../generation/GenerationProvider';
 import {TypeImage} from '../species-info/TypeImage';
 
 const EFFECTIVENESS_RESIST = [0.0, 0.25, 0.5];
@@ -83,6 +84,7 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
   pokemonSets,
   showOffensiveSummary,
 }: SummaryCardProps) => {
+  const {generation} = useContext(GenerationContext);
   const [resistanceMatrix, setResistanceMatrix] = useState<ResistanceMatrix>(
     new ResistanceMatrix([])
   );
@@ -112,13 +114,16 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
   }
 
   useEffect(() => {
-    ResistanceMatrix.forPokemonSets(pokemonSets).then(setResistanceMatrix);
-    CoverageMatrix.forPokemonSets(pokemonSets).then(setCoverageMatrix);
-  }, [pokemonSets]);
-
-  useEffect(() => {
-    PokeInfo.types().then(setTypes);
-  }, []);
+    if (generation) {
+      ResistanceMatrix.forPokemonSets(generation, pokemonSets).then(
+        setResistanceMatrix
+      );
+      CoverageMatrix.forPokemonSets(generation, pokemonSets).then(
+        setCoverageMatrix
+      );
+      setTypes(Array.from(generation.types).map(type => type.name));
+    }
+  }, [generation, pokemonSets]);
 
   return (
     <Card>

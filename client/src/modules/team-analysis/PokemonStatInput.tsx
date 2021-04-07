@@ -1,36 +1,38 @@
 import {Box, Grid, TextField} from '@material-ui/core';
-import {PokemonSet, StatName} from '@pkmn/dex-types';
-import React from 'react';
+import {PokemonSet, StatName} from '@pkmn/data';
+import React, {useContext} from 'react';
 
-import {PokeInfo} from '../../pkmn/PokeInfo';
+import {useSpecie} from '../../hooks/useSpecies';
+import {GenerationContext} from '../generation/GenerationProvider';
+
+import {PokemonAction, PokemonActionType} from './PokemonCard';
 
 export interface PokemonStatInputProps {
   pokemon: PokemonSet;
-  updatePokemonValue: (key: keyof PokemonSet, value: unknown) => void;
-  info: PokeInfo;
-  statKey: StatName;
-  statName: string;
+  dispatch: React.Dispatch<PokemonAction>;
+  stat: StatName;
 }
 
 export const PokemonStatInput: React.FC<PokemonStatInputProps> = ({
   pokemon,
-  updatePokemonValue,
-  info,
-  statKey,
-  statName,
+  dispatch,
+  stat,
 }: PokemonStatInputProps) => {
-  const ev = pokemon.evs[statKey];
-  const iv = pokemon.ivs[statKey];
-  const total = info.statTotals[statKey];
-
-  const updateStat = (key: 'evs' | 'ivs', value: string) => {
-    const stat = Number(value) || 0;
-
-    updatePokemonValue(key, {
-      ...pokemon[key],
-      [statKey]: stat,
-    });
-  };
+  const {generation} = useContext(GenerationContext);
+  const specie = useSpecie(pokemon.species);
+  const ev = pokemon.evs[stat];
+  const iv = pokemon.ivs[stat];
+  const total =
+    generation && specie
+      ? generation.stats.calc(
+          stat,
+          specie.baseStats[stat],
+          pokemon.ivs[stat],
+          pokemon.evs[stat],
+          pokemon.level,
+          generation.natures.get(pokemon.nature)
+        )
+      : -1;
 
   return (
     <Grid
@@ -40,7 +42,9 @@ export const PokemonStatInput: React.FC<PokemonStatInputProps> = ({
       spacing={1}
       wrap="nowrap"
     >
-      <Grid item>{statName}</Grid>
+      <Grid item>
+        {generation ? generation.stats.display(stat) : stat.toUpperCase()}
+      </Grid>
 
       <Grid item>
         <Box width="50px">
@@ -52,7 +56,13 @@ export const PokemonStatInput: React.FC<PokemonStatInputProps> = ({
               min: 0,
               max: 252,
             }}
-            onChange={e => updateStat('evs', e.currentTarget.value)}
+            onChange={e =>
+              dispatch({
+                type: PokemonActionType.SET_EV,
+                stat: stat,
+                value: Number(e.currentTarget.value),
+              })
+            }
             fullWidth
           />
         </Box>
@@ -68,7 +78,13 @@ export const PokemonStatInput: React.FC<PokemonStatInputProps> = ({
               min: 0,
               max: 31,
             }}
-            onChange={e => updateStat('ivs', e.currentTarget.value)}
+            onChange={e =>
+              dispatch({
+                type: PokemonActionType.SET_IV,
+                stat: stat,
+                value: Number(e.currentTarget.value),
+              })
+            }
             fullWidth
           />
         </Box>

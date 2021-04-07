@@ -3,7 +3,7 @@ import React from 'react';
 
 import {ResistanceMatrix} from '../../pkmn/matrix/ResistanceMatrix';
 import {TypeChartMatrixProps} from '../../pkmn/matrix/TypeChartMatrix';
-import {PartialPokemonSet} from '../../pkmn/PokeInfo';
+import {PartialPokemonSet} from '../../pkmn/PartialPokemonSet';
 
 import {TypeChartTable} from './TypeChartTable';
 
