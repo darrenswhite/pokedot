@@ -14,6 +14,7 @@ import {GenerationContext} from '../generation/GenerationProvider';
 import {SpeciesImage, SpeciesImageType} from '../species-info/SpeciesImage';
 
 import {PokemonAbilityInput} from './PokemonAbilityInput';
+import {PokemonItemInput} from './PokemonItemInput';
 import {PokemonLevelInput} from './PokemonLevelInput';
 import {PokemonMoveInput} from './PokemonMoveInput';
 import {PokemonStatInput} from './PokemonStatInput';
@@ -24,6 +25,7 @@ export enum PokemonActionType {
   SET_EV,
   SET_IV,
   SET_ABILITY,
+  SET_ITEM,
 }
 
 export interface SetLevelAction {
@@ -54,12 +56,18 @@ export interface SetAbilityAction {
   ability: string;
 }
 
+export interface SetAbilityItem {
+  type: PokemonActionType.SET_ITEM;
+  item: string;
+}
+
 export type PokemonAction =
   | SetLevelAction
   | SetMoveAction
   | SetEVAction
   | SetIVAction
-  | SetAbilityAction;
+  | SetAbilityAction
+  | SetAbilityItem;
 
 const reducer = (state: PokemonSet, action: PokemonAction) => {
   switch (action.type) {
@@ -82,6 +90,10 @@ const reducer = (state: PokemonSet, action: PokemonAction) => {
     case PokemonActionType.SET_ABILITY:
       return produce(state, draft => {
         draft.ability = action.ability;
+      });
+    case PokemonActionType.SET_ITEM:
+      return produce(state, draft => {
+        draft.item = action.item;
       });
     default:
       return state;
@@ -127,6 +139,12 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
 
               <Grid item>
                 <PokemonLevelInput pokemon={pokemon} dispatch={dispatch} />
+              </Grid>
+            </Grid>
+
+            <Grid container spacing={1}>
+              <Grid item>
+                <PokemonItemInput pokemon={pokemon} dispatch={dispatch} />
               </Grid>
             </Grid>
 

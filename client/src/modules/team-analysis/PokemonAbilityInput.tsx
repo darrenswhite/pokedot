@@ -18,8 +18,8 @@ export const PokemonAbilityInput: React.FC<PokemonAbilityInputProps> = ({
 }: PokemonAbilityInputProps) => {
   const specie = useSpecie(pokemon.species);
   const [options, setOptions] = useState<string[]>([]);
-  const nullableAbility =
-    pokemon.ability && pokemon.ability.length > 0 ? pokemon.ability : null;
+  const ability = pokemon.ability;
+  const nullableAbility = ability && ability.length > 0 ? ability : null;
 
   useEffect(() => {
     if (specie) {
