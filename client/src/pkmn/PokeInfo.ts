@@ -1,9 +1,10 @@
-import {Generation, Generations, Specie} from '@pkmn/data';
+import {Generation, Generations, Specie, StatName} from '@pkmn/data';
 import {
   AbilityName,
   EggGroup,
   GenerationNum,
   Move,
+  NatureData,
   PokemonSet,
   StatsTable,
   TypeName,
@@ -30,17 +31,20 @@ export class PokeInfo {
   resistances: TypeChart;
   coverage: TypeChart;
   moves: Move[];
+  statTotals: StatsTable;
 
   private constructor(
     specie: Specie,
     resistances: TypeChart,
     coverage: TypeChart,
-    moves: Move[]
+    moves: Move[],
+    statTotals: StatsTable
   ) {
     this.specie = specie;
     this.resistances = resistances;
     this.coverage = coverage;
     this.moves = moves;
+    this.statTotals = statTotals;
   }
 
   static async forSpecies(
@@ -63,11 +67,18 @@ export class PokeInfo {
       const resistances = PokeInfo.createResistanceTypeChart(generation, types);
       const coverage = PokeInfo.createCoverageTypeChart(generation, set.moves);
       const moves = await PokeInfo.getMoves(generation, specie);
+      const statTotals = PokeInfo.calculateStatTotals(generation, specie, set);
 
-      return new PokeInfo(specie, resistances, coverage, moves);
+      return new PokeInfo(specie, resistances, coverage, moves, statTotals);
     } else {
       throw new Error(`Unknown species: ${species}`);
     }
+  }
+
+  static async natures(gen?: GenerationNum): Promise<NatureData[]> {
+    const generation = await PokeInfo.getGeneration(gen);
+
+    return Array.from(generation.natures);
   }
 
   static async species(gen?: GenerationNum): Promise<string[]> {
@@ -116,6 +127,30 @@ export class PokeInfo {
 
   get id(): string {
     return this.specie.id;
+  }
+
+  private static calculateStatTotals(
+    generation: Generation,
+    specie: Specie,
+    set: PartialPokemonSet
+  ): StatsTable {
+    return Object.fromEntries(
+      Object.keys(STAT_NAMES).map(name => {
+        const stat = name as StatName;
+
+        return [
+          stat,
+          generation.stats.calc(
+            stat,
+            specie.baseStats[stat],
+            set.ivs ? set.ivs[stat] : undefined,
+            set.evs ? set.evs[stat] : undefined,
+            set.level,
+            set.nature ? generation.natures.get(set.nature) : undefined
+          ),
+        ];
+      })
+    ) as StatsTable;
   }
 
   private static async getMoves(

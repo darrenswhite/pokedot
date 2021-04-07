@@ -1,4 +1,5 @@
 import {Card, CardContent, CardHeader, Grid} from '@material-ui/core';
+import {PokemonSet} from '@pkmn/types';
 import dynamic from 'next/dynamic';
 import React, {useContext} from 'react';
 
@@ -34,18 +35,71 @@ const TeamAnalysis: React.FC = () => {
   let teamCards;
   let analysis;
 
-  const addPokemon = (pokemon: PartialPokemonSet) => {
-    if (team.length < 6 && !team.find(p => p.species === pokemon.species)) {
-      setTeam([...team, pokemon as PartialPokemonSet]);
+  const createPokemon = (pokemon: PartialPokemonSet): PokemonSet => {
+    return {
+      name: pokemon.name ?? '',
+      species: pokemon.species,
+      item: pokemon.item ?? '',
+      ability: pokemon.ability ?? '', // default to first ability
+      moves: pokemon.moves
+        ? [
+            pokemon.moves[0] ?? '',
+            pokemon.moves[1] ?? '',
+            pokemon.moves[2] ?? '',
+            pokemon.moves[3] ?? '',
+          ]
+        : ['', '', '', ''],
+      nature: pokemon.nature ?? '',
+      gender: pokemon.gender ?? '',
+      evs: pokemon.evs
+        ? {
+            hp: pokemon.evs.hp ?? 0,
+            atk: pokemon.evs.atk ?? 0,
+            def: pokemon.evs.def ?? 0,
+            spa: pokemon.evs.spa ?? 0,
+            spd: pokemon.evs.spd ?? 0,
+            spe: pokemon.evs.spe ?? 0,
+          }
+        : {hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0},
+      ivs: pokemon.ivs
+        ? {
+            hp: pokemon.ivs.hp ?? 31,
+            atk: pokemon.ivs.atk ?? 31,
+            def: pokemon.ivs.def ?? 31,
+            spa: pokemon.ivs.spa ?? 31,
+            spd: pokemon.ivs.spd ?? 31,
+            spe: pokemon.ivs.spe ?? 31,
+          }
+        : {hp: 31, atk: 31, def: 31, spa: 31, spd: 31, spe: 31},
+      level: pokemon.level ?? 50,
+      shiny: pokemon.shiny ?? false,
+      happiness: pokemon.happiness ?? 0,
+      pokeball: pokemon.pokeball ?? '',
+      hpType: pokemon.hpType ?? '',
+      gigantamax: pokemon.gigantamax ?? false,
+    };
+  };
+
+  const addPokemon = (species: string) => {
+    if (team.length < 6 && !team.find(p => p.species === species)) {
+      const pokemon = createPokemon({
+        species,
+      });
+
+      setTeam([...team, pokemon]);
     }
   };
 
-  const removePokemon = (index: number) => {
-    setTeam(team.filter((_, i) => i !== index));
+  const addAllPokemon = (pokemon: PartialPokemonSet[]) => {
+    setTeam(pokemon.map(createPokemon));
   };
 
-  const updatePokemon = (index: number, updated: PartialPokemonSet) => {
-    setTeam(team.map((pokemon, i) => (i === index ? updated : pokemon)));
+  const removePokemon = (index: number) => {
+    setTeam([...team.slice(0, index), ...team.slice(index + 1)]);
+  };
+
+  const updatePokemon = (index: number, updated: PokemonSet) => {
+    setTeam([...team.slice(0, index), updated, ...team.slice(index + 1)]);
   };
 
   if (team.length > 0) {
@@ -118,7 +172,7 @@ const TeamAnalysis: React.FC = () => {
   return (
     <Grid container justify="center" spacing={2}>
       <Grid item>
-        <TeamParser value={team} onParse={setTeam} />
+        <TeamParser value={team} onParse={addAllPokemon} />
       </Grid>
 
       <Grid container item xs={12} justify="center">

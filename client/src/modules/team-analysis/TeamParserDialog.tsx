@@ -6,7 +6,6 @@ import {
   DialogContentText,
   DialogTitle,
   TextField,
-  Typography,
 } from '@material-ui/core';
 import {PokemonSet, Team} from '@pkmn/sets';
 import React, {useEffect, useRef, useState} from 'react';

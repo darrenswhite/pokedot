@@ -1,11 +1,10 @@
+import {PokemonSet} from '@pkmn/dex-types';
 import {noop} from 'lodash/fp';
 import React, {createContext, useState} from 'react';
 
-import {PartialPokemonSet} from '../../pkmn/PokeInfo';
-
 export interface TeamContextProps {
-  team: PartialPokemonSet[];
-  setTeam: (team: PartialPokemonSet[]) => void;
+  team: PokemonSet[];
+  setTeam: (team: PokemonSet[]) => void;
 }
 
 export const TeamContext = createContext<TeamContextProps>({
@@ -20,7 +19,7 @@ export interface TeamProviderProps {
 export const TeamProvider: React.FC<TeamProviderProps> = ({
   children,
 }: TeamProviderProps) => {
-  const [team, setTeam] = useState<PartialPokemonSet[]>([]);
+  const [team, setTeam] = useState<PokemonSet[]>([]);
 
   return (
     <TeamContext.Provider value={{team, setTeam}}>

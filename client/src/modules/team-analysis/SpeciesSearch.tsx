@@ -7,7 +7,7 @@ import {
 import {findAll} from 'highlight-words-core';
 import React, {useEffect, useRef, useState} from 'react';
 
-import {PartialPokemonSet, PokeInfo} from '../../pkmn/PokeInfo';
+import {PokeInfo} from '../../pkmn/PokeInfo';
 import {SpeciesImage, SpeciesImageType} from '../species-info/SpeciesImage';
 
 const renderOption = (
@@ -44,7 +44,7 @@ const renderOption = (
 };
 
 export interface PokemonSearchProps {
-  onChange: (pokemonSets: PartialPokemonSet) => void;
+  onChange: (species: string) => void;
 }
 
 export const SpeciesSearch: React.FC<PokemonSearchProps> = ({
@@ -86,9 +86,7 @@ export const SpeciesSearch: React.FC<PokemonSearchProps> = ({
       }}
       onChange={(_, value: string | null) => {
         if (value) {
-          onChange({
-            species: value,
-          });
+          onChange(value);
         }
       }}
       fullWidth
