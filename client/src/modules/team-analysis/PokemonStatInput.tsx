@@ -55,6 +55,7 @@ export const PokemonStatInput: React.FC<PokemonStatInputProps> = ({
             inputProps={{
               min: 0,
               max: 252,
+              step: 4,
             }}
             onChange={e =>
               dispatch({

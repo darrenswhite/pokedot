@@ -119,7 +119,7 @@ const TeamAnalysis: React.FC = () => {
     teamCards = (
       <Grid container item xs={12} justify="center" spacing={4}>
         {state.team.map((pokemon, index) => (
-          <Grid key={pokemon.species} item>
+          <Grid key={index} item>
             <PokemonCard
               pokemon={pokemon}
               onChange={pokemon => {

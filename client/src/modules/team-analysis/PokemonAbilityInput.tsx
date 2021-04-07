@@ -28,7 +28,7 @@ export const PokemonAbilityInput: React.FC<PokemonAbilityInputProps> = ({
   }, [specie]);
 
   return (
-    <Box width="150px">
+    <Box width="220px">
       <Autocomplete
         options={options}
         value={nullableAbility}

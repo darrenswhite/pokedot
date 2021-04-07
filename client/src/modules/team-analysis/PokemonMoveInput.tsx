@@ -48,7 +48,7 @@ export const PokemonMoveInput: React.FC<PokemonMoveInputProps> = ({
   }, [generation, specie]);
 
   return (
-    <Box width="150px">
+    <Box width="220px">
       <Autocomplete
         options={options}
         value={nullableMove}

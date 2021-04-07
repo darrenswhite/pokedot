@@ -14,7 +14,7 @@ export const PokemonLevelInput: React.FC<PokemonLevelInputProps> = ({
   dispatch,
 }: PokemonLevelInputProps) => {
   return (
-    <Box width="150px">
+    <Box width="50px">
       <TextField
         value={pokemon.level}
         label="Level"

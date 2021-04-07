@@ -34,7 +34,7 @@ export const PokemonItemInput: React.FC<PokemonItemInputProps> = ({
   }, [generation, specie]);
 
   return (
-    <Box width="150px">
+    <Box width="220px">
       <Autocomplete
         options={options}
         value={nullableItem}
