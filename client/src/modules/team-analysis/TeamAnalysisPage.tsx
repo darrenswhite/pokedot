@@ -1,7 +1,7 @@
 import {Card, CardContent, CardHeader, Grid} from '@material-ui/core';
 import {PokemonSet} from '@pkmn/types';
 import dynamic from 'next/dynamic';
-import React, {useContext} from 'react';
+import React, {useCallback, useContext} from 'react';
 
 import {PartialPokemonSet} from '../../pkmn/PartialPokemonSet';
 import {DefensiveTableProps} from '../coverage/DefensiveTable';
@@ -115,21 +115,33 @@ const TeamAnalysis: React.FC = () => {
     });
   };
 
+  const RenderPokemonCard: React.FC<{pokemon: PokemonSet; index: number}> = ({
+    pokemon,
+    index,
+  }: {
+    pokemon: PokemonSet;
+    index: number;
+  }) => {
+    const onChange = useCallback(
+      pokemon => {
+        if (pokemon) {
+          updatePokemon(index, pokemon);
+        } else {
+          removePokemon(index);
+        }
+      },
+      [index]
+    );
+
+    return <PokemonCard pokemon={pokemon} onChange={onChange} />;
+  };
+
   if (state.team.length > 0) {
     teamCards = (
       <Grid container item xs={12} justify="center" spacing={4}>
         {state.team.map((pokemon, index) => (
           <Grid key={index} item>
-            <PokemonCard
-              pokemon={pokemon}
-              onChange={pokemon => {
-                if (pokemon) {
-                  updatePokemon(index, pokemon);
-                } else {
-                  removePokemon(index);
-                }
-              }}
-            />
+            <RenderPokemonCard pokemon={pokemon} index={index} />
           </Grid>
         ))}
       </Grid>
