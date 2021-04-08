@@ -35,19 +35,19 @@ export const PokemonStatInput: React.FC<PokemonStatInputProps> = ({
       : -1;
 
   return (
-    <Grid
-      container
-      alignItems="center"
-      justify="flex-end"
-      spacing={1}
-      wrap="nowrap"
-    >
-      <Grid item>
-        {generation ? generation.stats.display(stat) : stat.toUpperCase()}
-      </Grid>
+    <Box width="50px">
+      <Grid
+        container
+        alignItems="flex-start"
+        justify="flex-end"
+        wrap="nowrap"
+        direction="column"
+      >
+        <Grid item>
+          {generation ? generation.stats.display(stat) : stat.toUpperCase()}
+        </Grid>
 
-      <Grid item>
-        <Box width="50px">
+        <Grid item>
           <TextField
             value={ev}
             type="number"
@@ -66,11 +66,9 @@ export const PokemonStatInput: React.FC<PokemonStatInputProps> = ({
             }
             fullWidth
           />
-        </Box>
-      </Grid>
+        </Grid>
 
-      <Grid item>
-        <Box width="40px">
+        <Grid item>
           <TextField
             value={iv}
             type="number"
@@ -88,10 +86,10 @@ export const PokemonStatInput: React.FC<PokemonStatInputProps> = ({
             }
             fullWidth
           />
-        </Box>
-      </Grid>
+        </Grid>
 
-      <Grid item>{total}</Grid>
-    </Grid>
+        <Grid item>{total}</Grid>
+      </Grid>
+    </Box>
   );
 };

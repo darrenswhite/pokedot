@@ -1,6 +1,6 @@
-import {Box, TextField} from '@material-ui/core';
-import {Autocomplete, createFilterOptions} from '@material-ui/lab';
-import {Item, PokemonSet} from '@pkmn/data';
+import {Popper, TextField, Typography} from '@material-ui/core';
+import {Autocomplete} from '@material-ui/lab';
+import {PokemonSet} from '@pkmn/data';
 import React, {useContext, useEffect, useState} from 'react';
 
 import {useSpecie} from '../../hooks/useSpecies';
@@ -17,46 +17,73 @@ export const PokemonItemInput: React.FC<PokemonItemInputProps> = ({
   pokemon,
   dispatch,
 }: PokemonItemInputProps) => {
-  const {generation} = useContext(GenerationContext);
+  const {generation, stats} = useContext(GenerationContext);
   const specie = useSpecie(pokemon.species);
-  const [items, setItems] = useState<Item[]>([]);
-  const options = items.map(item => item.name);
-  const filterOptions = createFilterOptions<string>({
-    limit: 5,
-  });
+  const [items, setItems] = useState<Record<string, number>>({});
+  const options = Object.entries(items)
+    .sort((left, right) => right[1] - left[1])
+    .map(entry => entry[0]);
   const item = pokemon.item;
   const nullableItem = item && item.length > 0 ? item : null;
 
   useEffect(() => {
     if (generation && specie) {
-      setItems(Array.from(generation.items));
+      const specieStats = stats.data[specie.name];
+      const itemStats = specieStats?.Items || {};
+      const total = Object.values(itemStats).reduce(
+        (total, curr) => total + curr
+      );
+
+      const items = Object.fromEntries(
+        Object.entries(generation.dex.data.Items).map(([id, item]) => {
+          const usage = itemStats[id] ?? 0;
+
+          return [item.name, (usage / total) * 100];
+        })
+      );
+
+      setItems(items);
     }
-  }, [generation, specie]);
+  }, [generation, specie, stats]);
 
   return (
-    <Box width="220px">
-      <Autocomplete
-        options={options}
-        value={nullableItem}
-        filterOptions={filterOptions}
-        size="small"
-        renderInput={params => (
-          <TextField
-            {...params}
-            label="Item"
-            placeholder="Select an item"
-            size="small"
-            fullWidth
-          />
-        )}
-        onChange={(_, value) =>
-          dispatch({
-            type: PokemonActionType.SET_ITEM,
-            item: value ?? '',
-          })
+    <Autocomplete
+      options={options}
+      value={nullableItem}
+      size="small"
+      renderInput={params => (
+        <TextField
+          {...params}
+          label="Item"
+          placeholder="Select an item"
+          size="small"
+          fullWidth
+        />
+      )}
+      renderOption={option => {
+        let text = option;
+        const percent = items[option];
+
+        if (percent) {
+          text += ` (${percent.toFixed(2)}%)`;
         }
-        fullWidth
-      />
-    </Box>
+
+        return <Typography noWrap>{text}</Typography>;
+      }}
+      onChange={(_, value) =>
+        dispatch({
+          type: PokemonActionType.SET_ITEM,
+          item: value ?? '',
+        })
+      }
+      PopperComponent={params => (
+        <Popper
+          {...params}
+          style={{width: 'fit-content'}}
+          placement="bottom-start"
+        />
+      )}
+      fullWidth
+    />
   );
 };

@@ -65,7 +65,7 @@ export const PageContainer: React.FC<PageContainerProps> = ({
   const classes = useStyles();
 
   return (
-    <main className={classes.root}>
+    <div className={classes.root}>
       <div className={classes.wrapper}>
         <Header />
 
@@ -73,11 +73,11 @@ export const PageContainer: React.FC<PageContainerProps> = ({
           <GenerationProvider>
             <SpeciesProvider>
               <TeamProvider>
-                <div className={classes.main}>
+                <main role="main" className={classes.main}>
                   <Container maxWidth={false} className={classes.container}>
                     {children}
                   </Container>
-                </div>
+                </main>
 
                 <SpeciesBottomDrawer />
               </TeamProvider>
@@ -87,6 +87,6 @@ export const PageContainer: React.FC<PageContainerProps> = ({
 
         <Footer />
       </div>
-    </main>
+    </div>
   );
 };

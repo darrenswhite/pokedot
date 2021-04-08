@@ -1,22 +1,80 @@
-import {Generation, GenerationNum, Generations} from '@pkmn/data';
+import {Data, Generation} from '@pkmn/data';
+import {Dex} from '@pkmn/dex-types';
+import axios from 'axios';
 import {noop} from 'lodash/fp';
 import React, {createContext, useEffect, useState} from 'react';
+import {UsageStatistics} from 'smogon';
 
-const DEFAULT_GEN: GenerationNum = 8;
+import {serverUrl} from '../../util/constants';
+
+const DEFAULT_EXISTS = (d: Data): boolean => {
+  let exists;
+
+  if (!d.exists) {
+    exists = false;
+  } else if ('isNonstandard' in d && d.isNonstandard) {
+    exists = false;
+  } else if (d.kind === 'Ability' && d.id === 'noability') {
+    exists = false;
+  } else {
+    exists = !('tier' in d && ['Illegal', 'Unreleased'].includes(d.tier));
+  }
+
+  return exists;
+};
 
 export const initialState = (): GenerationContextProps => ({
+  dex: null,
   generation: null,
-  useGeneration: noop,
+  formats: {},
+  format: ['gen8vgc2021', 1760],
+  setFormat: noop,
+  stats: {
+    info: {
+      'team type': null,
+      cutoff: -1,
+      'cutoff deviation': 0,
+      metagame: '',
+      'number of battles': -1,
+    },
+    data: {},
+  },
 });
 
 export interface GenerationContextProps {
+  dex: Dex | null;
   generation: Generation | null;
-  useGeneration: (gen: GenerationNum) => void;
+  format: [string, number];
+  formats: Record<string, number[]>;
+  setFormat: (format: [string, number]) => void;
+  stats: UsageStatistics;
 }
 
 export const GenerationContext = createContext<GenerationContextProps>(
   initialState()
 );
+
+const loadDex = async (): Promise<Dex> => {
+  const {Dex} = await import('@pkmn/dex');
+
+  return Dex;
+};
+
+const loadFormats = async (): Promise<Record<string, number[]>> => {
+  const latest = await axios.get(`${serverUrl}/stats/formats/latest`);
+
+  return latest.data;
+};
+
+const loadStats = async (
+  format: [string, number]
+): Promise<UsageStatistics> => {
+  const latest = await axios.get(
+    `${serverUrl}/stats/latest/${format[0]}?weight=${format[1]}`
+  );
+
+  return latest.data;
+};
 
 export interface GenerationProviderProps {
   children: NonNullable<React.ReactNode>;
@@ -25,33 +83,31 @@ export interface GenerationProviderProps {
 export const GenerationProvider: React.FC<GenerationProviderProps> = ({
   children,
 }: GenerationProviderProps) => {
-  const [generations, setGenerations] = useState<Generations | null>(null);
+  const [dex, setDex] = useState(initialState().dex);
+  const [formats, setFormats] = useState(initialState().formats);
+  const [format, setFormat] = useState(initialState().format);
+  const [stats, setStats] = useState(initialState().stats);
   const [generation, setGeneration] = useState(initialState().generation);
 
-  const useGeneration = (gen: GenerationNum) => {
-    if (generations) {
-      setGeneration(generations.get(gen));
-    }
-  };
-
-  const loadGenerations = async () => {
-    const {Dex} = await import('@pkmn/dex');
-
-    setGenerations(new Generations(Dex));
-  };
-
   useEffect(() => {
-    loadGenerations();
+    loadDex().then(setDex);
+    loadFormats().then(setFormats);
   }, []);
 
   useEffect(() => {
-    if (generations && !generation) {
-      setGeneration(generations.get(DEFAULT_GEN));
+    loadStats(format).then(setStats);
+  }, [format]);
+
+  useEffect(() => {
+    if (dex) {
+      setGeneration(new Generation(dex, DEFAULT_EXISTS));
     }
-  }, [generations, generation]);
+  }, [dex]);
 
   return (
-    <GenerationContext.Provider value={{generation, useGeneration}}>
+    <GenerationContext.Provider
+      value={{dex, generation, formats, format, setFormat, stats}}
+    >
       {children}
     </GenerationContext.Provider>
   );

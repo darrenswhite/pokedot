@@ -2,11 +2,11 @@ import {Client, Room} from 'colyseus.js';
 import {noop} from 'lodash/fp';
 import React, {createContext, useState} from 'react';
 
-import {serverUrl} from '../../util/constants';
+import {socketUrl} from '../../util/constants';
 
 import {TeamGeneratorState} from './TeamGeneratorState';
 
-const client = new Client(serverUrl);
+const client = new Client(socketUrl);
 
 export const initialRoom = new Room('');
 

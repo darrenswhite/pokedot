@@ -141,31 +141,31 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
         }
       />
 
-      <Grid container wrap="nowrap">
-        <Grid item>
+      <Grid container>
+        <Grid item xs={12}>
           <CardContent>
             <Grid container spacing={1}>
-              <Grid item>
+              <Grid item xs>
                 <PokemonAbilityInput pokemon={pokemon} dispatch={dispatch} />
               </Grid>
 
-              <Grid item>
+              <Grid item xs>
                 <PokemonLevelInput pokemon={pokemon} dispatch={dispatch} />
               </Grid>
             </Grid>
 
             <Grid container spacing={1}>
-              <Grid item>
+              <Grid item xs>
                 <PokemonItemInput pokemon={pokemon} dispatch={dispatch} />
               </Grid>
 
-              <Grid item>
+              <Grid item xs>
                 <PokemonNatureInput pokemon={pokemon} dispatch={dispatch} />
               </Grid>
             </Grid>
 
             <Grid container spacing={1}>
-              <Grid item>
+              <Grid item xs>
                 <PokemonMoveInput
                   pokemon={pokemon}
                   dispatch={dispatch}
@@ -173,7 +173,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
                 />
               </Grid>
 
-              <Grid item>
+              <Grid item xs>
                 <PokemonMoveInput
                   pokemon={pokemon}
                   dispatch={dispatch}
@@ -183,7 +183,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
             </Grid>
 
             <Grid container spacing={1}>
-              <Grid item>
+              <Grid item xs>
                 <PokemonMoveInput
                   pokemon={pokemon}
                   dispatch={dispatch}
@@ -191,7 +191,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
                 />
               </Grid>
 
-              <Grid item>
+              <Grid item xs>
                 <PokemonMoveInput
                   pokemon={pokemon}
                   dispatch={dispatch}
@@ -202,11 +202,11 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
           </CardContent>
         </Grid>
 
-        <Grid item>
+        <Grid item xs>
           <CardContent>
-            <Grid container spacing={1} direction="column">
+            <Grid container wrap="nowrap">
               {Array.from(generation?.stats ?? []).map(stat => (
-                <Grid key={stat} item>
+                <Grid key={stat} item xs>
                   <PokemonStatInput
                     pokemon={pokemon}
                     dispatch={dispatch}

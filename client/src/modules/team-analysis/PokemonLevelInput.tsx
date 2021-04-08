@@ -1,4 +1,4 @@
-import {Box, TextField} from '@material-ui/core';
+import {TextField} from '@material-ui/core';
 import {PokemonSet} from '@pkmn/data';
 import React from 'react';
 
@@ -14,24 +14,22 @@ export const PokemonLevelInput: React.FC<PokemonLevelInputProps> = ({
   dispatch,
 }: PokemonLevelInputProps) => {
   return (
-    <Box width="50px">
-      <TextField
-        value={pokemon.level}
-        label="Level"
-        type="number"
-        size="small"
-        inputProps={{
-          min: 1,
-          max: 100,
-        }}
-        onChange={e =>
-          dispatch({
-            type: PokemonActionType.SET_LEVEL,
-            level: Number(e.currentTarget.value),
-          })
-        }
-        fullWidth
-      />
-    </Box>
+    <TextField
+      value={pokemon.level}
+      label="Level"
+      type="number"
+      size="small"
+      inputProps={{
+        min: 1,
+        max: 100,
+      }}
+      onChange={e =>
+        dispatch({
+          type: PokemonActionType.SET_LEVEL,
+          level: Number(e.currentTarget.value),
+        })
+      }
+      fullWidth
+    />
   );
 };

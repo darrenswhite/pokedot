@@ -1,9 +1,10 @@
-import {Box, TextField} from '@material-ui/core';
+import {Popper, TextField, Typography} from '@material-ui/core';
 import {Autocomplete} from '@material-ui/lab';
 import {PokemonSet} from '@pkmn/data';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import {useSpecie} from '../../hooks/useSpecies';
+import {GenerationContext} from '../generation/GenerationProvider';
 
 import {PokemonAction, PokemonActionType} from './PokemonCard';
 
@@ -16,40 +17,74 @@ export const PokemonAbilityInput: React.FC<PokemonAbilityInputProps> = ({
   pokemon,
   dispatch,
 }: PokemonAbilityInputProps) => {
+  const {generation, stats} = useContext(GenerationContext);
   const specie = useSpecie(pokemon.species);
-  const [options, setOptions] = useState<string[]>([]);
+  const [abilities, setAbilities] = useState<Record<string, number>>({});
+  const options = Object.entries(abilities)
+    .sort((left, right) => right[1] - left[1])
+    .map(entry => entry[0]);
   const ability = pokemon.ability;
   const nullableAbility = ability && ability.length > 0 ? ability : null;
 
   useEffect(() => {
-    if (specie) {
-      setOptions(Object.values(specie.abilities));
+    if (generation && specie) {
+      const specieStats = stats.data[specie.name];
+      const abilityStats = specieStats?.Abilities || {};
+      const total = Object.values(abilityStats).reduce(
+        (total, curr) => total + curr
+      );
+
+      const abilities = Object.fromEntries(
+        Object.values(specie.abilities).map(name => {
+          const ability = generation.abilities.get(name);
+          const usage = (ability && abilityStats[ability.id]) ?? 0;
+
+          return [name, (usage / total) * 100];
+        })
+      );
+
+      setAbilities(abilities);
     }
-  }, [specie]);
+  }, [generation, specie, stats]);
 
   return (
-    <Box width="220px">
-      <Autocomplete
-        options={options}
-        value={nullableAbility}
-        size="small"
-        renderInput={params => (
-          <TextField
-            {...params}
-            label="Ability"
-            placeholder="Select an ability"
-            size="small"
-            fullWidth
-          />
-        )}
-        onChange={(_, value) =>
-          dispatch({
-            type: PokemonActionType.SET_ABILITY,
-            ability: value ?? '',
-          })
+    <Autocomplete
+      options={options}
+      value={nullableAbility}
+      size="small"
+      renderInput={params => (
+        <TextField
+          {...params}
+          label="Ability"
+          placeholder="Select an ability"
+          size="small"
+          fullWidth
+        />
+      )}
+      renderOption={option => {
+        let text = option;
+        const percent = abilities[option];
+
+        if (percent) {
+          text += ` (${percent.toFixed(2)}%)`;
         }
-        fullWidth
-      />
-    </Box>
+
+        return <Typography noWrap>{text}</Typography>;
+      }}
+      onChange={(_, value) =>
+        dispatch({
+          type: PokemonActionType.SET_ABILITY,
+          ability: value ?? '',
+        })
+      }
+      PopperComponent={params => (
+        <Popper
+          {...params}
+          style={{width: 'fit-content'}}
+          placement="bottom-start"
+        />
+      )}
+      fullWidth
+    />
   );
 };
