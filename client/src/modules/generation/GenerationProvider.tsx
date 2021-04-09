@@ -12,12 +12,16 @@ const DEFAULT_EXISTS = (d: Data): boolean => {
 
   if (!d.exists) {
     exists = false;
-  } else if ('isNonstandard' in d && d.isNonstandard) {
+  } else if (
+    'isNonstandard' in d &&
+    d.isNonstandard &&
+    ['Unobtainable', 'Custom'].includes(d.isNonstandard)
+  ) {
     exists = false;
   } else if (d.kind === 'Ability' && d.id === 'noability') {
     exists = false;
   } else {
-    exists = !('tier' in d && ['Illegal', 'Unreleased'].includes(d.tier));
+    exists = true;
   }
 
   return exists;
@@ -90,12 +94,24 @@ export const GenerationProvider: React.FC<GenerationProviderProps> = ({
   const [generation, setGeneration] = useState(initialState().generation);
 
   useEffect(() => {
-    loadDex().then(setDex);
-    loadFormats().then(setFormats);
+    loadDex()
+      .then(setDex)
+      .catch(err => {
+        console.error('Failed to dex.', err);
+      });
+    loadFormats()
+      .then(setFormats)
+      .catch(err => {
+        console.error('Failed to formats.', err);
+      });
   }, []);
 
   useEffect(() => {
-    loadStats(format).then(setStats);
+    loadStats(format)
+      .then(setStats)
+      .catch(err => {
+        console.error(`Failed to stats for format ${format}.`, err);
+      });
   }, [format]);
 
   useEffect(() => {

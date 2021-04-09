@@ -31,7 +31,8 @@ export const PokemonItemInput: React.FC<PokemonItemInputProps> = ({
       const specieStats = stats.data[specie.name];
       const itemStats = specieStats?.Items || {};
       const total = Object.values(itemStats).reduce(
-        (total, curr) => total + curr
+        (total, curr) => total + curr,
+        0
       );
 
       const items = Object.fromEntries(

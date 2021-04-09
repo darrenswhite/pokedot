@@ -33,7 +33,8 @@ export const PokemonMoveInput: React.FC<PokemonMoveInputProps> = ({
       const specieStats = stats.data[specie.name];
       const moveStats = specieStats?.Moves || {};
       const total = Object.values(moveStats).reduce(
-        (total, curr) => total + curr
+        (total, curr) => total + curr,
+        0
       );
 
       const moves = Object.fromEntries(
