@@ -1,10 +1,14 @@
-import {Grid, Typography} from '@material-ui/core';
+import {Button, Grid, Typography} from '@material-ui/core';
+import {BarChart} from '@material-ui/icons';
+import {useRouter} from 'next/router';
 import React, {ReactElement, useContext} from 'react';
 
+import {useTeam} from '../../hooks/useTeam';
 import {
   GeneratedTeamsMatrix,
   GeneratedTeamsMatrixProps,
 } from '../../pkmn/matrix/GeneratedTeamsMatrix';
+import {Routes} from '../../router/Routes';
 import {SpeciesImage, SpeciesImageType} from '../species-info/SpeciesImage';
 import {PCol} from '../table/model/PCol';
 import {PValue} from '../table/model/PRow';
@@ -35,7 +39,9 @@ const mapSpeciesValue = (value: PValue): PValue => {
 };
 
 export const Summary: React.FC = () => {
-  const {state} = useContext(RoomContext);
+  const router = useRouter();
+  const {setTeam} = useTeam();
+  const {room, state} = useContext(RoomContext);
   const matrix = GeneratedTeamsMatrix.forState(state);
 
   const columnFieldOverrides: Partial<PCol> = {
@@ -48,6 +54,20 @@ export const Summary: React.FC = () => {
     mapValue: mapSpeciesValue,
   };
 
+  const viewTeam = () => {
+    const player = state.players[room.sessionId];
+
+    if (player) {
+      setTeam(
+        player.team.map(pokemon => ({
+          species: pokemon.name,
+        }))
+      );
+
+      router.push(Routes.TEAM_ANALYSIS.path);
+    }
+  };
+
   return (
     <TeamGeneratorContainer
       header={
@@ -56,7 +76,7 @@ export const Summary: React.FC = () => {
         </Typography>
       }
     >
-      <Grid container justify="center">
+      <Grid container justify="center" spacing={4}>
         <Grid item xs={12} sm={12} md={8} lg={6} xl={4}>
           <PMatrixTable
             matrix={matrix}
@@ -66,6 +86,15 @@ export const Summary: React.FC = () => {
             columnFieldOverrides={columnFieldOverrides}
             idFieldOverrides={idFieldOverrides}
           />
+        </Grid>
+
+        <Grid container item xs={12} justify="center">
+          <Grid item>
+            <Button variant="contained" onClick={viewTeam} color="primary">
+              <BarChart />
+              View Team Analysis
+            </Button>
+          </Grid>
         </Grid>
       </Grid>
     </TeamGeneratorContainer>

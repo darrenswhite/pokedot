@@ -1,11 +1,9 @@
 import {Button, Card, CardContent, CardHeader, Grid} from '@material-ui/core';
 import {ArrowBack, ArrowForward} from '@material-ui/icons';
-import {PokemonSet} from '@pkmn/types';
-import {Patch, applyPatches, produce} from 'immer';
 import dynamic from 'next/dynamic';
-import React, {useContext, useState} from 'react';
+import React from 'react';
 
-import {PartialPokemonSet} from '../../pkmn/PartialPokemonSet';
+import {useTeam} from '../../hooks/useTeam';
 import {DefensiveTableProps} from '../coverage/DefensiveTable';
 import {OffensiveTableProps} from '../coverage/OffensiveTable';
 import {SummaryCardProps} from '../coverage/SummaryCard';
@@ -13,7 +11,6 @@ import {SummaryCardProps} from '../coverage/SummaryCard';
 import {PokemonCardProps} from './PokemonCard';
 import {SpeciesSearch} from './SpeciesSearch';
 import {TeamParser} from './TeamParser';
-import {TeamContext} from './TeamProvider';
 
 const PokemonCard = dynamic<PokemonCardProps>(() =>
   import('./PokemonCard').then(m => m.PokemonCard)
@@ -31,184 +28,31 @@ const SummaryCard = dynamic<SummaryCardProps>(() =>
   import('../coverage/SummaryCard').then(m => m.SummaryCard)
 );
 
-const createPokemon = (pokemon: PartialPokemonSet): PokemonSet => {
-  return {
-    name: pokemon.name ?? '',
-    species: pokemon.species,
-    item: pokemon.item ?? '',
-    ability: pokemon.ability ?? '',
-    moves: pokemon.moves
-      ? [
-          pokemon.moves[0] ?? '',
-          pokemon.moves[1] ?? '',
-          pokemon.moves[2] ?? '',
-          pokemon.moves[3] ?? '',
-        ]
-      : ['', '', '', ''],
-    nature: pokemon.nature ?? '',
-    gender: pokemon.gender ?? '',
-    evs: pokemon.evs
-      ? {
-          hp: pokemon.evs.hp ?? 0,
-          atk: pokemon.evs.atk ?? 0,
-          def: pokemon.evs.def ?? 0,
-          spa: pokemon.evs.spa ?? 0,
-          spd: pokemon.evs.spd ?? 0,
-          spe: pokemon.evs.spe ?? 0,
-        }
-      : {
-          hp: 0,
-          atk: 0,
-          def: 0,
-          spa: 0,
-          spd: 0,
-          spe: 0,
-        },
-    ivs: pokemon.ivs
-      ? {
-          hp: pokemon.ivs.hp ?? 31,
-          atk: pokemon.ivs.atk ?? 31,
-          def: pokemon.ivs.def ?? 31,
-          spa: pokemon.ivs.spa ?? 31,
-          spd: pokemon.ivs.spd ?? 31,
-          spe: pokemon.ivs.spe ?? 31,
-        }
-      : {
-          hp: 31,
-          atk: 31,
-          def: 31,
-          spa: 31,
-          spd: 31,
-          spe: 31,
-        },
-    level: pokemon.level ?? 50,
-    shiny: pokemon.shiny ?? false,
-    happiness: pokemon.happiness ?? 255,
-    pokeball: pokemon.pokeball ?? '',
-    hpType: pokemon.hpType ?? '',
-    gigantamax: pokemon.gigantamax ?? false,
-  };
-};
-
-const MAX_CHANGE_HISTORY = 1000;
-
-interface Change {
-  patches: Patch[];
-  inversePatches: Patch[];
-}
-
 const TeamAnalysis: React.FC = () => {
-  const {team, setTeam} = useContext(TeamContext);
-  const [currentChange, setCurrentChange] = useState<number>(-1);
-  const [changes, setChanges] = useState<Record<number, Change>>({});
-
-  const setParsedTeam = (parsedTeam: PartialPokemonSet[]) => {
-    setTeam(
-      produce(
-        team,
-        draft => {
-          draft.splice(0, draft.length);
-          draft.push(...parsedTeam.map(createPokemon));
-        },
-        handleAddChange
-      )
-    );
-  };
-
-  const addPokemon = (species: string) => {
-    if (team.length < 6) {
-      const pokemon = createPokemon({
-        species,
-      });
-
-      setTeam(
-        produce(
-          team,
-          draft => {
-            draft.push(pokemon);
-          },
-          handleAddChange
-        )
-      );
-    }
-  };
-
-  const removePokemon = (index: number) => {
-    setTeam(
-      produce(
-        team,
-        draft => {
-          draft.splice(index, 1);
-        },
-        handleAddChange
-      )
-    );
-  };
-
-  const updatePokemon = (
-    index: number,
-    recipe: (pokemon: PokemonSet) => void
-  ) => {
-    setTeam(
-      produce(
-        team,
-        draft => {
-          const pokemon = draft[index];
-
-          if (pokemon) {
-            recipe(pokemon);
-          }
-        },
-        handleAddChange
-      )
-    );
-  };
-
-  const handleAddChange = (patches: Patch[], inversePatches: Patch[]) => {
-    setChanges(
-      produce(changes, draft => {
-        draft[currentChange + 1] = {
-          patches,
-          inversePatches,
-        };
-
-        delete draft[currentChange + 2];
-        delete draft[currentChange + 1 - MAX_CHANGE_HISTORY];
-      })
-    );
-    setCurrentChange(currentChange + 1);
-  };
-
-  const handleUndo = () => {
-    const change = changes[currentChange];
-
-    if (change) {
-      setTeam(applyPatches(team, change.inversePatches));
-      setCurrentChange(currentChange - 1);
-    }
-  };
-
-  const handleRedo = () => {
-    const change = changes[currentChange + 1];
-
-    if (change) {
-      setTeam(applyPatches(team, change.patches));
-      setCurrentChange(currentChange + 1);
-    }
-  };
+  const {
+    team,
+    setTeam,
+    addPokemon,
+    removePokemon,
+    updatePokemon,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+  } = useTeam();
 
   return (
     <Grid container justify="center" spacing={2}>
       <Grid item>
-        <TeamParser value={team} onParse={setParsedTeam} />
+        <TeamParser value={team} onParse={setTeam} />
       </Grid>
 
       <Grid item>
         <Button
           variant="contained"
-          onClick={handleUndo}
+          onClick={undo}
           color="primary"
-          disabled={!changes[currentChange]}
+          disabled={canUndo}
           aria-label="undo"
           fullWidth
         >
@@ -219,9 +63,9 @@ const TeamAnalysis: React.FC = () => {
       <Grid item>
         <Button
           variant="contained"
-          onClick={handleRedo}
+          onClick={redo}
           color="primary"
-          disabled={!changes[currentChange + 1]}
+          disabled={canRedo}
           aria-label="redo"
           fullWidth
         >
