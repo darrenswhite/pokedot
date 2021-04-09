@@ -10,32 +10,28 @@ import {SpecieStats} from './SpecieStats';
 export const SpeciesBottomDrawer: React.FC = () => {
   const {open, setOpen, species} = useContext(SpeciesContext);
   const specie = useSpecie(species);
-  let content;
-
-  if (specie) {
-    content = (
-      <>
-        <Grid item>
-          <SpecieHeader specie={specie} />
-        </Grid>
-        <Grid item>
-          <SpecieStats specie={specie} />
-        </Grid>
-      </>
-    );
-  } else {
-    content = (
-      <Grid item>
-        <CircularProgress />
-      </Grid>
-    );
-  }
 
   return (
     <Drawer anchor="bottom" open={open} onClose={() => setOpen(false)}>
       <Box p={4}>
         <Grid container justify="center" spacing={2}>
-          {content}
+          {specie && (
+            <>
+              <Grid item>
+                <SpecieHeader specie={specie} />
+              </Grid>
+
+              <Grid item>
+                <SpecieStats specie={specie} />
+              </Grid>
+            </>
+          )}
+
+          {!specie && (
+            <Grid item>
+              <CircularProgress />
+            </Grid>
+          )}
         </Grid>
       </Box>
     </Drawer>
