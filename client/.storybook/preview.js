@@ -3,6 +3,7 @@ import {addDecorator} from '@storybook/react';
 import {themes} from '@storybook/theming';
 import React from 'react';
 
+import {GenerationProvider} from '../src/modules/generation/GenerationProvider';
 import {Theme} from '../src/theme/Theme';
 
 export const parameters = {
@@ -12,4 +13,8 @@ export const parameters = {
   },
 };
 
-addDecorator(story => <ThemeProvider theme={Theme}>{story()}</ThemeProvider>);
+addDecorator(story => (
+  <ThemeProvider theme={Theme}>
+    <GenerationProvider>{story()}</GenerationProvider>
+  </ThemeProvider>
+));
