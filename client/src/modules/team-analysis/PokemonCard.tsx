@@ -6,6 +6,7 @@ import {
   CardHeader,
   Grid,
   colors,
+  makeStyles,
 } from '@material-ui/core';
 import {PokemonSet, StatName, StatsTable} from '@pkmn/data';
 import {produce} from 'immer';
@@ -121,6 +122,12 @@ const STAT_COLORS: StatsTable<Record<number, string>> = {
   spe: colors.purple,
 };
 
+const useStyles = makeStyles(() => ({
+  root: {
+    maxWidth: 400,
+  },
+}));
+
 export interface PokemonCardProps {
   pokemon: PokemonSet;
   onChange: (pokemon: PokemonSet | null) => void;
@@ -130,6 +137,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
   pokemon,
   onChange,
 }: PokemonCardProps) => {
+  const classes = useStyles();
   const [state, dispatch] = useReducer(reducer, pokemon);
 
   useEffect(() => {
@@ -137,7 +145,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
   }, [onChange, state]);
 
   return (
-    <Card>
+    <Card className={classes.root} raised>
       <CardHeader
         title={pokemon.name.length > 0 ? pokemon.name : pokemon.species}
         avatar={
@@ -149,9 +157,9 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
         }
       />
 
-      <Grid container>
-        <Grid item xs={12}>
-          <CardContent>
+      <CardContent>
+        <Grid container spacing={1}>
+          <Grid item xs={12}>
             <Grid container spacing={1}>
               <Grid item xs>
                 <PokemonAbilityInput pokemon={pokemon} dispatch={dispatch} />
@@ -207,11 +215,9 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
                 />
               </Grid>
             </Grid>
-          </CardContent>
-        </Grid>
+          </Grid>
 
-        <Grid item xs>
-          <CardContent>
+          <Grid item xs>
             <Grid container wrap="nowrap">
               {Object.entries(STAT_COLORS).map(([stat, color]) => (
                 <Grid key={stat} item xs>
@@ -224,9 +230,9 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
                 </Grid>
               ))}
             </Grid>
-          </CardContent>
+          </Grid>
         </Grid>
-      </Grid>
+      </CardContent>
 
       <CardActions>
         <Button size="small" color="primary" onClick={() => onChange(null)}>

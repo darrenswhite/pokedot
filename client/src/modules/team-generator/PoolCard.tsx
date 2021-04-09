@@ -38,6 +38,7 @@ export const PoolCard: React.FC<PoolCardProps> = ({
 
   return (
     <Card
+      raised
       className={clsx({
         [classes.unselected]: !selected,
         [classes.selected]: selected,
