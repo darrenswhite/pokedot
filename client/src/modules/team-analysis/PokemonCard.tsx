@@ -1,16 +1,19 @@
 import {
-  Button,
   Card,
   CardActions,
   CardContent,
   CardHeader,
+  Collapse,
+  Divider,
   Grid,
+  IconButton,
   colors,
   makeStyles,
 } from '@material-ui/core';
+import {DeleteOutline, ExpandMore} from '@material-ui/icons';
 import {PokemonSet, StatName, StatsTable} from '@pkmn/data';
-import {produce} from 'immer';
-import React, {useEffect, useReducer} from 'react';
+import clsx from 'clsx';
+import React, {useState} from 'react';
 
 import {SpeciesImage, SpeciesImageType} from '../species-info/SpeciesImage';
 
@@ -21,98 +24,6 @@ import {PokemonMoveInput} from './PokemonMoveInput';
 import {PokemonNatureInput} from './PokemonNatureInput';
 import {PokemonStatInput} from './PokemonStatInput';
 
-export enum PokemonActionType {
-  SET_LEVEL,
-  SET_MOVE,
-  SET_EV,
-  SET_IV,
-  SET_ABILITY,
-  SET_ITEM,
-  SET_NATURE,
-}
-
-export interface SetLevelAction {
-  type: PokemonActionType.SET_LEVEL;
-  level: number;
-}
-
-export interface SetMoveAction {
-  type: PokemonActionType.SET_MOVE;
-  index: number;
-  move: string;
-}
-
-export interface SetEVAction {
-  type: PokemonActionType.SET_EV;
-  stat: StatName;
-  value: number;
-}
-
-export interface SetIVAction {
-  type: PokemonActionType.SET_IV;
-  stat: StatName;
-  value: number;
-}
-
-export interface SetAbilityAction {
-  type: PokemonActionType.SET_ABILITY;
-  ability: string;
-}
-
-export interface SetItemAction {
-  type: PokemonActionType.SET_ITEM;
-  item: string;
-}
-
-export interface SetNatureAction {
-  type: PokemonActionType.SET_NATURE;
-  nature: string;
-}
-
-export type PokemonAction =
-  | SetLevelAction
-  | SetMoveAction
-  | SetEVAction
-  | SetIVAction
-  | SetAbilityAction
-  | SetItemAction
-  | SetNatureAction;
-
-const reducer = (state: PokemonSet, action: PokemonAction) => {
-  switch (action.type) {
-    case PokemonActionType.SET_LEVEL:
-      return produce(state, draft => {
-        draft.level = action.level;
-      });
-    case PokemonActionType.SET_MOVE:
-      return produce(state, draft => {
-        draft.moves[action.index] = action.move;
-      });
-    case PokemonActionType.SET_EV:
-      return produce(state, draft => {
-        draft.evs[action.stat] = action.value;
-      });
-    case PokemonActionType.SET_IV:
-      return produce(state, draft => {
-        draft.ivs[action.stat] = action.value;
-      });
-    case PokemonActionType.SET_ABILITY:
-      return produce(state, draft => {
-        draft.ability = action.ability;
-      });
-    case PokemonActionType.SET_ITEM:
-      return produce(state, draft => {
-        draft.item = action.item;
-      });
-    case PokemonActionType.SET_NATURE:
-      return produce(state, draft => {
-        draft.nature = action.nature;
-      });
-    default:
-      return state;
-  }
-};
-
 const STAT_COLORS: StatsTable<Record<number, string>> = {
   hp: colors.red,
   atk: colors.amber,
@@ -122,27 +33,36 @@ const STAT_COLORS: StatsTable<Record<number, string>> = {
   spe: colors.purple,
 };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   root: {
-    maxWidth: 400,
+    width: 332,
+  },
+  expand: {
+    transform: 'rotate(0deg)',
+    transition: theme.transitions.create('all', {
+      duration: theme.transitions.duration.shortest,
+    }),
+  },
+  expandOpen: {
+    transform: 'rotate(180deg)',
   },
 }));
 
 export interface PokemonCardProps {
   pokemon: PokemonSet;
-  onChange: (pokemon: PokemonSet | null) => void;
+  onChange: (recipe: (pokemon: PokemonSet) => void) => void;
+  onRemove: () => void;
 }
 
 export const PokemonCard: React.FC<PokemonCardProps> = ({
   pokemon,
   onChange,
+  onRemove,
 }: PokemonCardProps) => {
   const classes = useStyles();
-  const [state, dispatch] = useReducer(reducer, pokemon);
+  const [expanded, setExpanded] = useState(false);
 
-  useEffect(() => {
-    onChange(state);
-  }, [onChange, state]);
+  const handleExpandClick = () => setExpanded(!expanded);
 
   return (
     <Card className={classes.root} raised>
@@ -155,90 +75,106 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
             moreInfo
           />
         }
+        action={
+          <CardActions disableSpacing>
+            <IconButton onClick={onRemove} aria-label="remove">
+              <DeleteOutline />
+            </IconButton>
+
+            <IconButton
+              className={clsx(classes.expand, {
+                [classes.expandOpen]: expanded,
+              })}
+              onClick={handleExpandClick}
+              aria-expanded={expanded}
+              aria-label="show more"
+            >
+              <ExpandMore />
+            </IconButton>
+          </CardActions>
+        }
       />
 
-      <CardContent>
-        <Grid container spacing={1}>
-          <Grid item xs={12}>
-            <Grid container spacing={1}>
-              <Grid item xs>
-                <PokemonAbilityInput pokemon={pokemon} dispatch={dispatch} />
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <Divider />
+
+        <CardContent>
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <Grid container spacing={1}>
+                <Grid item xs>
+                  <PokemonAbilityInput pokemon={pokemon} onChange={onChange} />
+                </Grid>
+
+                <Grid item xs>
+                  <PokemonLevelInput pokemon={pokemon} onChange={onChange} />
+                </Grid>
               </Grid>
 
-              <Grid item xs>
-                <PokemonLevelInput pokemon={pokemon} dispatch={dispatch} />
-              </Grid>
-            </Grid>
+              <Grid container spacing={1}>
+                <Grid item xs>
+                  <PokemonItemInput pokemon={pokemon} onChange={onChange} />
+                </Grid>
 
-            <Grid container spacing={1}>
-              <Grid item xs>
-                <PokemonItemInput pokemon={pokemon} dispatch={dispatch} />
-              </Grid>
-
-              <Grid item xs>
-                <PokemonNatureInput pokemon={pokemon} dispatch={dispatch} />
-              </Grid>
-            </Grid>
-
-            <Grid container spacing={1}>
-              <Grid item xs>
-                <PokemonMoveInput
-                  pokemon={pokemon}
-                  dispatch={dispatch}
-                  index={0}
-                />
+                <Grid item xs>
+                  <PokemonNatureInput pokemon={pokemon} onChange={onChange} />
+                </Grid>
               </Grid>
 
-              <Grid item xs>
-                <PokemonMoveInput
-                  pokemon={pokemon}
-                  dispatch={dispatch}
-                  index={1}
-                />
-              </Grid>
-            </Grid>
-
-            <Grid container spacing={1}>
-              <Grid item xs>
-                <PokemonMoveInput
-                  pokemon={pokemon}
-                  dispatch={dispatch}
-                  index={2}
-                />
-              </Grid>
-
-              <Grid item xs>
-                <PokemonMoveInput
-                  pokemon={pokemon}
-                  dispatch={dispatch}
-                  index={3}
-                />
-              </Grid>
-            </Grid>
-          </Grid>
-
-          <Grid item xs>
-            <Grid container wrap="nowrap">
-              {Object.entries(STAT_COLORS).map(([stat, color]) => (
-                <Grid key={stat} item xs>
-                  <PokemonStatInput
+              <Grid container spacing={1}>
+                <Grid item xs>
+                  <PokemonMoveInput
                     pokemon={pokemon}
-                    dispatch={dispatch}
-                    stat={stat as StatName}
-                    color={color}
+                    onChange={onChange}
+                    index={0}
                   />
                 </Grid>
-              ))}
+
+                <Grid item xs>
+                  <PokemonMoveInput
+                    pokemon={pokemon}
+                    onChange={onChange}
+                    index={1}
+                  />
+                </Grid>
+              </Grid>
+
+              <Grid container spacing={1}>
+                <Grid item xs>
+                  <PokemonMoveInput
+                    pokemon={pokemon}
+                    onChange={onChange}
+                    index={2}
+                  />
+                </Grid>
+
+                <Grid item xs>
+                  <PokemonMoveInput
+                    pokemon={pokemon}
+                    onChange={onChange}
+                    index={3}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+
+            <Grid item xs>
+              <Grid container wrap="nowrap" justify="center">
+                {Object.entries(STAT_COLORS).map(([stat, color]) => (
+                  <Grid key={stat} item>
+                    <PokemonStatInput
+                      pokemon={pokemon}
+                      onChange={onChange}
+                      stat={stat as StatName}
+                      color={color}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      </CardContent>
-
-      <CardActions>
-        <Button size="small" color="primary" onClick={() => onChange(null)}>
-          Remove
-        </Button>
-      </CardActions>
+        </CardContent>
+      </Collapse>
     </Card>
   );
 };

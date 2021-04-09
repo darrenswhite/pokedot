@@ -5,18 +5,16 @@ import React, {useContext} from 'react';
 import {useSpecie} from '../../hooks/useSpecies';
 import {GenerationContext} from '../generation/GenerationProvider';
 
-import {PokemonAction, PokemonActionType} from './PokemonCard';
-
 export interface PokemonStatInputProps {
   pokemon: PokemonSet;
-  dispatch: React.Dispatch<PokemonAction>;
+  onChange: (recipe: (pokemon: PokemonSet) => void) => void;
   stat: StatName;
   color: Record<number, string>;
 }
 
 export const PokemonStatInput: React.FC<PokemonStatInputProps> = ({
   pokemon,
-  dispatch,
+  onChange,
   stat,
   color,
 }: PokemonStatInputProps) => {
@@ -63,10 +61,8 @@ export const PokemonStatInput: React.FC<PokemonStatInputProps> = ({
               style: {color: color[500], fontWeight: 'bold'},
             }}
             onChange={e =>
-              dispatch({
-                type: PokemonActionType.SET_EV,
-                stat: stat,
-                value: Number(e.currentTarget.value),
+              onChange(pokemon => {
+                pokemon.evs[stat] = Number(e.currentTarget.value);
               })
             }
             fullWidth
@@ -84,10 +80,8 @@ export const PokemonStatInput: React.FC<PokemonStatInputProps> = ({
               style: {color: color[500], fontSize: '0.75rem'},
             }}
             onChange={e =>
-              dispatch({
-                type: PokemonActionType.SET_IV,
-                stat: stat,
-                value: Number(e.currentTarget.value),
+              onChange(pokemon => {
+                pokemon.ivs[stat] = Number(e.currentTarget.value);
               })
             }
             fullWidth

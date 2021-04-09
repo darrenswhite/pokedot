@@ -6,16 +6,14 @@ import React, {useContext, useEffect, useState} from 'react';
 import {useSpecie} from '../../hooks/useSpecies';
 import {GenerationContext} from '../generation/GenerationProvider';
 
-import {PokemonAction, PokemonActionType} from './PokemonCard';
-
 export interface PokemonItemInputProps {
   pokemon: PokemonSet;
-  dispatch: React.Dispatch<PokemonAction>;
+  onChange: (recipe: (pokemon: PokemonSet) => void) => void;
 }
 
 export const PokemonItemInput: React.FC<PokemonItemInputProps> = ({
   pokemon,
-  dispatch,
+  onChange,
 }: PokemonItemInputProps) => {
   const {generation, stats} = useContext(GenerationContext);
   const specie = useSpecie(pokemon.species);
@@ -71,12 +69,11 @@ export const PokemonItemInput: React.FC<PokemonItemInputProps> = ({
 
         return <Typography noWrap>{text}</Typography>;
       }}
-      onChange={(_, value) =>
-        dispatch({
-          type: PokemonActionType.SET_ITEM,
-          item: value ?? '',
-        })
-      }
+      onChange={(_, value) => {
+        onChange(pokemon => {
+          pokemon.item = value ?? '';
+        });
+      }}
       PopperComponent={params => (
         <Popper
           {...params}

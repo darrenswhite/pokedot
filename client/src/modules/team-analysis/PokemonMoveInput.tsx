@@ -6,17 +6,15 @@ import React, {useContext, useEffect, useState} from 'react';
 import {useSpecie} from '../../hooks/useSpecies';
 import {GenerationContext} from '../generation/GenerationProvider';
 
-import {PokemonAction, PokemonActionType} from './PokemonCard';
-
 export interface PokemonMoveInputProps {
   pokemon: PokemonSet;
-  dispatch: React.Dispatch<PokemonAction>;
+  onChange: (recipe: (pokemon: PokemonSet) => void) => void;
   index: number;
 }
 
 export const PokemonMoveInput: React.FC<PokemonMoveInputProps> = ({
   pokemon,
-  dispatch,
+  onChange,
   index,
 }: PokemonMoveInputProps) => {
   const {generation, stats} = useContext(GenerationContext);
@@ -74,10 +72,8 @@ export const PokemonMoveInput: React.FC<PokemonMoveInputProps> = ({
         return <Typography noWrap>{text}</Typography>;
       }}
       onChange={(_, value) =>
-        dispatch({
-          type: PokemonActionType.SET_MOVE,
-          index,
-          move: value ?? '',
+        onChange(pokemon => {
+          pokemon.moves[index] = value ?? '';
         })
       }
       PopperComponent={params => (
