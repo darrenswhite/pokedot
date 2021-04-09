@@ -1,8 +1,9 @@
-import {Card, CardContent, CardHeader, Grid} from '@material-ui/core';
+import {Button, Card, CardContent, CardHeader, Grid} from '@material-ui/core';
+import {ArrowBack, ArrowForward} from '@material-ui/icons';
 import {PokemonSet} from '@pkmn/types';
-import {produce} from 'immer';
+import {Patch, applyPatches, produce} from 'immer';
 import dynamic from 'next/dynamic';
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 
 import {PartialPokemonSet} from '../../pkmn/PartialPokemonSet';
 import {DefensiveTableProps} from '../coverage/DefensiveTable';
@@ -89,8 +90,30 @@ const createPokemon = (pokemon: PartialPokemonSet): PokemonSet => {
   };
 };
 
+const MAX_CHANGE_HISTORY = 1000;
+
+interface Change {
+  patches: Patch[];
+  inversePatches: Patch[];
+}
+
 const TeamAnalysis: React.FC = () => {
   const {team, setTeam} = useContext(TeamContext);
+  const [currentChange, setCurrentChange] = useState<number>(-1);
+  const [changes, setChanges] = useState<Record<number, Change>>({});
+
+  const setParsedTeam = (parsedTeam: PartialPokemonSet[]) => {
+    setTeam(
+      produce(
+        team,
+        draft => {
+          draft.splice(0, draft.length);
+          draft.push(...parsedTeam.map(createPokemon));
+        },
+        handleAddChange
+      )
+    );
+  };
 
   const addPokemon = (species: string) => {
     if (team.length < 6) {
@@ -99,18 +122,26 @@ const TeamAnalysis: React.FC = () => {
       });
 
       setTeam(
-        produce(team, draft => {
-          draft.push(pokemon);
-        })
+        produce(
+          team,
+          draft => {
+            draft.push(pokemon);
+          },
+          handleAddChange
+        )
       );
     }
   };
 
   const removePokemon = (index: number) => {
     setTeam(
-      produce(team, draft => {
-        draft.splice(index, 1);
-      })
+      produce(
+        team,
+        draft => {
+          draft.splice(index, 1);
+        },
+        handleAddChange
+      )
     );
   };
 
@@ -119,23 +150,83 @@ const TeamAnalysis: React.FC = () => {
     recipe: (pokemon: PokemonSet) => void
   ) => {
     setTeam(
-      produce(team, draft => {
-        const pokemon = draft[index];
+      produce(
+        team,
+        draft => {
+          const pokemon = draft[index];
 
-        if (pokemon) {
-          recipe(pokemon);
-        }
+          if (pokemon) {
+            recipe(pokemon);
+          }
+        },
+        handleAddChange
+      )
+    );
+  };
+
+  const handleAddChange = (patches: Patch[], inversePatches: Patch[]) => {
+    setChanges(
+      produce(changes, draft => {
+        draft[currentChange + 1] = {
+          patches,
+          inversePatches,
+        };
+
+        delete draft[currentChange + 2];
+        delete draft[currentChange + 1 - MAX_CHANGE_HISTORY];
       })
     );
+    setCurrentChange(currentChange + 1);
+  };
+
+  const handleUndo = () => {
+    const change = changes[currentChange];
+
+    if (change) {
+      setTeam(applyPatches(team, change.inversePatches));
+      setCurrentChange(currentChange - 1);
+    }
+  };
+
+  const handleRedo = () => {
+    const change = changes[currentChange + 1];
+
+    if (change) {
+      setTeam(applyPatches(team, change.patches));
+      setCurrentChange(currentChange + 1);
+    }
   };
 
   return (
     <Grid container justify="center" spacing={2}>
       <Grid item>
-        <TeamParser
-          value={team}
-          onParse={team => setTeam(team.map(createPokemon))}
-        />
+        <TeamParser value={team} onParse={setParsedTeam} />
+      </Grid>
+
+      <Grid item>
+        <Button
+          variant="contained"
+          onClick={handleUndo}
+          color="primary"
+          disabled={!changes[currentChange]}
+          aria-label="undo"
+          fullWidth
+        >
+          <ArrowBack />
+        </Button>
+      </Grid>
+
+      <Grid item>
+        <Button
+          variant="contained"
+          onClick={handleRedo}
+          color="primary"
+          disabled={!changes[currentChange + 1]}
+          aria-label="redo"
+          fullWidth
+        >
+          <ArrowForward />
+        </Button>
       </Grid>
 
       <Grid container item xs={12} justify="center">
