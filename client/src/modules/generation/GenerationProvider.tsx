@@ -1,5 +1,4 @@
-import {Data, Generation} from '@pkmn/data';
-import {Dex} from '@pkmn/dex-types';
+import {Data, Dex, Generation} from '@pkmn/data';
 import axios from 'axios';
 import {noop} from 'lodash/fp';
 import React, {createContext, useEffect, useState} from 'react';

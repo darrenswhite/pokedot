@@ -1,4 +1,4 @@
-import {Box, Grid, TextField} from '@material-ui/core';
+import {Box, Grid, TextField, Typography} from '@material-ui/core';
 import {PokemonSet, StatName} from '@pkmn/data';
 import React, {useContext} from 'react';
 
@@ -11,12 +11,14 @@ export interface PokemonStatInputProps {
   pokemon: PokemonSet;
   dispatch: React.Dispatch<PokemonAction>;
   stat: StatName;
+  color: Record<number, string>;
 }
 
 export const PokemonStatInput: React.FC<PokemonStatInputProps> = ({
   pokemon,
   dispatch,
   stat,
+  color,
 }: PokemonStatInputProps) => {
   const {generation} = useContext(GenerationContext);
   const specie = useSpecie(pokemon.species);
@@ -44,7 +46,9 @@ export const PokemonStatInput: React.FC<PokemonStatInputProps> = ({
         direction="column"
       >
         <Grid item>
-          {generation ? generation.stats.display(stat) : stat.toUpperCase()}
+          <Typography variant="caption">
+            {generation ? generation.stats.display(stat) : stat.toUpperCase()}
+          </Typography>
         </Grid>
 
         <Grid item>
@@ -56,6 +60,7 @@ export const PokemonStatInput: React.FC<PokemonStatInputProps> = ({
               min: 0,
               max: 252,
               step: 4,
+              style: {color: color[500], fontWeight: 'bold'},
             }}
             onChange={e =>
               dispatch({
@@ -76,6 +81,7 @@ export const PokemonStatInput: React.FC<PokemonStatInputProps> = ({
             inputProps={{
               min: 0,
               max: 31,
+              style: {color: color[500], fontSize: '0.75rem'},
             }}
             onChange={e =>
               dispatch({
@@ -88,7 +94,9 @@ export const PokemonStatInput: React.FC<PokemonStatInputProps> = ({
           />
         </Grid>
 
-        <Grid item>{total}</Grid>
+        <Grid item>
+          <Typography variant="caption">{total}</Typography>
+        </Grid>
       </Grid>
     </Box>
   );

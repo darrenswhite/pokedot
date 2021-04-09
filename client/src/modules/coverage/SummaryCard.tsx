@@ -77,12 +77,10 @@ const renderTypeList = (title: string, types: TypeName[]): ReactElement => {
 
 export interface SummaryCardProps {
   pokemonSets: PartialPokemonSet[];
-  showOffensiveSummary?: boolean;
 }
 
 export const SummaryCard: React.FC<SummaryCardProps> = ({
   pokemonSets,
-  showOffensiveSummary,
 }: SummaryCardProps) => {
   const {generation} = useContext(GenerationContext);
   const [resistanceMatrix, setResistanceMatrix] = useState<ResistanceMatrix>(
@@ -103,15 +101,6 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
     types,
     EFFECTIVENESS_SUPER
   );
-  let offensiveSummary;
-
-  if (showOffensiveSummary) {
-    offensiveSummary = (
-      <CardContent>
-        {renderTypeList('Missing Offensive Coverage', offensiveMissingTypes)}{' '}
-      </CardContent>
-    );
-  }
 
   useEffect(() => {
     if (generation) {
@@ -130,14 +119,16 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
       <CardHeader title="Summary" />
 
       <CardContent>
-        {renderTypeList('Missing Defensive Coverage', defensiveMissingTypes)}{' '}
+        {renderTypeList('Missing Defensive Coverage', defensiveMissingTypes)}
       </CardContent>
 
       <CardContent>
         {renderTypeList('Weak Defensive Coverage', defensiveWeaknesses)}
       </CardContent>
 
-      {offensiveSummary}
+      <CardContent>
+        {renderTypeList('Missing Offensive Coverage', offensiveMissingTypes)}
+      </CardContent>
     </Card>
   );
 };

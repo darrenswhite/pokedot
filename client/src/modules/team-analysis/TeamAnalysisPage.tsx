@@ -178,7 +178,7 @@ const TeamAnalysis: React.FC = () => {
         </Grid>
 
         <Grid item xs={12} sm={6}>
-          <SummaryCard pokemonSets={state.team} showOffensiveSummary />
+          <SummaryCard pokemonSets={state.team} />
         </Grid>
       </Grid>
     );

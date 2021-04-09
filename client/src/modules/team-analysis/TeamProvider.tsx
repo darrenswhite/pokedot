@@ -1,4 +1,4 @@
-import {PokemonSet} from '@pkmn/dex-types';
+import {PokemonSet} from '@pkmn/data';
 import {produce} from 'immer';
 import {noop} from 'lodash/fp';
 import React, {createContext, useReducer} from 'react';

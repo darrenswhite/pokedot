@@ -1,6 +1,5 @@
 import {Grid, Typography, colors, makeStyles} from '@material-ui/core';
-import {Specie} from '@pkmn/data';
-import {StatName, StatsTable} from '@pkmn/types';
+import {Specie, StatName, StatsTable} from '@pkmn/data';
 import React, {useContext} from 'react';
 
 import {GenerationContext} from '../generation/GenerationProvider';
@@ -55,9 +54,11 @@ export const SpecieStats: React.FC<SpecieStatsProps> = ({
         <Grid item>
           {Object.keys(specie.baseStats).map(stat => (
             <div key={stat} className={`${classes.stat} ${classes.statName}`}>
-              {generation
-                ? generation.stats.display(stat as StatName)
-                : stat.toUpperCase()}
+              <Typography variant="caption">
+                {generation
+                  ? generation.stats.display(stat as StatName)
+                  : stat.toUpperCase()}
+              </Typography>
             </div>
           ))}
         </Grid>
@@ -65,8 +66,9 @@ export const SpecieStats: React.FC<SpecieStatsProps> = ({
         <Grid item xs>
           {Object.entries(specie.baseStats).map(([stat, value]) => {
             const width = (value / MAX_STAT) * 100;
-            const backgroundColor = STAT_COLORS[stat as StatName][700];
-            const backgroundColorLighter = STAT_COLORS[stat as StatName][300];
+            const color = STAT_COLORS[stat as StatName];
+            const backgroundColor = color[700];
+            const backgroundColorLighter = color[300];
 
             return (
               <Grid key={stat} container alignItems="center" wrap="nowrap">
@@ -84,7 +86,7 @@ export const SpecieStats: React.FC<SpecieStatsProps> = ({
                 </Grid>
 
                 <Grid item className={classes.statValue}>
-                  {value}
+                  <Typography variant="caption">{value}</Typography>
                 </Grid>
               </Grid>
             );

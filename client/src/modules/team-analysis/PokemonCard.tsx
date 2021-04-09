@@ -5,12 +5,12 @@ import {
   CardContent,
   CardHeader,
   Grid,
+  colors,
 } from '@material-ui/core';
-import {PokemonSet, StatName} from '@pkmn/dex-types';
+import {PokemonSet, StatName, StatsTable} from '@pkmn/data';
 import {produce} from 'immer';
-import React, {useContext, useEffect, useReducer} from 'react';
+import React, {useEffect, useReducer} from 'react';
 
-import {GenerationContext} from '../generation/GenerationProvider';
 import {SpeciesImage, SpeciesImageType} from '../species-info/SpeciesImage';
 
 import {PokemonAbilityInput} from './PokemonAbilityInput';
@@ -112,6 +112,15 @@ const reducer = (state: PokemonSet, action: PokemonAction) => {
   }
 };
 
+const STAT_COLORS: StatsTable<Record<number, string>> = {
+  hp: colors.red,
+  atk: colors.amber,
+  def: colors.yellow,
+  spa: colors.blue,
+  spd: colors.green,
+  spe: colors.purple,
+};
+
 export interface PokemonCardProps {
   pokemon: PokemonSet;
   onChange: (pokemon: PokemonSet | null) => void;
@@ -121,7 +130,6 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
   pokemon,
   onChange,
 }: PokemonCardProps) => {
-  const {generation} = useContext(GenerationContext);
   const [state, dispatch] = useReducer(reducer, pokemon);
 
   useEffect(() => {
@@ -205,12 +213,13 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
         <Grid item xs>
           <CardContent>
             <Grid container wrap="nowrap">
-              {Array.from(generation?.stats ?? []).map(stat => (
+              {Object.entries(STAT_COLORS).map(([stat, color]) => (
                 <Grid key={stat} item xs>
                   <PokemonStatInput
                     pokemon={pokemon}
                     dispatch={dispatch}
-                    stat={stat}
+                    stat={stat as StatName}
+                    color={color}
                   />
                 </Grid>
               ))}
