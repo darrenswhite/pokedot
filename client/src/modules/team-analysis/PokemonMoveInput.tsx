@@ -1,10 +1,36 @@
 import {Popper, TextField, Typography} from '@material-ui/core';
 import {Autocomplete} from '@material-ui/lab';
-import {PokemonSet} from '@pkmn/data';
+import {Generation, Move, PokemonSet, Specie} from '@pkmn/data';
 import React, {useContext, useEffect, useState} from 'react';
+import {UsageStatistics} from 'smogon';
 
 import {useSpecie} from '../../hooks/useSpecies';
 import {GenerationContext} from '../generation/GenerationProvider';
+
+const getMoves = async (
+  generation: Generation,
+  specie: Specie,
+  stats: UsageStatistics
+): Promise<Record<string, number>> => {
+  const specieStats = stats.data[specie.name];
+  const moveStats = specieStats?.Moves || {};
+  const total = Object.values(moveStats).reduce(
+    (total, curr) => total + curr,
+    0
+  );
+  const learnset = (await generation.learnsets.learnable(specie.id)) ?? {};
+  const learnsetMoves = Object.keys(learnset)
+    .map(moveId => generation.moves.get(moveId))
+    .filter(move => !!move) as Move[];
+
+  return Object.fromEntries(
+    Object.entries(learnsetMoves).map(([id, move]) => {
+      const usage = moveStats[id] ?? 0;
+
+      return [move.name, (usage / total) * 100];
+    })
+  );
+};
 
 export interface PokemonMoveInputProps {
   pokemon: PokemonSet;
@@ -28,22 +54,7 @@ export const PokemonMoveInput: React.FC<PokemonMoveInputProps> = ({
 
   useEffect(() => {
     if (generation && specie) {
-      const specieStats = stats.data[specie.name];
-      const moveStats = specieStats?.Moves || {};
-      const total = Object.values(moveStats).reduce(
-        (total, curr) => total + curr,
-        0
-      );
-
-      const moves = Object.fromEntries(
-        Object.entries(generation.dex.data.Moves).map(([id, move]) => {
-          const usage = moveStats[id] ?? 0;
-
-          return [move.name, (usage / total) * 100];
-        })
-      );
-
-      setMoves(moves);
+      getMoves(generation, specie, stats).then(setMoves);
     }
   }, [generation, specie, stats]);
 
