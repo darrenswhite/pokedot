@@ -5,20 +5,32 @@ import React from 'react';
 
 import {useJoinRoom, useRoomListeners} from '../../hooks/useRoom';
 
-const PlayerName = dynamic<unknown>(() =>
-  import('./PlayerName').then(m => m.PlayerName)
+const PlayerName = dynamic<unknown>(
+  () => import('./PlayerName').then(m => m.PlayerName),
+  {
+    ssr: false,
+  }
 );
 
-const PlayerReady = dynamic<unknown>(() =>
-  import('./PlayerReady').then(m => m.PlayerReady)
+const PlayerReady = dynamic<unknown>(
+  () => import('./PlayerReady').then(m => m.PlayerReady),
+  {
+    ssr: false,
+  }
 );
 
-const PoolSelections = dynamic<unknown>(() =>
-  import('./PoolSelections').then(m => m.PoolSelections)
+const PoolSelections = dynamic<unknown>(
+  () => import('./PoolSelections').then(m => m.PoolSelections),
+  {
+    ssr: false,
+  }
 );
 
-const Summary = dynamic<unknown>(() =>
-  import('./Summary').then(m => m.Summary)
+const Summary = dynamic<unknown>(
+  () => import('./Summary').then(m => m.Summary),
+  {
+    ssr: false,
+  }
 );
 
 export const RoomPage: React.FC = () => {

@@ -10,24 +10,43 @@ import {RoomProviderProps} from '../team-generator/RoomProvider';
 import {Footer} from './Footer';
 import {Header} from './Header';
 
-const SpeciesBottomDrawer = dynamic<unknown>(() =>
-  import('../species-info/SpeciesBottomDrawer').then(m => m.SpeciesBottomDrawer)
+const SpeciesBottomDrawer = dynamic<unknown>(
+  () =>
+    import('../species-info/SpeciesBottomDrawer').then(
+      m => m.SpeciesBottomDrawer
+    ),
+  {
+    ssr: false,
+  }
 );
 
-const GenerationProvider = dynamic<GenerationProviderProps>(() =>
-  import('../generation/GenerationProvider').then(m => m.GenerationProvider)
+const GenerationProvider = dynamic<GenerationProviderProps>(
+  () =>
+    import('../generation/GenerationProvider').then(m => m.GenerationProvider),
+  {
+    ssr: false,
+  }
 );
 
-const SpeciesProvider = dynamic<SpeciesProviderProps>(() =>
-  import('../species-info/SpeciesProvider').then(m => m.SpeciesProvider)
+const SpeciesProvider = dynamic<SpeciesProviderProps>(
+  () => import('../species-info/SpeciesProvider').then(m => m.SpeciesProvider),
+  {
+    ssr: false,
+  }
 );
 
-const TeamProvider = dynamic<TeamProviderProps>(() =>
-  import('../team-analysis/TeamProvider').then(m => m.TeamProvider)
+const TeamProvider = dynamic<TeamProviderProps>(
+  () => import('../team-analysis/TeamProvider').then(m => m.TeamProvider),
+  {
+    ssr: false,
+  }
 );
 
-const RoomProvider = dynamic<RoomProviderProps>(() =>
-  import('../team-generator/RoomProvider').then(m => m.RoomProvider)
+const RoomProvider = dynamic<RoomProviderProps>(
+  () => import('../team-generator/RoomProvider').then(m => m.RoomProvider),
+  {
+    ssr: false,
+  }
 );
 
 type PageContainerProps = {

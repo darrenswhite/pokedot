@@ -1,5 +1,5 @@
+import {BarChart, Casino, Home} from '@material-ui/icons';
 import {findLast, flow, values} from 'lodash/fp';
-import dynamic from 'next/dynamic';
 import {NextRouter} from 'next/router';
 
 export interface Route {
@@ -12,17 +12,17 @@ export const Routes = {
   HOME: {
     displayName: 'Home',
     path: '/',
-    icon: dynamic(() => import('@material-ui/icons/Home')),
+    icon: Home,
   },
   TEAM_ANALYSIS: {
     displayName: 'Team Analysis',
     path: '/team-analysis',
-    icon: dynamic(() => import('@material-ui/icons/BarChart')),
+    icon: BarChart,
   },
   TEAM_GENERATOR: {
     displayName: 'Team Generator',
     path: '/team-generator',
-    icon: dynamic(() => import('@material-ui/icons/Casino')),
+    icon: Casino,
   },
 };
 

@@ -17,8 +17,11 @@ import {Route, Routes, getCurrentRoute} from '../../router/Routes';
 
 import {DrawerProps} from './Drawer';
 
-const Drawer = dynamic<DrawerProps>(() =>
-  import('./Drawer').then(m => m.Drawer)
+const Drawer = dynamic<DrawerProps>(
+  () => import('./Drawer').then(m => m.Drawer),
+  {
+    ssr: false,
+  }
 );
 
 const useStyles = makeStyles(theme => ({

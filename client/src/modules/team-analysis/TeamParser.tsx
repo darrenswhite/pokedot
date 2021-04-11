@@ -7,8 +7,11 @@ import {PartialPokemonSet} from '../../pkmn/PartialPokemonSet';
 
 import {TeamParserDialogProps} from './TeamParserDialog';
 
-const TeamParserDialog = dynamic<TeamParserDialogProps>(() =>
-  import('./TeamParserDialog').then(m => m.TeamParserDialog)
+const TeamParserDialog = dynamic<TeamParserDialogProps>(
+  () => import('./TeamParserDialog').then(m => m.TeamParserDialog),
+  {
+    ssr: false,
+  }
 );
 
 export interface TeamParserProps {

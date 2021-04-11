@@ -12,20 +12,32 @@ import {PokemonCardProps} from './PokemonCard';
 import {SpeciesSearch} from './SpeciesSearch';
 import {TeamParser} from './TeamParser';
 
-const PokemonCard = dynamic<PokemonCardProps>(() =>
-  import('./PokemonCard').then(m => m.PokemonCard)
+const PokemonCard = dynamic<PokemonCardProps>(
+  () => import('./PokemonCard').then(m => m.PokemonCard),
+  {
+    ssr: false,
+  }
 );
 
-const DefensiveTable = dynamic<DefensiveTableProps>(() =>
-  import('../coverage/DefensiveTable').then(m => m.DefensiveTable)
+const DefensiveTable = dynamic<DefensiveTableProps>(
+  () => import('../coverage/DefensiveTable').then(m => m.DefensiveTable),
+  {
+    ssr: false,
+  }
 );
 
-const OffensiveTable = dynamic<OffensiveTableProps>(() =>
-  import('../coverage/OffensiveTable').then(m => m.OffensiveTable)
+const OffensiveTable = dynamic<OffensiveTableProps>(
+  () => import('../coverage/OffensiveTable').then(m => m.OffensiveTable),
+  {
+    ssr: false,
+  }
 );
 
-const SummaryCard = dynamic<SummaryCardProps>(() =>
-  import('../coverage/SummaryCard').then(m => m.SummaryCard)
+const SummaryCard = dynamic<SummaryCardProps>(
+  () => import('../coverage/SummaryCard').then(m => m.SummaryCard),
+  {
+    ssr: false,
+  }
 );
 
 const TeamAnalysis: React.FC = () => {
