@@ -24,8 +24,8 @@ const getMoves = async (
     .filter(move => !!move) as Move[];
 
   return Object.fromEntries(
-    Object.entries(learnsetMoves).map(([id, move]) => {
-      const usage = moveStats[id] ?? 0;
+    learnsetMoves.map(move => {
+      const usage = moveStats[move.id] ?? 0;
 
       return [move.name, (usage / total) * 100];
     })
