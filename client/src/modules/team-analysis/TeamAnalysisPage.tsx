@@ -1,7 +1,7 @@
 import {Button, Card, CardContent, CardHeader, Grid} from '@material-ui/core';
-import {ArrowBack, ArrowForward} from '@material-ui/icons';
+import {ArrowBack, ArrowForward, Check} from '@material-ui/icons';
 import dynamic from 'next/dynamic';
-import React from 'react';
+import React, {useState} from 'react';
 
 import {useTeam} from '../../hooks/useTeam';
 import {DefensiveTableProps} from '../coverage/DefensiveTable';
@@ -11,13 +11,7 @@ import {SummaryCardProps} from '../coverage/SummaryCard';
 import {PokemonCardProps} from './PokemonCard';
 import {SpeciesSearch} from './SpeciesSearch';
 import {TeamParser} from './TeamParser';
-
-const PokemonCard = dynamic<PokemonCardProps>(
-  () => import('./PokemonCard').then(m => m.PokemonCard),
-  {
-    ssr: false,
-  }
-);
+import {TeamValidationDialogProps} from './TeamValidationDialog';
 
 const DefensiveTable = dynamic<DefensiveTableProps>(
   () => import('../coverage/DefensiveTable').then(m => m.DefensiveTable),
@@ -40,6 +34,19 @@ const SummaryCard = dynamic<SummaryCardProps>(
   }
 );
 
+const PokemonCard = dynamic<PokemonCardProps>(
+  () => import('./PokemonCard').then(m => m.PokemonCard),
+  {
+    ssr: false,
+  }
+);
+const TeamValidationDialog = dynamic<TeamValidationDialogProps>(
+  () => import('./TeamValidationDialog').then(m => m.TeamValidationDialog),
+  {
+    ssr: false,
+  }
+);
+
 const TeamAnalysis: React.FC = () => {
   const {
     team,
@@ -51,16 +58,27 @@ const TeamAnalysis: React.FC = () => {
     redo,
     canUndo,
     canRedo,
+    validate,
   } = useTeam();
+  const [validationDialogOpen, setValidationDialogOpen] = useState<boolean>(
+    false
+  );
+  const [validationProblems, setValidationProblems] = useState<string[] | null>(
+    null
+  );
+
+  const validateTeam = async () => {
+    setValidationProblems(await validate());
+    openValidationDialog();
+  };
+
+  const openValidationDialog = () => setValidationDialogOpen(true);
+  const closeValidationDialog = () => setValidationDialogOpen(false);
 
   return (
     <Grid container justify="center" spacing={2}>
       <Grid item>
-        <TeamParser value={team} onParse={setTeam} />
-      </Grid>
-
-      <Grid item>
-        <Grid container wrap="nowrap">
+        <Grid container wrap="nowrap" spacing={1}>
           <Grid item>
             <Button
               variant="contained"
@@ -68,7 +86,6 @@ const TeamAnalysis: React.FC = () => {
               color="primary"
               disabled={canUndo}
               aria-label="undo"
-              fullWidth
             >
               <ArrowBack />
             </Button>
@@ -81,7 +98,6 @@ const TeamAnalysis: React.FC = () => {
               color="primary"
               disabled={canRedo}
               aria-label="redo"
-              fullWidth
             >
               <ArrowForward />
             </Button>
@@ -89,11 +105,33 @@ const TeamAnalysis: React.FC = () => {
         </Grid>
       </Grid>
 
+      <Grid item>
+        <TeamParser value={team} onParse={setTeam} />
+      </Grid>
+
+      <Grid item>
+        <Button
+          variant="contained"
+          onClick={validateTeam}
+          color="primary"
+          disabled={team.length === 0}
+        >
+          <Check />
+          Validate
+        </Button>
+      </Grid>
+
       <Grid container item xs={12} justify="center">
         <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
           <SpeciesSearch onChange={addPokemon} />
         </Grid>
       </Grid>
+
+      <TeamValidationDialog
+        open={validationDialogOpen}
+        onClose={closeValidationDialog}
+        problems={validationProblems}
+      />
 
       {team.length === 0 && (
         <Grid container item xs={12} justify="center">

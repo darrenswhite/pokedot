@@ -1,7 +1,9 @@
 import {PokemonSet} from '@pkmn/data';
 import {Patch, applyPatches, produce} from 'immer';
+import {cloneDeep} from 'lodash/fp';
 import {useContext} from 'react';
 
+import {GenerationContext} from '../modules/generation/GenerationProvider';
 import {TeamContext} from '../modules/team-analysis/TeamProvider';
 import {PartialPokemonSet} from '../pkmn/PartialPokemonSet';
 
@@ -17,9 +19,11 @@ export interface UseTeamProps {
   redo: () => void;
   canUndo: boolean;
   canRedo: boolean;
+  validate: () => Promise<string[] | null>;
 }
 
 export const useTeam = (): UseTeamProps => {
+  const {format} = useContext(GenerationContext);
   const {
     team,
     setTeam,
@@ -126,6 +130,13 @@ export const useTeam = (): UseTeamProps => {
     }
   };
 
+  const validate = async (): Promise<string[] | null> => {
+    const {TeamValidator} = await import('@pkmn/sim');
+    const validator = new TeamValidator(format[0]);
+
+    return validator.validateTeam(cloneDeep(team));
+  };
+
   return {
     team,
     setTeam: setPartialTeam,
@@ -136,6 +147,7 @@ export const useTeam = (): UseTeamProps => {
     redo,
     canUndo,
     canRedo,
+    validate,
   };
 };
 

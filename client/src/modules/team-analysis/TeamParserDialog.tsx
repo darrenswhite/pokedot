@@ -55,6 +55,7 @@ export const TeamParserDialog: React.FC<TeamParserDialogProps> = ({
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Import / Export Showdown Team</DialogTitle>
+
       <DialogContent>
         <DialogContentText>
           To import a team: Export a team from Pokémon Showdown Teambuilder,
