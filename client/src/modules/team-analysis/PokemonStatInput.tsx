@@ -5,6 +5,8 @@ import React, {useContext} from 'react';
 import {useSpecie} from '../../hooks/useSpecies';
 import {GenerationContext} from '../generation/GenerationProvider';
 
+const MAX_TOTAL_EVS = 508;
+
 export interface PokemonStatInputProps {
   pokemon: PokemonSet;
   onChange: (recipe: (pokemon: PokemonSet) => void) => void;
@@ -33,6 +35,11 @@ export const PokemonStatInput: React.FC<PokemonStatInputProps> = ({
           generation.natures.get(pokemon.nature)
         )
       : -1;
+  const evTotal = Object.values(pokemon.evs).reduce(
+    (total, curr) => total + curr,
+    0
+  );
+  const evRemaining = evTotal - ev;
 
   return (
     <Box width="50px">
@@ -58,13 +65,21 @@ export const PokemonStatInput: React.FC<PokemonStatInputProps> = ({
               min: 0,
               max: 252,
               step: 4,
-              style: {color: color[500], fontWeight: 'bold'},
+              style: {
+                color: color[500],
+                fontWeight: 'bold',
+              },
             }}
-            onChange={e =>
+            onChange={e => {
               onChange(pokemon => {
-                pokemon.evs[stat] = Number(e.currentTarget.value);
-              })
-            }
+                const value = Number(e.currentTarget.value);
+                const newTotal = evRemaining + value;
+                const remain = newTotal - MAX_TOTAL_EVS;
+                const newEv = remain > 0 ? value - remain : value;
+
+                pokemon.evs[stat] = newEv;
+              });
+            }}
             fullWidth
           />
         </Grid>
@@ -77,7 +92,10 @@ export const PokemonStatInput: React.FC<PokemonStatInputProps> = ({
             inputProps={{
               min: 0,
               max: 31,
-              style: {color: color[500], fontSize: '0.75rem'},
+              style: {
+                color: color[500],
+                fontSize: '0.75rem',
+              },
             }}
             onChange={e =>
               onChange(pokemon => {
