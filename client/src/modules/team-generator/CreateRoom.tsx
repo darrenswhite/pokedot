@@ -85,9 +85,9 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
     {
       field: 'poolSelectionTime',
       label: 'Pool Selection Time',
-      min: 10000,
-      max: 120000,
-      step: 10000,
+      min: 15000,
+      max: 60000,
+      step: 15000,
       valueLabelFormat: value => value / 1000 + 's',
     },
     {
@@ -126,7 +126,7 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
             <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
               <Grid item container spacing={2}>
                 <Grid item xs={5}>
-                  <Typography id={`${slider.field}-size-slider`}>
+                  <Typography id={`${slider.field}-slider`}>
                     {slider.label}
                   </Typography>
                 </Grid>
@@ -135,7 +135,7 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
                   <Slider
                     value={options[slider.field] as number}
                     onChange={setOptionValue(slider.field)}
-                    aria-labelledby={`${slider.field}-size-slider`}
+                    aria-labelledby={`${slider.field}-slider`}
                     valueLabelDisplay="auto"
                     step={slider.step}
                     marks

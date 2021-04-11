@@ -13,7 +13,7 @@ export const initialRoom = new Room('');
 export const initialState = (): TeamGeneratorState => ({
   options: {
     teamSize: 6,
-    poolSize: 3,
+    poolSize: 6,
     poolSelectionTime: 30000,
     legendaries: 0,
     mythicals: 0,
