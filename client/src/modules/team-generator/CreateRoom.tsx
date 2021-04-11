@@ -117,101 +117,102 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
     <Grid
       container
       justify="center"
-      direction="column"
-      spacing={2}
+      alignItems="center"
       style={{height: '100%'}}
     >
-      {sliders.map(slider => (
-        <Grid key={slider.field} item container justify="center">
-          <Grid item xs={12} sm={4} md={3} lg={2} xl={1}>
+      <Grid item container xs={12} justify="center" spacing={2}>
+        {sliders.map(slider => (
+          <Grid key={slider.field} item container justify="center">
+            <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
+              <Grid item container spacing={2}>
+                <Grid item xs={5}>
+                  <Typography id={`${slider.field}-size-slider`}>
+                    {slider.label}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs>
+                  <Slider
+                    value={options[slider.field] as number}
+                    onChange={setOptionValue(slider.field)}
+                    aria-labelledby={`${slider.field}-size-slider`}
+                    valueLabelDisplay="auto"
+                    step={slider.step}
+                    marks
+                    min={slider.min}
+                    max={slider.max}
+                    valueLabelFormat={slider.valueLabelFormat}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        ))}
+
+        <Grid item container justify="center">
+          <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
             <Grid item container spacing={2}>
               <Grid item xs={5}>
-                <Typography id={`${slider.field}-size-slider`}>
-                  {slider.label}
+                <Typography id="exclusive-pools-switch">
+                  Exclusive pools
                 </Typography>
               </Grid>
 
-              <Grid item xs>
-                <Slider
-                  value={options[slider.field] as number}
-                  onChange={setOptionValue(slider.field)}
-                  aria-labelledby={`${slider.field}-size-slider`}
-                  valueLabelDisplay="auto"
-                  step={slider.step}
-                  marks
-                  min={slider.min}
-                  max={slider.max}
-                  valueLabelFormat={slider.valueLabelFormat}
+              <Grid item container xs justify="flex-end">
+                <Switch
+                  checked={options.exclusivePools}
+                  onChange={setOptionValue('exclusivePools')}
+                  color="primary"
+                  aria-labelledby="exclusive-pools-switch"
                 />
               </Grid>
             </Grid>
           </Grid>
         </Grid>
-      ))}
 
-      <Grid item container justify="center">
-        <Grid item xs={12} sm={4} md={3} lg={2} xl={1}>
-          <Grid item container spacing={2}>
-            <Grid item xs={5}>
-              <Typography id="exclusive-pools-switch">
-                Exclusive pools
-              </Typography>
-            </Grid>
-
-            <Grid item container xs justify="flex-end">
-              <Switch
-                checked={options.exclusivePools}
-                onChange={setOptionValue('exclusivePools')}
-                color="primary"
-                aria-labelledby="exclusive-pools-switch"
-              />
+        {error && (
+          <Grid item container justify="center">
+            <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
+              <Alert variant="outlined" severity="error">
+                {error}
+              </Alert>
             </Grid>
           </Grid>
-        </Grid>
-      </Grid>
+        )}
 
-      {error && (
+        {isLoading && (
+          <Grid item container justify="center">
+            <Grid item>
+              <CircularProgress size={24} />
+            </Grid>
+          </Grid>
+        )}
+
         <Grid item container justify="center">
-          <Grid item xs={12} sm={4} md={3} lg={2} xl={1}>
-            <Alert variant="outlined" severity="error">
-              {error}
-            </Alert>
+          <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
+            <Button
+              onClick={createNewRoom}
+              variant="contained"
+              color="primary"
+              fullWidth
+              disabled={isLoading}
+            >
+              Create room
+            </Button>
           </Grid>
         </Grid>
-      )}
 
-      {isLoading && (
         <Grid item container justify="center">
-          <Grid item>
-            <CircularProgress size={24} />
+          <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
+            <Button
+              onClick={onBack}
+              variant="contained"
+              color="primary"
+              fullWidth
+            >
+              Back
+            </Button>
           </Grid>
-        </Grid>
-      )}
-
-      <Grid item container justify="center">
-        <Grid item xs={12} sm={4} md={3} lg={2} xl={1}>
-          <Button
-            onClick={createNewRoom}
-            variant="contained"
-            color="primary"
-            fullWidth
-            disabled={isLoading}
-          >
-            Create room
-          </Button>
-        </Grid>
-      </Grid>
-
-      <Grid item container justify="center">
-        <Grid item xs={12} sm={4} md={3} lg={2} xl={1}>
-          <Button
-            onClick={onBack}
-            variant="contained"
-            color="primary"
-            fullWidth
-          >
-            Back
-          </Button>
         </Grid>
       </Grid>
     </Grid>

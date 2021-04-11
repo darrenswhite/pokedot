@@ -32,49 +32,48 @@ export const RoomsPage: React.FC = () => {
     setJoin(true);
   };
 
-  let content;
+  return (
+    <>
+      {create && <CreateRoom onBack={reset} />}
 
-  if (create) {
-    content = <CreateRoom onBack={reset} />;
-  } else if (join) {
-    content = <JoinRoom onBack={reset} />;
-  } else {
-    content = (
-      <Grid
-        container
-        justify="center"
-        direction="column"
-        spacing={2}
-        style={{height: '100%'}}
-      >
-        <Grid item container justify="center">
-          <Grid item xs={12} sm={4} md={3} lg={2} xl={1}>
-            <Button
-              onClick={showCreate}
-              variant="contained"
-              color="primary"
-              fullWidth
-            >
-              Create room
-            </Button>
+      {join && <JoinRoom onBack={reset} />}
+
+      {!join && !create && (
+        <Grid
+          container
+          justify="center"
+          alignItems="center"
+          style={{height: '100%'}}
+        >
+          <Grid item container xs={12} justify="center" spacing={2}>
+            <Grid item container justify="center">
+              <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
+                <Button
+                  onClick={showCreate}
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                >
+                  Create room
+                </Button>
+              </Grid>
+            </Grid>
+
+            <Grid item container justify="center">
+              <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
+                <Button
+                  onClick={showJoin}
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                >
+                  Join room
+                </Button>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
-
-        <Grid item container justify="center">
-          <Grid item xs={12} sm={4} md={3} lg={2} xl={1}>
-            <Button
-              onClick={showJoin}
-              variant="contained"
-              color="primary"
-              fullWidth
-            >
-              Join room
-            </Button>
-          </Grid>
-        </Grid>
-      </Grid>
-    );
-  }
-
-  return content;
+      )}
+    </>
+  );
 };

@@ -34,12 +34,7 @@ export const TeamParser: React.FC<TeamParserProps> = ({
         onParse={onParse}
       />
 
-      <Button
-        variant="contained"
-        onClick={openDialog}
-        color="primary"
-        fullWidth
-      >
+      <Button variant="contained" onClick={openDialog} color="primary">
         <ImportExport />
         Import / Export Showdown
       </Button>

@@ -24,35 +24,36 @@ export const PlayerName: React.FC = () => {
     <Grid
       container
       justify="center"
-      direction="column"
-      spacing={2}
+      alignItems="center"
       style={{height: '100%'}}
     >
-      <Grid item container justify="center">
-        <Grid item xs={12} sm={4} md={3} lg={2} xl={1}>
-          <TextField
-            label="Nickname"
-            placeholder="Enter name..."
-            onChange={e => setName(e.target.value.trim())}
-            onKeyUp={e => e.key === 'Enter' && submitName()}
-            value={name}
-            helperText={nameError}
-            error={!!nameError}
-            fullWidth
-          />
+      <Grid item container xs={12} justify="center" spacing={2}>
+        <Grid item container justify="center">
+          <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
+            <TextField
+              label="Nickname"
+              placeholder="Enter name..."
+              onChange={e => setName(e.target.value.trim())}
+              onKeyUp={e => e.key === 'Enter' && submitName()}
+              value={name}
+              helperText={nameError}
+              error={!!nameError}
+              fullWidth
+            />
+          </Grid>
         </Grid>
-      </Grid>
 
-      <Grid item container justify="center">
-        <Grid item xs={12} sm={4} md={3} lg={2} xl={1}>
-          <Button
-            onClick={submitName}
-            variant="contained"
-            color="primary"
-            fullWidth
-          >
-            Submit
-          </Button>
+        <Grid item container justify="center">
+          <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
+            <Button
+              onClick={submitName}
+              variant="contained"
+              color="primary"
+              fullWidth
+            >
+              Submit
+            </Button>
+          </Grid>
         </Grid>
       </Grid>
     </Grid>

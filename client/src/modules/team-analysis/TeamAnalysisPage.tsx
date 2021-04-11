@@ -48,29 +48,33 @@ const TeamAnalysis: React.FC = () => {
       </Grid>
 
       <Grid item>
-        <Button
-          variant="contained"
-          onClick={undo}
-          color="primary"
-          disabled={canUndo}
-          aria-label="undo"
-          fullWidth
-        >
-          <ArrowBack />
-        </Button>
-      </Grid>
+        <Grid container wrap="nowrap">
+          <Grid item>
+            <Button
+              variant="contained"
+              onClick={undo}
+              color="primary"
+              disabled={canUndo}
+              aria-label="undo"
+              fullWidth
+            >
+              <ArrowBack />
+            </Button>
+          </Grid>
 
-      <Grid item>
-        <Button
-          variant="contained"
-          onClick={redo}
-          color="primary"
-          disabled={canRedo}
-          aria-label="redo"
-          fullWidth
-        >
-          <ArrowForward />
-        </Button>
+          <Grid item>
+            <Button
+              variant="contained"
+              onClick={redo}
+              color="primary"
+              disabled={canRedo}
+              aria-label="redo"
+              fullWidth
+            >
+              <ArrowForward />
+            </Button>
+          </Grid>
+        </Grid>
       </Grid>
 
       <Grid container item xs={12} justify="center">
@@ -95,7 +99,7 @@ const TeamAnalysis: React.FC = () => {
       )}
 
       {team.length > 0 && (
-        <Grid container item xs={12} justify="center" spacing={4}>
+        <Grid container item xs={12} justify="center" spacing={2}>
           {team.map((pokemon, index) => (
             <Grid key={index} item>
               <PokemonCard
