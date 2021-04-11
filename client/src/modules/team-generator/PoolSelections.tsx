@@ -36,7 +36,7 @@ export const PoolSelections: React.FC = () => {
         <Grid item xs={12} sm={12} md={12} lg={10} xl={5}>
           <Grid container justify="center" spacing={2} wrap="wrap">
             {pool.map((pokemon, index) => {
-              const selected = team[currentPool]?.id === pokemon.id;
+              const selected = team[currentPool]?.name === pokemon.name;
 
               return (
                 <Grid key={index} item>

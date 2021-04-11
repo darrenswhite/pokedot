@@ -95,23 +95,23 @@ export const SpecieStats: React.FC<SpecieStatsProps> = ({
 
       <Grid container justify="center" spacing={1}>
         <Grid item>
-          {Object.keys(specie.baseStats).map(stat => {
-            return renderStatName(
-              generation ? generation.stats.display(stat) : stat.toUpperCase()
-            );
-          })}
+          {Object.keys(specie.baseStats).map(stat => (
+            <React.Fragment key={stat}>
+              {renderStatName(
+                generation ? generation.stats.display(stat) : stat.toUpperCase()
+              )}
+            </React.Fragment>
+          ))}
 
           {renderStatName('Total')}
         </Grid>
 
         <Grid item xs>
-          {Object.entries(specie.baseStats).map(([stat, value]) => {
-            return renderStatBar(
-              value,
-              MAX_STAT,
-              STAT_COLORS[stat as StatName]
-            );
-          })}
+          {Object.entries(specie.baseStats).map(([stat, value]) => (
+            <React.Fragment key={stat}>
+              {renderStatBar(value, MAX_STAT, STAT_COLORS[stat as StatName])}
+            </React.Fragment>
+          ))}
 
           {renderStatBar(baseStatTotal, MAX_TOTAL, STAT_TOTAL_COLOR)}
         </Grid>

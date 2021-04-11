@@ -27,6 +27,7 @@ export interface Player {
 }
 
 export interface Pokemon {
-  id: string;
+  num: number;
   name: string;
+  baseSpecies: string;
 }

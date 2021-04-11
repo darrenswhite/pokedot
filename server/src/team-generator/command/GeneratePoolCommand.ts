@@ -10,9 +10,11 @@ import {StartPoolSelectionTimerCommand} from './StartPoolSelectionTimerCommand';
 import {TeamGeneratorCommand} from './TeamGeneratorCommand';
 
 const generations = new Generations(Dex);
-const isMythical = (pokemon: Pokemon) => MYTHICALS.includes(pokemon.id);
+const isMythical = (pokemon: Pokemon) =>
+  MYTHICALS.includes(pokemon.baseSpecies);
 const isLegendary = (pokemon: Pokemon) =>
-  LEGENDS.includes(pokemon.id) || SUB_LEGENDS.includes(pokemon.id);
+  LEGENDS.includes(pokemon.baseSpecies) ||
+  SUB_LEGENDS.includes(pokemon.baseSpecies);
 
 export class GeneratePoolCommand extends TeamGeneratorCommand {
   execute(): TeamGeneratorCommand[] {
@@ -48,7 +50,8 @@ export class GeneratePoolCommand extends TeamGeneratorCommand {
     const teamMythicals = team.filter(isMythical).length;
     const teamLegendaries = team.filter(isLegendary).length;
 
-    const teamFilter = (pokemon: Pokemon) => !team.includes(pokemon);
+    const teamFilter = (pokemon: Pokemon) =>
+      team.filter(p => p.num === pokemon.num).length === 0;
     const exclusiveFilter = (pokemon: Pokemon) =>
       !exclusivePools || !previousPools.includes(pokemon);
     let specieFilter;
@@ -74,113 +77,111 @@ export class GeneratePoolCommand extends TeamGeneratorCommand {
   allPokemon(gen: GenerationNum): Pokemon[] {
     const generation = generations.get(gen);
 
-    return Array.from(generation.species)
-      .filter((specie: Specie) => specie.name === specie.baseSpecies)
-      .map(this.createPokemon);
+    return Array.from(generation.species).map(this.createPokemon);
   }
 
   createPokemon(specie: Specie): Pokemon {
-    return new Pokemon(specie.id, specie.name);
+    return new Pokemon(specie.num, specie.name, specie.baseSpecies);
   }
 }
 
 const MYTHICALS = [
-  'mew',
-  'celebi',
-  'jirachi',
-  'deoxys',
-  'phione',
-  'manaphy',
-  'darkrai',
-  'shaymin',
-  'arceus',
-  'victini',
-  'keldeo',
-  'meloetta',
-  'genesect',
-  'diancie',
-  'hoopa',
-  'volcanion',
-  'magearna',
-  'marshadow',
-  'zeraora',
-  'meltan',
-  'melmetal',
-  'zarude',
+  'Mew',
+  'Celebi',
+  'Jirachi',
+  'Deoxys',
+  'Phione',
+  'Manaphy',
+  'Darkrai',
+  'Shaymin',
+  'Arceus',
+  'Victini',
+  'Keldeo',
+  'Meloetta',
+  'Genesect',
+  'Diancie',
+  'Hoopa',
+  'Volcanion',
+  'Magearna',
+  'Marshadow',
+  'Zeraora',
+  'Meltan',
+  'Melmetal',
+  'Zarude',
 ];
 
 const LEGENDS = [
-  'mewtwo',
-  'lugia',
-  'hooh',
-  'kyogre',
-  'groudon',
-  'rayquaza',
-  'dialga',
-  'palkia',
-  'giratina',
-  'reshiram',
-  'zekrom',
-  'kyurem',
-  'xerneas',
-  'yveltal',
-  'zygarde',
-  'cosmog',
-  'cosmoem',
-  'solgaleo',
-  'lunala',
-  'necrozma',
-  'zacian',
-  'zamazenta',
-  'eternatus',
-  'calyrex',
+  'Mewtwo',
+  'Lugia',
+  'Ho-Oh',
+  'Kyogre',
+  'Groudon',
+  'Rayquaza',
+  'Dialga',
+  'Palkia',
+  'Giratina',
+  'Reshiram',
+  'Zekrom',
+  'Kyurem',
+  'Xerneas',
+  'Yveltal',
+  'Zygarde',
+  'Cosmog',
+  'Cosmoem',
+  'Solgaleo',
+  'Lunala',
+  'Necrozma',
+  'Zacian',
+  'Zamazenta',
+  'Eternatus',
+  'Calyrex',
 ];
 
 const SUB_LEGENDS = [
-  'articuno',
-  'zapdos',
-  'moltres',
-  'raikou',
-  'entei',
-  'suicune',
-  'regirock',
-  'regice',
-  'registeel',
-  'latias',
-  'latios',
-  'uxie',
-  'mesprit',
-  'azelf',
-  'heatran',
-  'regigigas',
-  'cresselia',
-  'cobalion',
-  'terrakion',
-  'virizion',
-  'tornadus',
-  'thundurus',
-  'landorus',
-  'typenull',
-  'silvally',
-  'tapukoko',
-  'tapulele',
-  'tapubulu',
-  'tapufini',
-  'nihilego',
-  'buzzwole',
-  'pheromosa',
-  'xurkitree',
-  'celesteela',
-  'kartana',
-  'guzzlord',
-  'poipole',
-  'naganadel',
-  'stakataka',
-  'blacephalon',
-  'kubfu',
-  'urshifu',
-  'regieleki',
-  'regidrago',
-  'glastrier',
-  'spectrier',
+  'Articuno',
+  'Zapdos',
+  'Moltres',
+  'Raikou',
+  'Entei',
+  'Suicune',
+  'Regirock',
+  'Regice',
+  'Registeel',
+  'Latias',
+  'Latios',
+  'Uxie',
+  'Mesprit',
+  'Azelf',
+  'Heatran',
+  'Regigigas',
+  'Cresselia',
+  'Cobalion',
+  'Terrakion',
+  'Virizion',
+  'Tornadus',
+  'Thundurus',
+  'Landorus',
+  'Type: Null',
+  'Silvally',
+  'Tapu Koko',
+  'Tapu Lele',
+  'Tapu Bulu',
+  'Tapu Fini',
+  'Nihilego',
+  'Buzzwole',
+  'Pheromosa',
+  'Xurkitree',
+  'Celesteela',
+  'Kartana',
+  'Guzzlord',
+  'Poipole',
+  'Naganadel',
+  'Stakataka',
+  'Blacephalon',
+  'Kubfu',
+  'Urshifu',
+  'Regieleki',
+  'Regidrago',
+  'Glastrier',
+  'Spectrier',
 ];
