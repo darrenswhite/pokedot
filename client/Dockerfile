@@ -27,16 +27,10 @@ FROM node:14-alpine AS runner
 
 WORKDIR /pokedot
 
-COPY --from=builder /pokedot/next.config.js ./
-#COPY --from=builder /pokedot/public ./public
-COPY --from=builder /pokedot/.next ./.next
+COPY --from=builder /pokedot/build ./build
 COPY --from=proddeps /pokedot/node_modules ./node_modules
+COPY --from=builder /pokedot/serve.js ./
 COPY --from=builder /pokedot/package.json ./
-
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nextjs -u 1001
-RUN chown -R nextjs:nodejs /pokedot/.next
-USER nextjs
 
 EXPOSE 3000
 
