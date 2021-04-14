@@ -11,7 +11,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import {DeleteOutline, ExpandMore} from '@material-ui/icons';
-import {PokemonSet, StatName, StatsTable} from '@pkmn/data';
+import {PokemonSet, StatID, StatsTable} from '@pkmn/data';
 import clsx from 'clsx';
 import React, {useState} from 'react';
 
@@ -165,7 +165,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
                     <PokemonStatInput
                       pokemon={pokemon}
                       onChange={onChange}
-                      stat={stat as StatName}
+                      stat={stat as StatID}
                       color={color}
                     />
                   </Grid>

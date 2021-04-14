@@ -1,5 +1,5 @@
 import {Box, Grid, TextField, Typography} from '@material-ui/core';
-import {PokemonSet, StatName} from '@pkmn/data';
+import {PokemonSet, StatID} from '@pkmn/data';
 import React, {useContext} from 'react';
 
 import {useSpecie} from '../../hooks/useSpecies';
@@ -10,7 +10,7 @@ const MAX_TOTAL_EVS = 508;
 export interface PokemonStatInputProps {
   pokemon: PokemonSet;
   onChange: (recipe: (pokemon: PokemonSet) => void) => void;
-  stat: StatName;
+  stat: StatID;
   color: Record<number, string>;
 }
 

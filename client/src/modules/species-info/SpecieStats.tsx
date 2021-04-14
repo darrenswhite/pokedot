@@ -1,5 +1,5 @@
 import {Grid, Typography, colors, makeStyles} from '@material-ui/core';
-import {Specie, StatName, StatsTable} from '@pkmn/data';
+import {Specie, StatID, StatsTable} from '@pkmn/data';
 import React, {useContext} from 'react';
 
 import {GenerationContext} from '../generation/GenerationProvider';
@@ -109,7 +109,7 @@ export const SpecieStats: React.FC<SpecieStatsProps> = ({
         <Grid item xs>
           {Object.entries(specie.baseStats).map(([stat, value]) => (
             <React.Fragment key={stat}>
-              {renderStatBar(value, MAX_STAT, STAT_COLORS[stat as StatName])}
+              {renderStatBar(value, MAX_STAT, STAT_COLORS[stat as StatID])}
             </React.Fragment>
           ))}
 
