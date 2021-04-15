@@ -5,83 +5,134 @@ import {sampleSize} from 'lodash/fp';
 
 import {Player} from '../Player';
 import {Pokemon} from '../Pokemon';
+import {Pool} from '../Pool';
 
 import {StartPoolSelectionTimerCommand} from './StartPoolSelectionTimerCommand';
 import {TeamGeneratorCommand} from './TeamGeneratorCommand';
 
 const generations = new Generations(Dex);
-const isMythical = (pokemon: Pokemon) =>
-  MYTHICALS.includes(pokemon.baseSpecies);
-const isLegendary = (pokemon: Pokemon) =>
-  LEGENDS.includes(pokemon.baseSpecies) ||
-  SUB_LEGENDS.includes(pokemon.baseSpecies);
+
+const isMythical = (specie: Specie) => MYTHICALS.includes(specie.baseSpecies);
+
+const isRestrictedLegendary = (specie: Specie) =>
+  RESTRICTED_LEGENDS.includes(specie.baseSpecies);
+
+const isSubLegendary = (specie: Specie) =>
+  SUB_LEGENDS.includes(specie.baseSpecies);
+
+const isFullyEvolved = (specie: Specie) => !specie.nfe;
+
+const not = (filter: (specie: Specie) => boolean) => (specie: Specie) =>
+  !filter(specie);
+
+const every = (filters: ((specie: Specie) => boolean)[]) => (specie: Specie) =>
+  filters.every(filter => filter(specie));
 
 export class GeneratePoolCommand extends TeamGeneratorCommand {
   execute(): TeamGeneratorCommand[] {
-    this.logger.info('Generating player pools.');
+    const pools = this.state.options.pools;
+    const currentPool = this.state.currentPool + 1;
+    const pool = pools[currentPool];
 
-    const nextPool = this.state.currentPool + 1;
+    this.logger.info({currentPool, pool}, 'Generating player pools...');
 
-    this.state.players.forEach(player => {
-      if (player.pool) {
-        player.previousPools.push(...player.pool);
-      }
+    if (pool) {
+      this.state.players.forEach(player => {
+        const playerPool = this.generatePool(pool, player);
 
-      player.pool = this.generatePool(player);
-    });
+        player.pool = playerPool;
+        player.previousPools.push(...playerPool);
+      });
 
-    this.state.currentPool = nextPool;
+      this.state.currentPool = currentPool;
 
-    this.logger.info({nextPool}, 'Player pools generated.');
+      this.logger.info({currentPool, pool}, 'Player pools generated.');
+    } else {
+      this.logger.error(
+        {currentPool},
+        'Failed to generate player pools: current pool does not exist.'
+      );
+    }
 
     return [new StartPoolSelectionTimerCommand()];
   }
 
-  generatePool({team, previousPools}: Player): ArraySchema<Pokemon> {
-    const {
-      poolSize,
-      legendaries,
-      mythicals,
-      exclusivePools,
-      gen,
-    } = this.state.options;
-
-    const pokemon = this.allPokemon(gen);
-    const teamMythicals = team.filter(isMythical).length;
-    const teamLegendaries = team.filter(isLegendary).length;
-
+  generatePool(
+    pool: Pool,
+    {team, previousPools}: Player
+  ): ArraySchema<Pokemon> {
+    const {poolSize, exclusivePools, gen} = this.state.options;
     const teamFilter = (pokemon: Pokemon) =>
-      team.filter(p => p.num === pokemon.num).length === 0;
+      team.filter(member => member.num === pokemon.num).length === 0;
     const exclusiveFilter = (pokemon: Pokemon) =>
-      !exclusivePools || !previousPools.includes(pokemon);
-    let specieFilter;
+      !exclusivePools ||
+      previousPools.filter(member => member.name === pokemon.name).length === 0;
 
-    if (teamMythicals < mythicals) {
-      specieFilter = isMythical;
-    } else if (teamLegendaries < legendaries) {
-      specieFilter = isLegendary;
-    } else {
-      specieFilter = (pokemon: Pokemon) =>
-        !isMythical(pokemon) && !isLegendary(pokemon);
-    }
+    const species = this.species(gen);
+    const eligiblePokemon = this.eligibleSpecies(species, pool).map(
+      this.createPokemon
+    );
 
-    const availableSpecies = pokemon
+    const pokemonPool = eligiblePokemon
       .filter(teamFilter)
-      .filter(exclusiveFilter)
-      .filter(specieFilter);
-    const pool = sampleSize(poolSize, availableSpecies);
+      .filter(exclusiveFilter);
+    const poolSample = sampleSize(poolSize, pokemonPool);
 
-    return new ArraySchema<Pokemon>(...pool);
+    return new ArraySchema<Pokemon>(...poolSample);
   }
 
-  allPokemon(gen: GenerationNum): Pokemon[] {
+  eligibleSpecies(species: Specie[], pool: Pool): Specie[] {
+    const eligibleSpecies = [];
+
+    if (pool.mythicals) {
+      eligibleSpecies.push(...species.filter(isMythical));
+    }
+
+    if (pool.restrictedLegendaries) {
+      eligibleSpecies.push(...species.filter(isRestrictedLegendary));
+    }
+
+    if (pool.subLegendaries) {
+      eligibleSpecies.push(...species.filter(isSubLegendary));
+    }
+
+    if (pool.fullyEvolved) {
+      eligibleSpecies.push(
+        ...species.filter(
+          every([
+            isFullyEvolved,
+            not(isMythical),
+            not(isRestrictedLegendary),
+            not(isSubLegendary),
+          ])
+        )
+      );
+    }
+
+    if (pool.notFullyEvolved) {
+      eligibleSpecies.push(
+        ...species.filter(
+          every([
+            not(isFullyEvolved),
+            not(isMythical),
+            not(isRestrictedLegendary),
+            not(isSubLegendary),
+          ])
+        )
+      );
+    }
+
+    return eligibleSpecies;
+  }
+
+  species(gen: GenerationNum): Specie[] {
     const generation = generations.get(gen);
 
-    return Array.from(generation.species).map(this.createPokemon);
+    return Array.from(generation.species);
   }
 
   createPokemon(specie: Specie): Pokemon {
-    return new Pokemon(specie.num, specie.name, specie.baseSpecies);
+    return new Pokemon(specie.num, specie.name);
   }
 }
 
@@ -110,7 +161,7 @@ const MYTHICALS = [
   'Zarude',
 ];
 
-const LEGENDS = [
+const RESTRICTED_LEGENDS = [
   'Mewtwo',
   'Lugia',
   'Ho-Oh',

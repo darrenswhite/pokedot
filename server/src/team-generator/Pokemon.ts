@@ -7,13 +7,9 @@ export class Pokemon extends Schema {
   @type('string')
   name: string;
 
-  @type('string')
-  baseSpecies: string;
-
-  constructor(num: number, name: string, baseSpecies: string) {
+  constructor(num: number, name: string) {
     super();
     this.num = num;
     this.name = name;
-    this.baseSpecies = baseSpecies;
   }
 }

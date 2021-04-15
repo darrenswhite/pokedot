@@ -39,13 +39,11 @@ export const RoomPage: React.FC = () => {
   const {isLoading, error, room, state} = useJoinRoom(roomId);
   const {currentPool, options, players} = state;
   const player = players[room.sessionId];
-  const showPoolSelections = currentPool !== -1;
-  const showSummary = currentPool === options?.teamSize;
   let content;
 
   useRoomListeners();
 
-  if (error || isLoading || !player) {
+  if (error || isLoading || !player || !options) {
     content = (
       <Grid
         container
@@ -60,9 +58,9 @@ export const RoomPage: React.FC = () => {
     );
   } else if (player.name === 'Anonymous') {
     content = <PlayerName />;
-  } else if (showSummary) {
+  } else if (currentPool === options.pools.length) {
     content = <Summary />;
-  } else if (showPoolSelections) {
+  } else if (currentPool >= 0) {
     content = <PoolSelections />;
   } else {
     content = <PlayerReady />;

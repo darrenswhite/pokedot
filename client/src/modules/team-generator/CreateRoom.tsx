@@ -7,13 +7,15 @@ import {
   Typography,
 } from '@material-ui/core';
 import {Alert} from '@material-ui/lab';
+import {produce} from 'immer';
 import {useRouter} from 'next/router';
 import React, {useContext, useState} from 'react';
 
 import {createRoom, useRoomListeners} from '../../hooks/useRoom';
 
-import {RoomContext, initialState} from './RoomProvider';
-import {Options} from './TeamGeneratorState';
+import {PoolOptionsCard} from './PoolOptionsCard';
+import {RoomContext, initialPoolState, initialState} from './RoomProvider';
+import {Options, Pool} from './TeamGeneratorState';
 
 interface Slider {
   field: keyof Options;
@@ -69,48 +71,32 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
 
   useRoomListeners();
 
-  const sliders: Slider[] = [
-    {
-      field: 'teamSize',
-      label: 'Team size',
-      min: 1,
-      max: 6,
-    },
-    {
-      field: 'poolSize',
-      label: 'Pool size',
-      min: 2,
-      max: 10,
-    },
-    {
-      field: 'poolSelectionTime',
-      label: 'Pool Selection Time',
-      min: 15000,
-      max: 60000,
-      step: 15000,
-      valueLabelFormat: value => value / 1000 + 's',
-    },
-    {
-      field: 'legendaries',
-      label: 'Legendaries',
-      min: 0,
-      max: options.teamSize - options.mythicals,
-    },
-    {
-      field: 'mythicals',
-      label: 'Mythicals',
-      min: 0,
-      max: options.teamSize - options.legendaries,
-    },
-  ];
+  const updatePool = (index: number, recipe: (pool: Pool) => void) => {
+    setOptions(
+      produce(options, draft => {
+        const pool = draft.pools[index];
 
-  const setOptionValue = (key: keyof Options) => {
-    return (_: React.ChangeEvent<unknown>, newValue: unknown) => {
-      setOptions({
-        ...options,
-        [key]: newValue,
-      });
-    };
+        if (pool) {
+          recipe(pool);
+        }
+      })
+    );
+  };
+
+  const handlePoolsChange = (
+    _: React.ChangeEvent<unknown>,
+    value: number | number[]
+  ) => {
+    const pools = Array.from(Array(value as number)).map(index => {
+      const curr = options.pools[index];
+
+      return curr ?? initialPoolState();
+    });
+
+    setOptions({
+      ...options,
+      pools,
+    });
   };
 
   return (
@@ -120,48 +106,120 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
       alignItems="center"
       style={{height: '100%'}}
     >
-      <Grid item container xs={12} justify="center" spacing={2}>
-        {sliders.map(slider => (
-          <Grid key={slider.field} item container justify="center">
-            <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
-              <Grid item container spacing={2}>
-                <Grid item xs={5}>
-                  <Typography id={`${slider.field}-slider`}>
-                    {slider.label}
-                  </Typography>
-                </Grid>
-
-                <Grid item xs>
-                  <Slider
-                    value={options[slider.field] as number}
-                    onChange={setOptionValue(slider.field)}
-                    aria-labelledby={`${slider.field}-slider`}
-                    valueLabelDisplay="auto"
-                    step={slider.step}
-                    marks
-                    min={slider.min}
-                    max={slider.max}
-                    valueLabelFormat={slider.valueLabelFormat}
-                  />
-                </Grid>
-              </Grid>
+      <Grid item container justify="center" spacing={2}>
+        <Grid item container justify="center" spacing={2}>
+          {options.pools.map((pool, index) => (
+            <Grid key={index} item>
+              <PoolOptionsCard
+                pool={pool}
+                onChange={recipe => updatePool(index, recipe)}
+                index={index}
+              />
             </Grid>
-          </Grid>
-        ))}
+          ))}
+        </Grid>
 
         <Grid item container justify="center">
           <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
-            <Grid item container spacing={2}>
-              <Grid item xs={5}>
+            <Grid container spacing={2} alignItems="center">
+              <Grid item xs>
+                <Typography id="pools-slider">Pools</Typography>
+              </Grid>
+
+              <Grid item xs>
+                <Slider
+                  value={options.pools.length}
+                  onChange={handlePoolsChange}
+                  aria-labelledby="pools-slider"
+                  valueLabelDisplay="auto"
+                  marks
+                  min={1}
+                  max={6}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+
+        <Grid item container justify="center">
+          <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
+            <Grid container spacing={2} alignItems="center">
+              <Grid item xs>
+                <Typography id="poolSize-slider">Pool size</Typography>
+              </Grid>
+
+              <Grid item xs>
+                <Slider
+                  value={options.poolSize}
+                  onChange={(_, value) => {
+                    setOptions(
+                      produce(options, draft => {
+                        draft.poolSize = value as number;
+                      })
+                    );
+                  }}
+                  aria-labelledby="poolSize-slider"
+                  valueLabelDisplay="auto"
+                  marks
+                  min={2}
+                  max={10}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+
+        <Grid item container justify="center">
+          <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
+            <Grid container spacing={2} alignItems="center">
+              <Grid item xs>
+                <Typography id="poolSelectionTime-slider">
+                  Pool Selection Time
+                </Typography>
+              </Grid>
+
+              <Grid item xs>
+                <Slider
+                  value={options.poolSelectionTime}
+                  onChange={(_, value) => {
+                    setOptions(
+                      produce(options, draft => {
+                        draft.poolSelectionTime = value as number;
+                      })
+                    );
+                  }}
+                  aria-labelledby="poolSelectionTime-slider"
+                  valueLabelDisplay="auto"
+                  step={15000}
+                  marks
+                  min={15000}
+                  max={60000}
+                  valueLabelFormat={value => value / 1000 + 's'}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+
+        <Grid item container justify="center">
+          <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
+            <Grid container spacing={2} alignItems="center">
+              <Grid item xs>
                 <Typography id="exclusive-pools-switch">
                   Exclusive pools
                 </Typography>
               </Grid>
 
-              <Grid item container xs justify="flex-end">
+              <Grid item>
                 <Switch
                   checked={options.exclusivePools}
-                  onChange={setOptionValue('exclusivePools')}
+                  onChange={(_, value) => {
+                    setOptions(
+                      produce(options, draft => {
+                        draft.exclusivePools = value;
+                      })
+                    );
+                  }}
                   color="primary"
                   aria-labelledby="exclusive-pools-switch"
                 />

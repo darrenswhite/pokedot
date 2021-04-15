@@ -59,7 +59,7 @@ export const JoinRoom: React.FC<JoinRoomProps> = ({onBack}: JoinRoomProps) => {
       alignItems="center"
       style={{height: '100%'}}
     >
-      <Grid item container xs={12} justify="center" spacing={2}>
+      <Grid item container justify="center" spacing={2}>
         <Grid item container justify="center">
           <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
             <TextField

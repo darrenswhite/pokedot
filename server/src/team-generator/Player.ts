@@ -10,13 +10,13 @@ export class Player extends Schema {
   name: string;
 
   @type([Pokemon])
-  team: ArraySchema<Pokemon> = new ArraySchema<Pokemon>();
+  team = new ArraySchema<Pokemon>();
 
   @type([Pokemon])
-  pool: ArraySchema<Pokemon> = new ArraySchema<Pokemon>();
+  pool = new ArraySchema<Pokemon>();
 
   @type([Pokemon])
-  previousPools: ArraySchema<Pokemon> = new ArraySchema<Pokemon>();
+  previousPools = new ArraySchema<Pokemon>();
 
   @type('boolean')
   ready = false;

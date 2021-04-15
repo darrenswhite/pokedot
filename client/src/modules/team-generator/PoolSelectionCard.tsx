@@ -23,17 +23,17 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export interface PoolCardProps {
+export interface PoolSelectionCardProps {
   pokemon: Pokemon;
   onSelect: () => void;
   selected: boolean;
 }
 
-export const PoolCard: React.FC<PoolCardProps> = ({
+export const PoolSelectionCard: React.FC<PoolSelectionCardProps> = ({
   pokemon,
   onSelect,
   selected,
-}: PoolCardProps) => {
+}: PoolSelectionCardProps) => {
   const classes = useStyles();
 
   return (

@@ -24,7 +24,7 @@ export const OptionsList: React.FC = () => {
       >
         <Divider />
         <ListItem>
-          <ListItemText>Team size: {options.teamSize}</ListItemText>
+          <ListItemText>Pools: {options.pools.length}</ListItemText>
         </ListItem>
         <ListItem>
           <ListItemText>Pool size: {options.poolSize}</ListItemText>
@@ -33,12 +33,6 @@ export const OptionsList: React.FC = () => {
           <ListItemText>
             Pool Selection Time: {options.poolSelectionTime / 1000}s
           </ListItemText>
-        </ListItem>
-        <ListItem>
-          <ListItemText>Legendaries: {options.legendaries}</ListItemText>
-        </ListItem>
-        <ListItem>
-          <ListItemText>Mythicals: {options.mythicals}</ListItemText>
         </ListItem>
         <ListItem>
           <ListItemText>

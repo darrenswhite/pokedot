@@ -121,7 +121,7 @@ const TeamAnalysis: React.FC = () => {
         </Button>
       </Grid>
 
-      <Grid container item xs={12} justify="center">
+      <Grid container item justify="center">
         <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
           <SpeciesSearch onChange={addPokemon} />
         </Grid>
@@ -134,7 +134,7 @@ const TeamAnalysis: React.FC = () => {
       />
 
       {team.length === 0 && (
-        <Grid container item xs={12} justify="center">
+        <Grid container item justify="center">
           <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
             <Card>
               <CardHeader title="No Pokémon added." />
@@ -149,7 +149,7 @@ const TeamAnalysis: React.FC = () => {
       )}
 
       {team.length > 0 && (
-        <Grid container item xs={12} justify="center" spacing={2}>
+        <Grid container item justify="center" spacing={2}>
           {team.map((pokemon, index) => (
             <Grid key={index} item>
               <PokemonCard

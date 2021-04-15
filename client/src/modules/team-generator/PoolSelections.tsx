@@ -1,7 +1,7 @@
 import {Grid, Typography} from '@material-ui/core';
 import React, {useContext} from 'react';
 
-import {PoolCard} from './PoolCard';
+import {PoolSelectionCard} from './PoolSelectionCard';
 import {RoomContext} from './RoomProvider';
 import {TeamGeneratorContainer} from './TeamGeneratorContainer';
 
@@ -23,7 +23,7 @@ export const PoolSelections: React.FC = () => {
       header={
         <>
           <Typography variant="h5" component="h2" align="center" gutterBottom>
-            Pool {currentPool + 1} / {options.teamSize}
+            Pool {currentPool + 1} / {options.pools.length}
           </Typography>
 
           <Typography variant="h5" component="h2" align="center" gutterBottom>
@@ -40,7 +40,7 @@ export const PoolSelections: React.FC = () => {
 
               return (
                 <Grid key={index} item>
-                  <PoolCard
+                  <PoolSelectionCard
                     pokemon={pokemon}
                     onSelect={() => selectFromPool(index)}
                     selected={selected}

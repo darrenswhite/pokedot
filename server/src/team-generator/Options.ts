@@ -1,21 +1,17 @@
-import {Schema, type} from '@colyseus/schema';
+import {ArraySchema, Schema, type} from '@colyseus/schema';
 import {GenerationNum} from '@pkmn/types';
 
+import {Pool} from './Pool';
+
 export class Options extends Schema {
-  @type('number')
-  teamSize: number;
+  @type([Pool])
+  pools: ArraySchema<Pool>;
 
   @type('number')
   poolSize: number;
 
   @type('number')
   poolSelectionTime: number;
-
-  @type('number')
-  legendaries: number;
-
-  @type('number')
-  mythicals: number;
 
   @type('boolean')
   exclusivePools: boolean;
@@ -24,20 +20,16 @@ export class Options extends Schema {
   gen: GenerationNum;
 
   constructor(
-    teamSize: number,
+    pools: ArraySchema<Pool>,
     poolSize: number,
     poolSelectionTime: number,
-    legendaries: number,
-    mythicals: number,
     exclusivePools: boolean,
     gen: GenerationNum
   ) {
     super();
-    this.teamSize = teamSize;
+    this.pools = pools;
     this.poolSize = poolSize;
     this.poolSelectionTime = poolSelectionTime;
-    this.legendaries = legendaries;
-    this.mythicals = mythicals;
     this.exclusivePools = exclusivePools;
     this.gen = gen;
   }

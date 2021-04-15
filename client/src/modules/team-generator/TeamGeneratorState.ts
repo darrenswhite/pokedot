@@ -8,11 +8,9 @@ export interface TeamGeneratorState {
 }
 
 export interface Options {
-  teamSize: number;
+  pools: Pool[];
   poolSize: number;
   poolSelectionTime: number;
-  legendaries: number;
-  mythicals: number;
   exclusivePools: boolean;
   gen: GenerationNum;
 }
@@ -29,5 +27,14 @@ export interface Player {
 export interface Pokemon {
   num: number;
   name: string;
-  baseSpecies: string;
+}
+
+export interface Pool {
+  fullyEvolved: boolean;
+  notFullyEvolved: boolean;
+  restrictedLegendaries: boolean;
+  subLegendaries: boolean;
+  mythicals: boolean;
+  minimumBaseStatTotal: number;
+  maximumBaseStatTotal: number;
 }

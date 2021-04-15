@@ -75,7 +75,6 @@ export const useJoinRoom = (
       rejoinOrJoinRoom(client, roomId)
         .then(room => {
           setRoom(room);
-          setState(room.state);
           setIsLoading(false);
         })
         .catch(e => {

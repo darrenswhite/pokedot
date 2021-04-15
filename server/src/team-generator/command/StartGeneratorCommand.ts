@@ -12,7 +12,7 @@ export class StartGeneratorCommand extends TeamGeneratorCommand {
     );
   }
 
-  execute(): Promise<TeamGeneratorCommand[]> {
+  async execute(): Promise<TeamGeneratorCommand[]> {
     this.logger.info('All players ready, locking room.');
 
     return this.room

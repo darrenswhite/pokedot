@@ -1,22 +1,30 @@
 import {Client, Room} from 'colyseus.js';
-import {noop} from 'lodash/fp';
+import {noop, range} from 'lodash/fp';
 import React, {createContext, useState} from 'react';
 
 import {socketUrl} from '../../util/constants';
 
-import {TeamGeneratorState} from './TeamGeneratorState';
+import {Pool, TeamGeneratorState} from './TeamGeneratorState';
 
 const client = new Client(socketUrl);
 
 export const initialRoom = new Room('');
 
+export const initialPoolState = (): Pool => ({
+  fullyEvolved: true,
+  notFullyEvolved: false,
+  restrictedLegendaries: false,
+  subLegendaries: false,
+  mythicals: false,
+  minimumBaseStatTotal: 0,
+  maximumBaseStatTotal: 0,
+});
+
 export const initialState = (): TeamGeneratorState => ({
   options: {
-    teamSize: 6,
+    pools: range(0, 6).map(initialPoolState),
     poolSize: 6,
     poolSelectionTime: 30000,
-    legendaries: 0,
-    mythicals: 0,
     exclusivePools: false,
     gen: 8,
   },

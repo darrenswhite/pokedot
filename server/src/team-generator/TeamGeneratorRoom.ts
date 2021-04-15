@@ -1,4 +1,5 @@
 import {Dispatcher} from '@colyseus/command';
+import {ArraySchema} from '@colyseus/schema';
 import {Client, Room} from 'colyseus';
 
 import {IdGenerator} from '../util/IdGenerator';
@@ -8,6 +9,7 @@ import {OnJoinCommand} from './command/OnJoinCommand';
 import {OnLeaveCommand} from './command/OnLeaveCommand';
 import {OnMessageCommand} from './command/OnMessageCommand';
 import {Options} from './Options';
+import {Pool} from './Pool';
 import {TeamGeneratorState} from './TeamGeneratorState';
 
 export class TeamGeneratorRoom extends Room<TeamGeneratorState> {
@@ -22,16 +24,27 @@ export class TeamGeneratorRoom extends Room<TeamGeneratorState> {
       roomId: this.roomId,
     });
 
-    this.logger.info('Creating new room...');
+    this.logger.info({options}, 'Creating new room...');
 
     this.setState(
       new TeamGeneratorState(
         new Options(
-          options.teamSize,
+          new ArraySchema<Pool>(
+            ...options.pools.map(
+              pool =>
+                new Pool(
+                  pool.fullyEvolved,
+                  pool.notFullyEvolved,
+                  pool.restrictedLegendaries,
+                  pool.subLegendaries,
+                  pool.mythicals,
+                  pool.minimumBaseStatTotal,
+                  pool.maximumBaseStatTotal
+                )
+            )
+          ),
           options.poolSize,
           options.poolSelectionTime,
-          options.legendaries,
-          options.mythicals,
           options.exclusivePools,
           options.gen
         )
