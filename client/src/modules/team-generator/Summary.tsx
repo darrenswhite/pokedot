@@ -64,7 +64,9 @@ export const Summary: React.FC = () => {
         }))
       );
 
-      router.push(Routes.TEAM_ANALYSIS.path);
+      router.push(Routes.TEAM_ANALYSIS.path).catch(e => {
+        console.log(`Failed to navigate to team analysis page.`, e);
+      });
     }
   };
 

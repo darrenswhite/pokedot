@@ -1,7 +1,7 @@
 import {ArraySchema} from '@colyseus/schema';
 import {GenerationNum, Generations, Specie} from '@pkmn/data';
 import {Dex} from '@pkmn/dex';
-import {sampleSize} from 'lodash/fp';
+import {filter, sampleSize} from 'lodash/fp';
 
 import {Player} from '../Player';
 import {Pokemon} from '../Pokemon';
@@ -63,14 +63,16 @@ export class GeneratePoolCommand extends TeamGeneratorCommand {
   ): ArraySchema<Pokemon> {
     const {poolSize, exclusivePools, gen} = this.state.options;
     const teamFilter = (pokemon: Pokemon) =>
-      team.filter(member => member.num === pokemon.num).length === 0;
+      filter((member: Pokemon) => member.num === pokemon.num)(team).length ===
+      0;
     const exclusiveFilter = (pokemon: Pokemon) =>
       !exclusivePools ||
-      previousPools.filter(member => member.name === pokemon.name).length === 0;
+      filter((member: Pokemon) => member.name === pokemon.name)(previousPools)
+        .length === 0;
 
     const species = this.species(gen);
     const eligiblePokemon = this.eligibleSpecies(species, pool).map(
-      this.createPokemon
+      this.createPokemon.bind(this)
     );
 
     const pokemonPool = eligiblePokemon

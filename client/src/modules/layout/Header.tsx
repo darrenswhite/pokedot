@@ -90,7 +90,7 @@ export const Header: React.FC = () => {
         >
           {flow(
             values,
-            map(route => (
+            map((route: Route) => (
               <Tab
                 key={route.path}
                 label={renderRouteLabel(route)}

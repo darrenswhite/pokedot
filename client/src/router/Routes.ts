@@ -29,6 +29,6 @@ export const Routes = {
 export const getCurrentRoute = (router: NextRouter): Route | undefined => {
   return flow(
     values,
-    findLast(route => router.pathname.startsWith(route.path))
+    findLast((route: Route) => router.pathname.startsWith(route.path))
   )(Routes);
 };

@@ -51,22 +51,25 @@ export class TeamGeneratorRoom extends Room<TeamGeneratorState> {
       )
     );
 
-    this.onMessage('*', ({sessionId}, type, payload) => {
-      this.logger.info(
-        {sessionId, type},
-        'Delegating client message to dispatcher.'
-      );
+    this.onMessage(
+      '*',
+      ({sessionId}, type, payload: Record<string, unknown>) => {
+        this.logger.info(
+          {sessionId, type},
+          'Delegating client message to dispatcher.'
+        );
 
-      this.dispatcher.dispatch(
-        new OnMessageCommand({
-          type,
-          payload: {
-            sessionId,
-            ...payload,
-          },
-        })
-      );
-    });
+        void this.dispatcher.dispatch(
+          new OnMessageCommand({
+            type,
+            payload: {
+              sessionId,
+              ...payload,
+            },
+          })
+        );
+      }
+    );
 
     this.logger.info('Successfully created new room.');
   }
@@ -74,7 +77,7 @@ export class TeamGeneratorRoom extends Room<TeamGeneratorState> {
   onJoin({sessionId}: Client): void {
     this.logger.info({sessionId}, 'Delegating client join to dispatcher.');
 
-    this.dispatcher.dispatch(
+    void this.dispatcher.dispatch(
       new OnJoinCommand({
         sessionId,
       })
@@ -86,7 +89,7 @@ export class TeamGeneratorRoom extends Room<TeamGeneratorState> {
 
     this.logger.info({sessionId}, 'Delegating client leave to dispatcher.');
 
-    this.dispatcher.dispatch(
+    void this.dispatcher.dispatch(
       new OnLeaveCommand({
         client,
         sessionId,

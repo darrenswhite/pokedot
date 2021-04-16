@@ -2,24 +2,37 @@ module.exports = {
   root: true,
   extends: [
     'eslint:recommended',
-    'plugin:prettier/recommended',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
     'plugin:import/errors',
     'plugin:import/warnings',
     'plugin:import/typescript',
+    'plugin:prettier/recommended',
   ],
   parserOptions: {
     parser: '@typescript-eslint/parser',
+    project: ['./tsconfig.json'],
+    tsconfigRootDir: __dirname,
     sourceType: 'module',
-    ecmaVersion: 2018,
+    ecmaVersion: 2020,
+    ecmaFeatures: {
+      jsx: true,
+    },
   },
   env: {
     browser: true,
     node: true,
   },
+  ignorePatterns: [
+    '.eslintrc.js',
+    '.storybook/**/*.js',
+    'next.config.js',
+    'prettier.config.js',
+    'serve.js',
+  ],
   plugins: ['@typescript-eslint', 'prettier'],
   rules: {
     'import/order': [
@@ -43,14 +56,6 @@ module.exports = {
         allowSeparatedGroups: false,
       },
     ],
-    '@typescript-eslint/explicit-function-return-type': 'off',
-    '@typescript-eslint/no-empty-function': [
-      'error',
-      {
-        allow: ['private-constructors'],
-      },
-    ],
-    '@typescript-eslint/no-var-requires': 'off',
   },
   settings: {
     react: {

@@ -17,6 +17,18 @@ export const ROOM_ID_LENGTH = 4;
 export const LOCAL_STORAGE_KEY_ROOM_ID = 'pokedot-room-id';
 export const LOCAL_STORAGE_KEY_SESSION_ID = 'pokedot-session-id';
 
+export interface UseCreateRoomReturnType {
+  createRoom: (
+    roomName: string,
+    options: Options,
+    cb: (room: Room<TeamGeneratorState>) => Promise<unknown>
+  ) => void;
+  client: Client;
+  room: Room<TeamGeneratorState>;
+  isLoading: boolean;
+  error: string | null;
+}
+
 export interface UseJoinRoomReturnType {
   client: Client;
   room: Room<TeamGeneratorState>;
@@ -25,25 +37,49 @@ export interface UseJoinRoomReturnType {
   error: string | null;
 }
 
-export const createRoom = async (
-  client: Client,
-  roomName: string,
-  options: Options
-): Promise<Room<TeamGeneratorState>> => {
-  let room;
+export const useCreateRoom = (): UseCreateRoomReturnType => {
+  const {client, room, setRoom} = useContext(RoomContext);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
-  try {
-    room = await client.create<TeamGeneratorState>(roomName, options);
+  const createRoom = (
+    roomName: string,
+    options: Options,
+    cb: (room: Room<TeamGeneratorState>) => Promise<unknown>
+  ) => {
+    setError(null);
+    setIsLoading(true);
 
-    addRoomSessionCache(room);
+    createNewRoom(client, roomName, options)
+      .then(room => {
+        setRoom(room);
+        cb(room)
+          .then(() => {
+            setIsLoading(false);
+          })
+          .catch(e => {
+            console.error(
+              `Failed to invoke create room callback ${roomName} ${room.id}.`,
+              e
+            );
+            setError('Failed to create room.');
+            setIsLoading(false);
+          });
+      })
+      .catch(e => {
+        console.error(`Failed to create room.`, e);
+        setError('Failed to create room.');
+        setIsLoading(false);
+      });
+  };
 
-    console.log(`Created room ${room.id}.`);
-  } catch (e) {
-    console.error(`Failed to create room ${roomName}: ${e}`);
-    throw new Error(`Failed to create room ${roomName}: ${e}`);
-  }
-
-  return room;
+  return {
+    createRoom,
+    client,
+    room,
+    isLoading,
+    error,
+  };
 };
 
 export const useJoinRoom = (
@@ -78,8 +114,8 @@ export const useJoinRoom = (
           setIsLoading(false);
         })
         .catch(e => {
-          console.error(e);
-          setError(`Failed to join room.`);
+          console.error(`Failed to join room ${roomId}.`, e);
+          setError(`Failed to join room ${roomId}.`);
           setIsLoading(false);
         });
     }
@@ -93,8 +129,8 @@ export const useRoomListeners = (): void => {
 
   useEffect(() => {
     if (room) {
-      room.onLeave((...args) => {
-        console.log(`Client left room: ${args}`);
+      room.onLeave(code => {
+        console.log(`Client left room: ${code}`);
       });
       room.onError(err => {
         console.error(`Room error: ${err}`);
@@ -108,6 +144,18 @@ export const useRoomListeners = (): void => {
       };
     }
   }, [room, setState]);
+};
+
+const createNewRoom = async (
+  client: Client,
+  roomName: string,
+  options: Options
+): Promise<Room<TeamGeneratorState>> => {
+  const room = await client.create<TeamGeneratorState>(roomName, options);
+
+  addRoomSessionCache(room);
+
+  return room;
 };
 
 const rejoinOrJoinRoom = async (
@@ -143,15 +191,9 @@ const joinRoom = async (
   client: Client,
   roomId: string
 ): Promise<Room<TeamGeneratorState>> => {
-  let room;
+  const room = await client.joinById<TeamGeneratorState>(roomId);
 
-  try {
-    room = await client.joinById<TeamGeneratorState>(roomId);
-
-    addRoomSessionCache(room);
-  } catch (e) {
-    throw new Error(`Failed to join room ${roomId}. ${e}`);
-  }
+  addRoomSessionCache(room);
 
   return room;
 };

@@ -20,7 +20,7 @@ export class StartGeneratorCommand extends TeamGeneratorCommand {
       .then(() => {
         return [new ResetPoolsCommand(), new GeneratePoolCommand()];
       })
-      .catch(err => {
+      .catch((err: unknown) => {
         this.logger.error({err}, 'Failed to lock room.');
         // TODO what do we do in this scenario?
         return [];

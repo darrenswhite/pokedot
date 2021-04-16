@@ -41,7 +41,7 @@ const getMissingTypes = (
 const getWeaknesses = (matrix: TypeChartMatrix): TypeName[] => {
   const typeScores = matrix
     .scoreTypes(reduce((total, curr) => total * curr, 1))
-    .sort((left, right) => (right[1] as number) - (left[1] as number));
+    .sort((left, right) => right[1] - left[1]);
 
   return flow(
     filter((typeScore: [TypeName, number]) => typeScore[1] > 1.0),
@@ -104,12 +104,10 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
 
   useEffect(() => {
     if (generation) {
-      ResistanceMatrix.forPokemonSets(generation, pokemonSets).then(
-        setResistanceMatrix
+      setResistanceMatrix(
+        ResistanceMatrix.forPokemonSets(generation, pokemonSets)
       );
-      CoverageMatrix.forPokemonSets(generation, pokemonSets).then(
-        setCoverageMatrix
-      );
+      setCoverageMatrix(CoverageMatrix.forPokemonSets(generation, pokemonSets));
       setTypes(Array.from(generation.types).map(type => type.name));
     }
   }, [generation, pokemonSets]);

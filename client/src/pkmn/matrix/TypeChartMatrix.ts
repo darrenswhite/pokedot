@@ -20,11 +20,11 @@ export type TypeChartFunction = (
 ) => TypeChart;
 
 export abstract class TypeChartMatrix extends Matrix<TypeChartMatrixProps> {
-  protected static async buildMatrix(
+  protected static buildMatrix(
     generation: Generation,
     pokemonSets: PartialPokemonSet[],
     typeChartFunction: TypeChartFunction
-  ): Promise<TypeChartMatrixProps[]> {
+  ): TypeChartMatrixProps[] {
     const types = Array.from(generation.types).map(type => type.name);
 
     return pokemonSets.flatMap(pokemon => {

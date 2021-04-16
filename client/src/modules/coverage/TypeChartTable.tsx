@@ -107,7 +107,7 @@ const useStyles = makeStyles(() => ({
 export type TypeChartMatrixConstructor = (
   generation: Generation,
   pokemonSets: PartialPokemonSet[]
-) => Promise<TypeChartMatrix>;
+) => TypeChartMatrix;
 
 export interface TypeChartTableProps {
   pokemonSets: PartialPokemonSet[];
@@ -135,7 +135,7 @@ export const TypeChartTable: React.FC<TypeChartTableProps> = ({
 
   useEffect(() => {
     if (generation) {
-      matrixConstructor(generation, pokemonSets).then(setMatrix);
+      setMatrix(matrixConstructor(generation, pokemonSets));
     }
   }, [matrixConstructor, generation, pokemonSets]);
 

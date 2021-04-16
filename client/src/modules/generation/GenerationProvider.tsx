@@ -66,7 +66,7 @@ const loadDex = async (): Promise<Dex> => {
 const loadFormats = async (): Promise<Record<string, number[]>> => {
   const latest = await axios.get(`${serverUrl}/stats/formats/latest`);
 
-  return latest.data;
+  return latest.data as Record<string, number[]>;
 };
 
 const loadStats = async (
@@ -76,7 +76,7 @@ const loadStats = async (
     `${serverUrl}/stats/latest/${format[0]}?weight=${format[1]}`
   );
 
-  return latest.data;
+  return latest.data as UsageStatistics;
 };
 
 export interface GenerationProviderProps {
@@ -109,7 +109,10 @@ export const GenerationProvider: React.FC<GenerationProviderProps> = ({
     loadStats(format)
       .then(setStats)
       .catch(err => {
-        console.error(`Failed to stats for format ${format}.`, err);
+        console.error(
+          `Failed to stats for format ${format[0]} [${format[1]}].`,
+          err
+        );
       });
   }, [format]);
 

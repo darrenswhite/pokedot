@@ -46,11 +46,10 @@ export class Matrix<T extends MatrixValue> {
         groupBy(key),
         mapValues(
           rest.length > 0
-            ? (values: GroupedMatrixValue<T, keyof T, unknown>) =>
-                this.groupByRecursive(rest, values)
+            ? values => this.groupByRecursive(rest, values)
             : identity
         )
-      )(value);
+      )(value) as GroupedMatrixValue<T, keyof T, unknown>;
     } else {
       grouped = value;
     }

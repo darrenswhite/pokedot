@@ -5,15 +5,15 @@ import {PartialPokemonSet} from '../PartialPokemonSet';
 import {TypeChart, TypeChartMatrix} from './TypeChartMatrix';
 
 export class ResistanceMatrix extends TypeChartMatrix {
-  static async forPokemonSets(
+  static forPokemonSets(
     generation: Generation,
     pokemonSets: PartialPokemonSet[]
-  ): Promise<ResistanceMatrix> {
+  ): ResistanceMatrix {
     return new ResistanceMatrix(
-      await ResistanceMatrix.buildMatrix(
+      ResistanceMatrix.buildMatrix(
         generation,
         pokemonSets,
-        ResistanceMatrix.createResistanceTypeChart
+        ResistanceMatrix.createResistanceTypeChart.bind(this)
       )
     );
   }
@@ -34,6 +34,6 @@ export class ResistanceMatrix extends TypeChartMatrix {
 
         return [type, total];
       })
-    );
+    ) as TypeChart;
   }
 }

@@ -9,12 +9,12 @@ import {
 import {Alert} from '@material-ui/lab';
 import {produce} from 'immer';
 import {useRouter} from 'next/router';
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 
-import {createRoom, useRoomListeners} from '../../hooks/useRoom';
+import {useCreateRoom, useRoomListeners} from '../../hooks/useRoom';
 
 import {PoolOptionsCard} from './PoolOptionsCard';
-import {RoomContext, initialPoolState, initialState} from './RoomProvider';
+import {initialPoolState, initialState} from './RoomProvider';
 import {Options, Pool} from './TeamGeneratorState';
 
 interface Slider {
@@ -35,41 +35,17 @@ export interface CreateRoomProps {
 export const CreateRoom: React.FC<CreateRoomProps> = ({
   onBack,
 }: CreateRoomProps) => {
-  const {client, setRoom, setState} = useContext(RoomContext);
+  const {createRoom, error, isLoading} = useCreateRoom();
   const router = useRouter();
   const [options, setOptions] = useState<Options>(initialState().options);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const createNewRoom = () => {
-    setError(null);
-    setIsLoading(true);
-
-    createRoom(client, 'team-generator', options)
-      .then(room => {
-        setRoom(room);
-        setState(room.state);
-        router
-          .push(`/team-generator/${room.id}`)
-          .then(() => {
-            setIsLoading(false);
-          })
-          .catch(e => {
-            console.error(
-              `Failed to navigate to team generator room ${room.id}.`,
-              e
-            );
-            setError('Failed to join newly created room.');
-            setIsLoading(false);
-          });
-      })
-      .catch(() => {
-        setError('Failed to create room.');
-        setIsLoading(false);
-      });
-  };
 
   useRoomListeners();
+
+  const handleCreateRoom = () => {
+    createRoom('team-generator', options, room => {
+      return router.push(`/team-generator/${room.id}`);
+    });
+  };
 
   const updatePool = (index: number, recipe: (pool: Pool) => void) => {
     setOptions(
@@ -87,7 +63,7 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
     _: React.ChangeEvent<unknown>,
     value: number | number[]
   ) => {
-    const pools = Array.from(Array(value as number)).map(index => {
+    const pools = Array.from(Array(value as number).keys()).map(index => {
       const curr = options.pools[index];
 
       return curr ?? initialPoolState();
@@ -194,7 +170,7 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
                   marks
                   min={15000}
                   max={60000}
-                  valueLabelFormat={value => value / 1000 + 's'}
+                  valueLabelFormat={value => String(value / 1000) + 's'}
                 />
               </Grid>
             </Grid>
@@ -249,7 +225,7 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
         <Grid item container justify="center">
           <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
             <Button
-              onClick={createNewRoom}
+              onClick={handleCreateRoom}
               variant="contained"
               color="primary"
               fullWidth

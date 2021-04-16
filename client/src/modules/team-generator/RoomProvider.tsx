@@ -8,7 +8,7 @@ import {Pool, TeamGeneratorState} from './TeamGeneratorState';
 
 const client = new Client(socketUrl);
 
-export const initialRoom = new Room('');
+export const initialRoom = new Room<TeamGeneratorState>('');
 
 export const initialPoolState = (): Pool => ({
   fullyEvolved: true,

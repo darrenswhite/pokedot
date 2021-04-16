@@ -32,8 +32,7 @@ export const PokemonAbilityInput: React.FC<PokemonAbilityInputProps> = ({
         (total, curr) => total + curr,
         0
       );
-
-      const abilities = Object.fromEntries(
+      const abilities = Object.fromEntries<number>(
         Object.values(specie.abilities).map(name => {
           const ability = generation.abilities.get(name);
           const usage = (ability && abilityStats[ability.id]) ?? 0;

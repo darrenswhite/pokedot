@@ -54,7 +54,11 @@ export const PokemonMoveInput: React.FC<PokemonMoveInputProps> = ({
 
   useEffect(() => {
     if (generation && specie) {
-      getMoves(generation, specie, stats).then(setMoves);
+      getMoves(generation, specie, stats)
+        .then(setMoves)
+        .catch(e => {
+          console.error(`Failed to get moves for specie ${specie.name}.`, e);
+        });
     }
   }, [generation, specie, stats]);
 

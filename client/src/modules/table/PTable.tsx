@@ -70,7 +70,7 @@ export const PTable: React.FC<PTableProps> = ({
 
   return (
     <TableContainer className={className} style={style}>
-      <Table size="small" stickyHeader>
+      <Table size="small" stickyHeader style={{borderCollapse: 'collapse'}}>
         <PHeader
           columns={columns}
           sortItem={sortItem}

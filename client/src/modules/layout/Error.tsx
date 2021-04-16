@@ -42,9 +42,13 @@ export const Error: React.FC<ErrorProps> = ({
   const [avatar, setAvatar] = useState('');
 
   useEffect(() => {
-    import('@pkmn/img').then(({Sprites}) => {
-      setAvatar(Sprites.getAvatar(avatarName));
-    });
+    import('@pkmn/img')
+      .then(({Sprites}) => {
+        setAvatar(Sprites.getAvatar(avatarName));
+      })
+      .catch(e => {
+        console.error('Failed to import @pkmn/img.', e);
+      });
   }, [avatarName]);
 
   return (

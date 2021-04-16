@@ -27,7 +27,6 @@ const getTitle = (router: NextRouter): string => {
 };
 
 const App: React.FC<AppProps> = (props: AppProps) => {
-  const {Component, pageProps} = props;
   const router = useRouter();
   const title = getTitle(router);
 
@@ -59,7 +58,7 @@ const App: React.FC<AppProps> = (props: AppProps) => {
         <CssBaseline />
 
         <PageContainer>
-          <Component {...pageProps} />
+          <props.Component {...props.pageProps} />
         </PageContainer>
       </ThemeProvider>
     </>

@@ -31,7 +31,7 @@ export const DefensiveTable: React.FC<DefensiveTableProps> = ({
         columnField={columnField}
         idField={idField}
         valueField={valueField}
-        matrixConstructor={ResistanceMatrix.forPokemonSets}
+        matrixConstructor={ResistanceMatrix.forPokemonSets.bind(this)}
       />
     </>
   );

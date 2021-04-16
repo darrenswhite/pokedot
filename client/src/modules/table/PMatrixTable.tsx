@@ -9,11 +9,16 @@ import {PTable} from './PTable';
 
 const sentanceCase = flow(toString, toLower, upperFirst);
 
-const getColumns = <T extends MatrixValue>(
+const getColumns = <
+  T extends MatrixValue,
+  C extends keyof T,
+  I extends keyof T,
+  V extends keyof T
+>(
   matrix: Matrix<T>,
-  columnField: keyof T,
-  idField: keyof T,
-  valueField: keyof T,
+  columnField: C,
+  idField: I,
+  valueField: V,
   columnFieldOverrides?: Partial<PCol>,
   idFieldOverrides?: Partial<PCol>
 ): PCol[] => {
@@ -27,7 +32,7 @@ const getColumns = <T extends MatrixValue>(
   const rowColumns: PCol[] = columnKeys.sort().map(key => ({
     field: key,
     headerName: sentanceCase(key),
-    mapValue: value => map(val => (val as T)[valueField])(value as T[]),
+    mapValue: value => map((val: T) => val[valueField] as V)(value as T[]),
     ...idFieldOverrides,
   }));
 

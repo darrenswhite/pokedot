@@ -5,15 +5,15 @@ import {PartialPokemonSet} from '../PartialPokemonSet';
 import {TypeChart, TypeChartMatrix} from './TypeChartMatrix';
 
 export class CoverageMatrix extends TypeChartMatrix {
-  static async forPokemonSets(
+  static forPokemonSets(
     generation: Generation,
     pokemonSets: PartialPokemonSet[]
-  ): Promise<CoverageMatrix> {
+  ): CoverageMatrix {
     return new CoverageMatrix(
-      await CoverageMatrix.buildMatrix(
+      CoverageMatrix.buildMatrix(
         generation,
         pokemonSets,
-        CoverageMatrix.createCoverageTypeChart
+        CoverageMatrix.createCoverageTypeChart.bind(this)
       )
     );
   }
@@ -40,6 +40,6 @@ export class CoverageMatrix extends TypeChartMatrix {
 
         return [type, total];
       })
-    );
+    ) as TypeChart;
   }
 }

@@ -31,7 +31,7 @@ export const OffensiveTable: React.FC<OffensiveTableProps> = ({
         columnField={columnField}
         idField={idField}
         valueField={valueField}
-        matrixConstructor={CoverageMatrix.forPokemonSets}
+        matrixConstructor={CoverageMatrix.forPokemonSets.bind(this)}
       />
     </>
   );
