@@ -64,18 +64,15 @@ export const useCreateRoom = <S>(
     createNewRoom<S>(client, roomName, options)
       .then(room => {
         setRoom(room);
-        cb(room)
-          .then(() => {
-            setIsLoading(false);
-          })
-          .catch(e => {
-            console.error(
-              `Failed to invoke create room callback ${roomName} ${room.id}.`,
-              e
-            );
-            setError('Failed to create room.');
-            setIsLoading(false);
-          });
+        setIsLoading(false);
+
+        cb(room).catch(e => {
+          console.error(
+            `Failed to invoke create room callback ${roomName} ${room.id}.`,
+            e
+          );
+          setError('Failed to create room.');
+        });
       })
       .catch(e => {
         console.error(`Failed to create room.`, e);

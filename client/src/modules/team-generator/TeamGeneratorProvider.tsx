@@ -24,7 +24,7 @@ export const initialPoolState = (): Pool => ({
 const initialState = (): TeamGeneratorState => ({
   options: {
     pools: range(0, 6).map(initialPoolState),
-    poolSize: 6,
+    poolSize: 5,
     poolSelectionTime: 30000,
     exclusivePools: false,
     gen: 8,

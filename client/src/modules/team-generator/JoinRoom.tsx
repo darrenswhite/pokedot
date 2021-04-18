@@ -37,19 +37,11 @@ export const JoinRoom: React.FC<JoinRoomProps> = ({onBack}: JoinRoomProps) => {
     setError(null);
     setIsLoading(true);
 
-    router
-      .push(`/team-generator/${roomId}`)
-      .then(() => {
-        setIsLoading(false);
-      })
-      .catch(e => {
-        console.error(
-          `Failed to navigate to team generator room ${roomId}.`,
-          e
-        );
-        setError('Failed to join room.');
-        setIsLoading(false);
-      });
+    router.push(`/team-generator/${roomId}`).catch(e => {
+      console.error(`Failed to navigate to team generator room ${roomId}.`, e);
+      setError('Failed to join room.');
+      setIsLoading(false);
+    });
   };
 
   return (
