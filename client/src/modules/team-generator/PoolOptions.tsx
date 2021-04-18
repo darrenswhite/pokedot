@@ -5,12 +5,26 @@ import {
   Divider,
   Grid,
   Switch,
+  Theme,
   Typography,
+  makeStyles,
 } from '@material-ui/core';
 import {ExpandMore} from '@material-ui/icons';
 import React from 'react';
 
-import {Pool} from './TeamGeneratorState';
+import {Pool, getPoolOptionsDisplay} from './TeamGeneratorState';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  heading: {
+    fontSize: theme.typography.pxToRem(15),
+    flexBasis: '33.33%',
+    flexShrink: 0,
+  },
+  secondaryHeading: {
+    fontSize: theme.typography.pxToRem(15),
+    color: theme.palette.text.secondary,
+  },
+}));
 
 export interface PoolOptionsProps {
   pool: Pool;
@@ -23,10 +37,18 @@ export const PoolOptions: React.FC<PoolOptionsProps> = ({
   onChange,
   index,
 }: PoolOptionsProps) => {
+  const classes = useStyles();
+
   return (
     <Accordion TransitionProps={{unmountOnExit: true}}>
       <AccordionSummary expandIcon={<ExpandMore />}>
-        <Typography>{`Pool ${index + 1}`}</Typography>
+        <Typography className={classes.heading}>
+          {`Pool #${index + 1}`}
+        </Typography>
+
+        <Typography className={classes.secondaryHeading}>
+          {getPoolOptionsDisplay(pool)}
+        </Typography>
       </AccordionSummary>
 
       <Divider />

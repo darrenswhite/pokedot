@@ -38,3 +38,39 @@ export interface Pool {
   minimumBaseStatTotal: number;
   maximumBaseStatTotal: number;
 }
+
+export const getPoolOptionsDisplay = (pool: Pool): string => {
+  const options = [];
+
+  if (pool.fullyEvolved) {
+    options.push('FE');
+  }
+
+  if (pool.notFullyEvolved) {
+    options.push('NFE');
+  }
+
+  if (pool.restrictedLegendaries) {
+    options.push('RL');
+  }
+
+  if (pool.subLegendaries) {
+    options.push('SL');
+  }
+
+  if (pool.mythicals) {
+    options.push('M');
+  }
+
+  if (pool.minimumBaseStatTotal > 0 && pool.maximumBaseStatTotal > 0) {
+    options.push(
+      `${pool.minimumBaseStatTotal}>=BST<=${pool.maximumBaseStatTotal}`
+    );
+  } else if (pool.minimumBaseStatTotal > 0) {
+    options.push(`BST>=${pool.minimumBaseStatTotal}`);
+  } else if (pool.maximumBaseStatTotal > 0) {
+    options.push(`BST<=${pool.maximumBaseStatTotal}`);
+  }
+
+  return options.length > 0 ? options.join(', ') : 'None';
+};
