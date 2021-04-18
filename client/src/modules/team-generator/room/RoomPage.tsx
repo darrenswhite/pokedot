@@ -3,28 +3,26 @@ import dynamic from 'next/dynamic';
 import {useRouter} from 'next/router';
 import React from 'react';
 
-import {useJoinRoom, useRoomListeners} from '../../hooks/useRoom';
+import {useJoinRoom, useRoomListeners} from '../../../hooks/useRoom';
+import {TeamGeneratorContext} from '../TeamGeneratorProvider';
 
-const PlayerName = dynamic<unknown>(
-  () => import('./PlayerName').then(m => m.PlayerName),
+const SetPlayerName = dynamic<unknown>(
+  () => import('./SetPlayerName').then(m => m.SetPlayerName),
   {
     ssr: false,
   }
 );
 
-const PlayerReady = dynamic<unknown>(
-  () => import('./PlayerReady').then(m => m.PlayerReady),
+const SetPlayerReady = dynamic<unknown>(
+  () => import('./SetPlayerReady').then(m => m.SetPlayerReady),
   {
     ssr: false,
   }
 );
 
-const PoolSelections = dynamic<unknown>(
-  () => import('./PoolSelections').then(m => m.PoolSelections),
-  {
-    ssr: false,
-  }
-);
+const Pool = dynamic<unknown>(() => import('./Pool').then(m => m.Pool), {
+  ssr: false,
+});
 
 const Summary = dynamic<unknown>(
   () => import('./Summary').then(m => m.Summary),
@@ -36,12 +34,15 @@ const Summary = dynamic<unknown>(
 export const RoomPage: React.FC = () => {
   const {query} = useRouter();
   const roomId = typeof query.roomId === 'string' ? query.roomId : '';
-  const {isLoading, error, room, state} = useJoinRoom(roomId);
+  const {isLoading, error, room, state} = useJoinRoom(
+    TeamGeneratorContext,
+    roomId
+  );
   const {currentPool, options, players} = state;
   const player = players[room.sessionId];
   let content;
 
-  useRoomListeners();
+  useRoomListeners(TeamGeneratorContext);
 
   if (error || isLoading || !player || !options) {
     content = (
@@ -57,13 +58,13 @@ export const RoomPage: React.FC = () => {
       </Grid>
     );
   } else if (player.name === 'Anonymous') {
-    content = <PlayerName />;
+    content = <SetPlayerName />;
   } else if (currentPool === options.pools.length) {
     content = <Summary />;
   } else if (currentPool >= 0) {
-    content = <PoolSelections />;
+    content = <Pool />;
   } else {
-    content = <PlayerReady />;
+    content = <SetPlayerReady />;
   }
 
   return content;

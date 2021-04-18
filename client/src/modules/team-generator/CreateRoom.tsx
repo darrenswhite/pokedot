@@ -9,24 +9,13 @@ import {
 import {Alert} from '@material-ui/lab';
 import {produce} from 'immer';
 import {useRouter} from 'next/router';
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 
 import {useCreateRoom, useRoomListeners} from '../../hooks/useRoom';
 
 import {PoolOptionsCard} from './PoolOptionsCard';
-import {initialPoolState, initialState} from './RoomProvider';
+import {TeamGeneratorContext, initialPoolState} from './TeamGeneratorProvider';
 import {Options, Pool} from './TeamGeneratorState';
-
-interface Slider {
-  field: keyof Options;
-  label: string;
-  min?: number;
-  max?: number;
-  step?: number | null;
-  valueLabelFormat?:
-    | string
-    | ((value: number, index: number) => React.ReactNode);
-}
 
 export interface CreateRoomProps {
   onBack: () => void;
@@ -35,11 +24,14 @@ export interface CreateRoomProps {
 export const CreateRoom: React.FC<CreateRoomProps> = ({
   onBack,
 }: CreateRoomProps) => {
-  const {createRoom, error, isLoading} = useCreateRoom();
+  const context = useContext(TeamGeneratorContext);
+  const {createRoom, error, isLoading} = useCreateRoom(TeamGeneratorContext);
   const router = useRouter();
-  const [options, setOptions] = useState<Options>(initialState().options);
+  const [options, setOptions] = useState<Options>(
+    context.initialState().options
+  );
 
-  useRoomListeners();
+  useRoomListeners(TeamGeneratorContext);
 
   const handleCreateRoom = () => {
     createRoom('team-generator', options, room => {

@@ -3,18 +3,16 @@ import dynamic from 'next/dynamic';
 import React from 'react';
 
 import {GenerationProviderProps} from '../generation/GenerationProvider';
-import {SpeciesProviderProps} from '../species-info/SpeciesProvider';
+import {SpeciesProviderProps} from '../species/SpeciesProvider';
 import {TeamProviderProps} from '../team-analysis/TeamProvider';
-import {RoomProviderProps} from '../team-generator/RoomProvider';
+import {TeamGeneratorProviderProps} from '../team-generator/TeamGeneratorProvider';
 
 import {Footer} from './Footer';
 import {Header} from './Header';
 
 const SpeciesBottomDrawer = dynamic<unknown>(
   () =>
-    import('../species-info/SpeciesBottomDrawer').then(
-      m => m.SpeciesBottomDrawer
-    ),
+    import('../species/SpeciesBottomDrawer').then(m => m.SpeciesBottomDrawer),
   {
     ssr: false,
   }
@@ -29,7 +27,7 @@ const GenerationProvider = dynamic<GenerationProviderProps>(
 );
 
 const SpeciesProvider = dynamic<SpeciesProviderProps>(
-  () => import('../species-info/SpeciesProvider').then(m => m.SpeciesProvider),
+  () => import('../species/SpeciesProvider').then(m => m.SpeciesProvider),
   {
     ssr: false,
   }
@@ -42,8 +40,11 @@ const TeamProvider = dynamic<TeamProviderProps>(
   }
 );
 
-const RoomProvider = dynamic<RoomProviderProps>(
-  () => import('../team-generator/RoomProvider').then(m => m.RoomProvider),
+const TeamGeneratorProvider = dynamic<TeamGeneratorProviderProps>(
+  () =>
+    import('../team-generator/TeamGeneratorProvider').then(
+      m => m.TeamGeneratorProvider
+    ),
   {
     ssr: false,
   }
@@ -88,7 +89,7 @@ export const PageContainer: React.FC<PageContainerProps> = ({
       <div className={classes.wrapper}>
         <Header />
 
-        <RoomProvider>
+        <TeamGeneratorProvider>
           <GenerationProvider>
             <SpeciesProvider>
               <TeamProvider>
@@ -102,7 +103,7 @@ export const PageContainer: React.FC<PageContainerProps> = ({
               </TeamProvider>
             </SpeciesProvider>
           </GenerationProvider>
-        </RoomProvider>
+        </TeamGeneratorProvider>
 
         <Footer />
       </div>

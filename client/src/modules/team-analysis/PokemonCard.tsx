@@ -15,7 +15,7 @@ import {PokemonSet, StatID, StatsTable} from '@pkmn/data';
 import clsx from 'clsx';
 import React, {useState} from 'react';
 
-import {SpeciesImage, SpeciesImageType} from '../species-info/SpeciesImage';
+import {SpeciesImage, SpeciesImageType} from '../species/SpeciesImage';
 
 import {PokemonAbilityInput} from './PokemonAbilityInput';
 import {PokemonItemInput} from './PokemonItemInput';

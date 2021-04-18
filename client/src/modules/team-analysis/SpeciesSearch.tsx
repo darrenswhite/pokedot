@@ -8,7 +8,7 @@ import {findAll} from 'highlight-words-core';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 
 import {GenerationContext} from '../generation/GenerationProvider';
-import {SpeciesImage, SpeciesImageType} from '../species-info/SpeciesImage';
+import {SpeciesImage, SpeciesImageType} from '../species/SpeciesImage';
 
 const renderOption = (
   option: string,

@@ -1,10 +1,10 @@
 import {Button, Grid, TextField} from '@material-ui/core';
 import React, {useContext, useState} from 'react';
 
-import {RoomContext} from './RoomProvider';
+import {TeamGeneratorContext} from '../TeamGeneratorProvider';
 
-export const PlayerName: React.FC = () => {
-  const {room} = useContext(RoomContext);
+export const SetPlayerName: React.FC = () => {
+  const {room} = useContext(TeamGeneratorContext);
   const [name, setName] = useState<string>('');
   const [nameError, setNameError] = useState<string>('');
 

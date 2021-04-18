@@ -18,7 +18,7 @@ import {
 } from '../../pkmn/matrix/TypeChartMatrix';
 import {PartialPokemonSet} from '../../pkmn/PartialPokemonSet';
 import {GenerationContext} from '../generation/GenerationProvider';
-import {TypeImage} from '../species-info/TypeImage';
+import {TypeImage} from '../species/TypeImage';
 
 const EFFECTIVENESS_RESIST = [0.0, 0.25, 0.5];
 const EFFECTIVENESS_SUPER = [2.0, 4.0];

@@ -1,56 +1,67 @@
 import {Schema} from '@colyseus/schema';
-import {Client, Room} from 'colyseus.js';
-import {useContext, useEffect, useState} from 'react';
-
-import {
-  RoomContext,
-  initialRoom,
-  initialState,
-} from '../modules/team-generator/RoomProvider';
-import {
-  Options,
-  TeamGeneratorState,
-} from '../modules/team-generator/TeamGeneratorState';
+import {Client, JoinOptions, Room} from 'colyseus.js';
+import {Context, useContext, useEffect, useState} from 'react';
 
 export const ROOM_ID_LENGTH = 4;
 
 export const LOCAL_STORAGE_KEY_ROOM_ID = 'pokedot-room-id';
 export const LOCAL_STORAGE_KEY_SESSION_ID = 'pokedot-session-id';
 
-export interface UseCreateRoomReturnType {
+export interface RoomContext<S> {
+  client: Client;
+  initialRoom: Room<S>;
+  room: Room<S>;
+  setRoom: (room: Room<S>) => void;
+  initialState: () => S;
+  state: S;
+  setState: (state: S) => void;
+}
+
+export interface UseCreateRoomReturnType<S> {
   createRoom: (
     roomName: string,
-    options: Options,
-    cb: (room: Room<TeamGeneratorState>) => Promise<unknown>
+    options: JoinOptions,
+    cb: (room: Room<S>) => Promise<unknown>
   ) => void;
   client: Client;
-  room: Room<TeamGeneratorState>;
+  room: Room<S>;
   isLoading: boolean;
   error: string | null;
 }
 
-export interface UseJoinRoomReturnType {
+export interface UseJoinRoomReturnType<T> {
   client: Client;
-  room: Room<TeamGeneratorState>;
-  state: TeamGeneratorState;
+  room: Room<T>;
+  state: T;
   isLoading: boolean;
   error: string | null;
 }
 
-export const useCreateRoom = (): UseCreateRoomReturnType => {
-  const {client, room, setRoom} = useContext(RoomContext);
+export const useCreateRoom = <S>(
+  context: Context<RoomContext<S>>
+): UseCreateRoomReturnType<S> => {
+  const {
+    client,
+    initialRoom,
+    room,
+    setRoom,
+    initialState,
+    setState,
+  } = useContext(context);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   const createRoom = (
     roomName: string,
-    options: Options,
-    cb: (room: Room<TeamGeneratorState>) => Promise<unknown>
+    options: JoinOptions,
+    cb: (room: Room<S>) => Promise<unknown>
   ) => {
     setError(null);
     setIsLoading(true);
 
-    createNewRoom(client, roomName, options)
+    leaveRoom(initialRoom, room, setRoom, initialState, setState);
+
+    createNewRoom<S>(client, roomName, options)
       .then(room => {
         setRoom(room);
         cb(room)
@@ -82,10 +93,19 @@ export const useCreateRoom = (): UseCreateRoomReturnType => {
   };
 };
 
-export const useJoinRoom = (
+export const useJoinRoom = <S>(
+  context: Context<RoomContext<S>>,
   unnormalizedRoomId: string
-): UseJoinRoomReturnType => {
-  const {client, room, setRoom, state, setState} = useContext(RoomContext);
+): UseJoinRoomReturnType<S> => {
+  const {
+    client,
+    initialRoom,
+    room,
+    setRoom,
+    initialState,
+    state,
+    setState,
+  } = useContext(context);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const roomId = normalizeRoomId(unnormalizedRoomId);
@@ -100,15 +120,9 @@ export const useJoinRoom = (
     } else if (room.id === roomId) {
       setIsLoading(false);
     } else {
-      if (room !== initialRoom) {
-        console.log(`Leaving current room ${room.id}.`);
-        room.leave();
-      }
+      leaveRoom(initialRoom, room, setRoom, initialState, setState);
 
-      setRoom(initialRoom);
-      setState(initialState());
-
-      rejoinOrJoinRoom(client, roomId)
+      rejoinOrJoinRoom<S>(client, roomId)
         .then(room => {
           setRoom(room);
           setIsLoading(false);
@@ -119,24 +133,24 @@ export const useJoinRoom = (
           setIsLoading(false);
         });
     }
-  }, [room, client, roomId, setRoom, setState]);
+  }, [initialRoom, room, client, roomId, setRoom, initialState, setState]);
 
   return {client, room, state, isLoading, error};
 };
 
-export const useRoomListeners = (): void => {
-  const {room, setState} = useContext(RoomContext);
+export const useRoomListeners = <S>(context: Context<RoomContext<S>>): void => {
+  const {room, setState} = useContext(context);
 
   useEffect(() => {
     if (room) {
       room.onLeave(code => {
-        console.log(`Client left room: ${code}`);
+        console.log(`Client left room (${code}).`);
       });
-      room.onError(err => {
-        console.error(`Room error: ${err}`);
+      room.onError((code, message) => {
+        console.error(`Room error (${code}): ${message ?? 'no reason'}.`);
       });
       room.onStateChange(state => {
-        setState(((state as unknown) as Schema).toJSON() as TeamGeneratorState);
+        setState(((state as unknown) as Schema).toJSON() as S);
       });
 
       return () => {
@@ -146,22 +160,38 @@ export const useRoomListeners = (): void => {
   }, [room, setState]);
 };
 
-const createNewRoom = async (
+const leaveRoom = <S>(
+  initialRoom: Room<S>,
+  room: Room<S>,
+  setRoom: (room: Room<S>) => void,
+  initialState: () => S,
+  setState: (state: S) => void
+) => {
+  if (room !== initialRoom) {
+    console.log(`Leaving current room ${room.id}.`);
+    room.leave();
+  }
+
+  setRoom(initialRoom);
+  setState(initialState());
+};
+
+const createNewRoom = async <S>(
   client: Client,
   roomName: string,
-  options: Options
-): Promise<Room<TeamGeneratorState>> => {
-  const room = await client.create<TeamGeneratorState>(roomName, options);
+  options?: JoinOptions
+): Promise<Room<S>> => {
+  const room = await client.create<S>(roomName, options);
 
   addRoomSessionCache(room);
 
   return room;
 };
 
-const rejoinOrJoinRoom = async (
+const rejoinOrJoinRoom = async <S>(
   client: Client,
   roomId: string
-): Promise<Room<TeamGeneratorState>> => {
+): Promise<Room<S>> => {
   let room;
 
   const existingRoomId = getRoomIdCache();
@@ -169,29 +199,26 @@ const rejoinOrJoinRoom = async (
 
   if (existingRoomId && existingSessionId && existingRoomId === roomId) {
     try {
-      room = await client.reconnect<TeamGeneratorState>(
-        existingRoomId,
-        existingSessionId
-      );
+      room = await client.reconnect<S>(existingRoomId, existingSessionId);
 
       console.log(`Re-joined room ${room.id}.`);
     } catch (e) {
       console.warn(`Failed to re-join room, ${roomId} joining new session.`, e);
       removeRoomSessionCache();
-      room = joinRoom(client, roomId);
+      room = joinRoom<S>(client, roomId);
     }
   } else {
-    room = joinRoom(client, roomId);
+    room = joinRoom<S>(client, roomId);
   }
 
   return room;
 };
 
-const joinRoom = async (
+const joinRoom = async <S>(
   client: Client,
   roomId: string
-): Promise<Room<TeamGeneratorState>> => {
-  const room = await client.joinById<TeamGeneratorState>(roomId);
+): Promise<Room<S>> => {
+  const room = await client.joinById<S>(roomId);
 
   addRoomSessionCache(room);
 

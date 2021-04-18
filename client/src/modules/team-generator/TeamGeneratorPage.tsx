@@ -19,7 +19,7 @@ const JoinRoom = dynamic<JoinRoomProps>(
   }
 );
 
-export const RoomsPage: React.FC = () => {
+export const TeamGeneratorPage: React.FC = () => {
   const [create, setCreate] = useState(false);
   const [join, setJoin] = useState(false);
 

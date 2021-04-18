@@ -10,8 +10,8 @@ import {
 } from '../../pkmn/matrix/TypeChartMatrix';
 import {PartialPokemonSet} from '../../pkmn/PartialPokemonSet';
 import {GenerationContext} from '../generation/GenerationProvider';
-import {SpeciesImage, SpeciesImageType} from '../species-info/SpeciesImage';
-import {TypeImage} from '../species-info/TypeImage';
+import {SpeciesImage, SpeciesImageType} from '../species/SpeciesImage';
+import {TypeImage} from '../species/TypeImage';
 import {PCol} from '../table/model/PCol';
 import {PValue} from '../table/model/PRow';
 import {PMatrixTable} from '../table/PMatrixTable';

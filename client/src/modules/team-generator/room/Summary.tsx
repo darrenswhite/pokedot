@@ -3,19 +3,19 @@ import {BarChart} from '@material-ui/icons';
 import {useRouter} from 'next/router';
 import React, {ReactElement, useContext} from 'react';
 
-import {useTeam} from '../../hooks/useTeam';
+import {useTeam} from '../../../hooks/useTeam';
 import {
   GeneratedTeamsMatrix,
   GeneratedTeamsMatrixProps,
-} from '../../pkmn/matrix/GeneratedTeamsMatrix';
-import {Routes} from '../../router/Routes';
-import {SpeciesImage, SpeciesImageType} from '../species-info/SpeciesImage';
-import {PCol} from '../table/model/PCol';
-import {PValue} from '../table/model/PRow';
-import {PMatrixTable} from '../table/PMatrixTable';
+} from '../../../pkmn/matrix/GeneratedTeamsMatrix';
+import {Routes} from '../../../router/Routes';
+import {SpeciesImage, SpeciesImageType} from '../../species/SpeciesImage';
+import {PCol} from '../../table/model/PCol';
+import {PValue} from '../../table/model/PRow';
+import {PMatrixTable} from '../../table/PMatrixTable';
+import {TeamGeneratorContext} from '../TeamGeneratorProvider';
 
-import {RoomContext} from './RoomProvider';
-import {TeamGeneratorContainer} from './TeamGeneratorContainer';
+import {RoomLayout} from './RoomLayout';
 
 const renderPoolCell = (value: PValue): ReactElement => {
   return <span>#{Number(value) + 1}</span>;
@@ -41,7 +41,7 @@ const mapSpeciesValue = (value: PValue): PValue => {
 export const Summary: React.FC = () => {
   const router = useRouter();
   const {setTeam} = useTeam();
-  const {room, state} = useContext(RoomContext);
+  const {room, state} = useContext(TeamGeneratorContext);
   const matrix = GeneratedTeamsMatrix.forState(state);
 
   const columnFieldOverrides: Partial<PCol> = {
@@ -71,7 +71,7 @@ export const Summary: React.FC = () => {
   };
 
   return (
-    <TeamGeneratorContainer
+    <RoomLayout
       header={
         <Typography variant="h5" component="h2" align="center" gutterBottom>
           Summary
@@ -99,6 +99,6 @@ export const Summary: React.FC = () => {
           </Grid>
         </Grid>
       </Grid>
-    </TeamGeneratorContainer>
+    </RoomLayout>
   );
 };

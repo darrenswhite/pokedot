@@ -10,9 +10,8 @@ import {
 import clsx from 'clsx';
 import React from 'react';
 
-import {SpeciesImage, SpeciesImageType} from '../species-info/SpeciesImage';
-
-import {Pokemon} from './TeamGeneratorState';
+import {SpeciesImage, SpeciesImageType} from '../../species/SpeciesImage';
+import {Pokemon} from '../TeamGeneratorState';
 
 const useStyles = makeStyles(theme => ({
   unselected: {
@@ -23,17 +22,17 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export interface PoolSelectionCardProps {
+export interface PoolCardProps {
   pokemon: Pokemon;
   onSelect: () => void;
   selected: boolean;
 }
 
-export const PoolSelectionCard: React.FC<PoolSelectionCardProps> = ({
+export const PoolCard: React.FC<PoolCardProps> = ({
   pokemon,
   onSelect,
   selected,
-}: PoolSelectionCardProps) => {
+}: PoolCardProps) => {
   const classes = useStyles();
 
   return (

@@ -8,10 +8,10 @@ import {
 } from '@material-ui/core';
 import React, {useContext} from 'react';
 
-import {RoomContext} from './RoomProvider';
+import {TeamGeneratorContext} from '../TeamGeneratorProvider';
 
 export const OptionsList: React.FC = () => {
-  const {state} = useContext(RoomContext);
+  const {state} = useContext(TeamGeneratorContext);
   const {options} = state;
 
   return (
@@ -23,17 +23,21 @@ export const OptionsList: React.FC = () => {
         }
       >
         <Divider />
+
         <ListItem>
           <ListItemText>Pools: {options.pools.length}</ListItemText>
         </ListItem>
+
         <ListItem>
           <ListItemText>Pool size: {options.poolSize}</ListItemText>
         </ListItem>
+
         <ListItem>
           <ListItemText>
             Pool Selection Time: {options.poolSelectionTime / 1000}s
           </ListItemText>
         </ListItem>
+
         <ListItem>
           <ListItemText>
             Exclusive pools: {options.exclusivePools ? 'Yes' : 'No'}

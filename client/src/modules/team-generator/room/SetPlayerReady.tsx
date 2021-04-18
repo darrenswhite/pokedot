@@ -1,8 +1,9 @@
 import {Button, Grid, Typography, makeStyles} from '@material-ui/core';
 import React, {useContext} from 'react';
 
-import {RoomContext} from './RoomProvider';
-import {TeamGeneratorContainer} from './TeamGeneratorContainer';
+import {TeamGeneratorContext} from '../TeamGeneratorProvider';
+
+import {RoomLayout} from './RoomLayout';
 
 const useStyles = makeStyles(() => ({
   roomId: {
@@ -10,15 +11,17 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const PlayerReady: React.FC = () => {
-  const {room, state} = useContext(RoomContext);
+export const SetPlayerReady: React.FC = () => {
+  const {room, state} = useContext(TeamGeneratorContext);
   const classes = useStyles();
   const ready = state.players[room.sessionId]?.ready;
 
-  const setPlayerReady = () => room.send('SET_PLAYER_READY');
+  const setPlayerReady = () => {
+    return room.send('SET_PLAYER_READY');
+  };
 
   return (
-    <TeamGeneratorContainer
+    <RoomLayout
       header={
         <Typography variant="h5" component="h2" align="center" gutterBottom>
           Room code: <span className={classes.roomId}>{room.id}</span>
@@ -38,6 +41,6 @@ export const PlayerReady: React.FC = () => {
           </Button>
         </Grid>
       </Grid>
-    </TeamGeneratorContainer>
+    </RoomLayout>
   );
 };

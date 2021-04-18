@@ -3,9 +3,9 @@ import React, {useContext} from 'react';
 
 import {useSpecie} from '../../hooks/useSpecies';
 
-import {SpecieHeader} from './SpecieHeader';
+import {SpeciesHeader} from './SpeciesHeader';
 import {SpeciesContext} from './SpeciesProvider';
-import {SpecieStats} from './SpecieStats';
+import {SpeciesStats} from './SpeciesStats';
 
 export const SpeciesBottomDrawer: React.FC = () => {
   const {open, setOpen, species} = useContext(SpeciesContext);
@@ -18,11 +18,11 @@ export const SpeciesBottomDrawer: React.FC = () => {
           {specie && (
             <>
               <Grid item>
-                <SpecieHeader specie={specie} />
+                <SpeciesHeader specie={specie} />
               </Grid>
 
               <Grid item>
-                <SpecieStats specie={specie} />
+                <SpeciesStats specie={specie} />
               </Grid>
             </>
           )}

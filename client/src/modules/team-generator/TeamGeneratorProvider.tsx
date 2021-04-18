@@ -2,13 +2,14 @@ import {Client, Room} from 'colyseus.js';
 import {noop, range} from 'lodash/fp';
 import React, {createContext, useState} from 'react';
 
+import {RoomContext} from '../../hooks/useRoom';
 import {socketUrl} from '../../util/constants';
 
 import {Pool, TeamGeneratorState} from './TeamGeneratorState';
 
 const client = new Client(socketUrl);
 
-export const initialRoom = new Room<TeamGeneratorState>('');
+const initialRoom = new Room<TeamGeneratorState>('');
 
 export const initialPoolState = (): Pool => ({
   fullyEvolved: true,
@@ -20,7 +21,7 @@ export const initialPoolState = (): Pool => ({
   maximumBaseStatTotal: 0,
 });
 
-export const initialState = (): TeamGeneratorState => ({
+const initialState = (): TeamGeneratorState => ({
   options: {
     pools: range(0, 6).map(initialPoolState),
     poolSize: 6,
@@ -33,35 +34,41 @@ export const initialState = (): TeamGeneratorState => ({
   currentPoolTime: -1,
 });
 
-export interface RoomContextProps {
-  client: Client;
-  room: Room<TeamGeneratorState>;
-  setRoom: (room: Room<TeamGeneratorState>) => void;
-  state: TeamGeneratorState;
-  setState: (state: TeamGeneratorState) => void;
-}
+export type TeamGeneratorContextProps = RoomContext<TeamGeneratorState>;
 
-export const RoomContext = createContext<RoomContextProps>({
+export const TeamGeneratorContext = createContext<TeamGeneratorContextProps>({
   client: client,
+  initialRoom,
   room: initialRoom,
   setRoom: noop,
+  initialState,
   state: initialState(),
   setState: noop,
 });
 
-export interface RoomProviderProps {
+export interface TeamGeneratorProviderProps {
   children: NonNullable<React.ReactNode>;
 }
 
-export const RoomProvider: React.FC<RoomProviderProps> = ({
+export const TeamGeneratorProvider: React.FC<TeamGeneratorProviderProps> = ({
   children,
-}: RoomProviderProps) => {
+}: TeamGeneratorProviderProps) => {
   const [room, setRoom] = useState<Room<TeamGeneratorState>>(initialRoom);
   const [state, setState] = useState<TeamGeneratorState>(initialState());
 
   return (
-    <RoomContext.Provider value={{client, room, setRoom, state, setState}}>
+    <TeamGeneratorContext.Provider
+      value={{
+        client,
+        initialRoom,
+        room,
+        setRoom,
+        initialState,
+        state,
+        setState,
+      }}
+    >
       {children}
-    </RoomContext.Provider>
+    </TeamGeneratorContext.Provider>
   );
 };

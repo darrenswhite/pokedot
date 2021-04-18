@@ -1,12 +1,13 @@
 import {Grid, Typography} from '@material-ui/core';
 import React, {useContext} from 'react';
 
-import {PoolSelectionCard} from './PoolSelectionCard';
-import {RoomContext} from './RoomProvider';
-import {TeamGeneratorContainer} from './TeamGeneratorContainer';
+import {TeamGeneratorContext} from '../TeamGeneratorProvider';
 
-export const PoolSelections: React.FC = () => {
-  const {room, state} = useContext(RoomContext);
+import {PoolCard} from './PoolCard';
+import {RoomLayout} from './RoomLayout';
+
+export const Pool: React.FC = () => {
+  const {room, state} = useContext(TeamGeneratorContext);
   const {currentPool, currentPoolTime, options, players} = state;
   const player = players[room.sessionId];
   const pool = player?.pool || [];
@@ -19,7 +20,7 @@ export const PoolSelections: React.FC = () => {
   };
 
   return (
-    <TeamGeneratorContainer
+    <RoomLayout
       header={
         <>
           <Typography variant="h5" component="h2" align="center" gutterBottom>
@@ -40,7 +41,7 @@ export const PoolSelections: React.FC = () => {
 
               return (
                 <Grid key={index} item>
-                  <PoolSelectionCard
+                  <PoolCard
                     pokemon={pokemon}
                     onSelect={() => selectFromPool(index)}
                     selected={selected}
@@ -51,6 +52,6 @@ export const PoolSelections: React.FC = () => {
           </Grid>
         </Grid>
       </Grid>
-    </TeamGeneratorContainer>
+    </RoomLayout>
   );
 };

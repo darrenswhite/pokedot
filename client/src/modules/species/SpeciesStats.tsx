@@ -34,13 +34,13 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export interface SpecieStatsProps {
+export interface SpeciesStatsProps {
   specie: Specie;
 }
 
-export const SpecieStats: React.FC<SpecieStatsProps> = ({
+export const SpeciesStats: React.FC<SpeciesStatsProps> = ({
   specie,
-}: SpecieStatsProps) => {
+}: SpeciesStatsProps) => {
   const {generation} = useContext(GenerationContext);
   const classes = useStyles();
   const baseStatTotal = Object.values(specie.baseStats).reduce(

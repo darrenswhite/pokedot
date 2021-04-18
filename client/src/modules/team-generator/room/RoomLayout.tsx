@@ -4,15 +4,15 @@ import React from 'react';
 import {OptionsList} from './OptionsList';
 import {PlayerList} from './PlayerList';
 
-export interface TeamGeneratorContainerProps {
+export interface RoomLayoutProps {
   children: NonNullable<React.ReactNode>;
   header?: React.ReactNode;
 }
 
-export const TeamGeneratorContainer: React.FC<TeamGeneratorContainerProps> = ({
+export const RoomLayout: React.FC<RoomLayoutProps> = ({
   children,
   header,
-}: TeamGeneratorContainerProps) => {
+}: RoomLayoutProps) => {
   return (
     <Grid container justify="center" spacing={1} style={{height: '100%'}}>
       <Grid container item xs={12} sm={8} md={10} justify="center">

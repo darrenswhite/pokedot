@@ -5,13 +5,13 @@ import React from 'react';
 import {SpeciesImage, SpeciesImageType} from './SpeciesImage';
 import {TypeImage} from './TypeImage';
 
-export interface SpecieHeaderProps {
+export interface SpeciesHeaderProps {
   specie: Specie;
 }
 
-export const SpecieHeader: React.FC<SpecieHeaderProps> = ({
+export const SpeciesHeader: React.FC<SpeciesHeaderProps> = ({
   specie,
-}: SpecieHeaderProps) => {
+}: SpeciesHeaderProps) => {
   return (
     <>
       <Grid container justify="center">

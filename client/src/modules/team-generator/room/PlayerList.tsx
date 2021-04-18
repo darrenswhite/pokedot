@@ -12,8 +12,8 @@ import {Check, Clear} from '@material-ui/icons';
 import clsx from 'clsx';
 import React, {useContext} from 'react';
 
-import {RoomContext} from './RoomProvider';
-import {Player} from './TeamGeneratorState';
+import {TeamGeneratorContext} from '../TeamGeneratorProvider';
+import {Player} from '../TeamGeneratorState';
 
 const useStyles = makeStyles(() => ({
   disconnected: {
@@ -23,7 +23,7 @@ const useStyles = makeStyles(() => ({
 
 export const PlayerList: React.FC = () => {
   const classes = useStyles();
-  const {state} = useContext(RoomContext);
+  const {state} = useContext(TeamGeneratorContext);
   const currentPool = state.currentPool;
   const players = Object.values(state.players);
 
