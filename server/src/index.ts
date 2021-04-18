@@ -11,7 +11,8 @@ import config from 'config';
 import cors from 'cors';
 import express from 'express';
 
-import {FormatsController} from './controller/FormatsController';
+import {FormatController} from './controller/FormatController';
+import {PoolController} from './controller/PoolController';
 import {Controllers} from './decorator/Controller';
 import {TeamGeneratorRoom} from './team-generator/TeamGeneratorRoom';
 
@@ -31,7 +32,7 @@ const gameServer = new Server({
 
 gameServer.define('team-generator', TeamGeneratorRoom);
 
-app.use(Controllers([FormatsController]));
+app.use(Controllers([FormatController, PoolController]));
 app.use('/colyseus', monitor());
 
 gameServer

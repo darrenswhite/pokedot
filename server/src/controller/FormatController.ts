@@ -6,7 +6,7 @@ import {Controller, Get} from '../decorator';
 import {Logger} from '../util/Logger';
 
 @Controller('/formats')
-export class FormatsController {
+export class FormatController {
   formats: Formats;
 
   constructor(@Inject formats: Formats) {
