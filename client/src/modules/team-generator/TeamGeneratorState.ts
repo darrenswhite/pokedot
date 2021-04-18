@@ -1,5 +1,10 @@
 import {GenerationNum} from '@pkmn/types';
 
+import {
+  DEFAULT_MAXIMUM_BASE_STAT_TOTAL,
+  DEFAULT_MINIMUM_BASE_STAT_TOTAL,
+} from './TeamGeneratorProvider';
+
 export interface TeamGeneratorState {
   options: Options;
   players: Record<string, Player>;
@@ -41,6 +46,10 @@ export interface Pool {
 
 export const getPoolOptionsDisplay = (pool: Pool): string => {
   const options = [];
+  const minBST = pool.minimumBaseStatTotal;
+  const maxBST = pool.maximumBaseStatTotal;
+  const hasMinBST = minBST !== DEFAULT_MINIMUM_BASE_STAT_TOTAL;
+  const hasMaxBST = maxBST !== DEFAULT_MAXIMUM_BASE_STAT_TOTAL;
 
   if (pool.fullyEvolved) {
     options.push('FE');
@@ -62,14 +71,12 @@ export const getPoolOptionsDisplay = (pool: Pool): string => {
     options.push('M');
   }
 
-  if (pool.minimumBaseStatTotal > 0 && pool.maximumBaseStatTotal > 0) {
-    options.push(
-      `${pool.minimumBaseStatTotal}>=BST<=${pool.maximumBaseStatTotal}`
-    );
-  } else if (pool.minimumBaseStatTotal > 0) {
-    options.push(`BST>=${pool.minimumBaseStatTotal}`);
-  } else if (pool.maximumBaseStatTotal > 0) {
-    options.push(`BST<=${pool.maximumBaseStatTotal}`);
+  if (hasMinBST && hasMaxBST) {
+    options.push(`${minBST}>=BST<=${maxBST}`);
+  } else if (hasMinBST) {
+    options.push(`BST>=${minBST}`);
+  } else if (hasMaxBST) {
+    options.push(`BST<=${maxBST}`);
   }
 
   return options.length > 0 ? options.join(', ') : 'None';

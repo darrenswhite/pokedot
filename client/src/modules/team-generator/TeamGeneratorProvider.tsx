@@ -11,14 +11,17 @@ const client = new Client(socketUrl);
 
 const initialRoom = new Room<TeamGeneratorState>('');
 
+export const DEFAULT_MINIMUM_BASE_STAT_TOTAL = 0;
+export const DEFAULT_MAXIMUM_BASE_STAT_TOTAL = 999;
+
 export const initialPoolState = (): Pool => ({
   fullyEvolved: true,
   notFullyEvolved: false,
   restrictedLegendaries: false,
   subLegendaries: false,
   mythicals: false,
-  minimumBaseStatTotal: 0,
-  maximumBaseStatTotal: 0,
+  minimumBaseStatTotal: DEFAULT_MINIMUM_BASE_STAT_TOTAL,
+  maximumBaseStatTotal: DEFAULT_MAXIMUM_BASE_STAT_TOTAL,
 });
 
 const initialState = (): TeamGeneratorState => ({

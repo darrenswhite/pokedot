@@ -4,6 +4,7 @@ import {
   AccordionSummary,
   Divider,
   Grid,
+  Slider,
   Switch,
   Theme,
   Typography,
@@ -12,6 +13,10 @@ import {
 import {ExpandMore} from '@material-ui/icons';
 import React from 'react';
 
+import {
+  DEFAULT_MAXIMUM_BASE_STAT_TOTAL,
+  DEFAULT_MINIMUM_BASE_STAT_TOTAL,
+} from './TeamGeneratorProvider';
 import {Pool, getPoolOptionsDisplay} from './TeamGeneratorState';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -167,11 +172,31 @@ export const PoolOptions: React.FC<PoolOptionsProps> = ({
           </Grid>
 
           <Grid item xs={12}>
-            Minimum Base Stat Total: X
-          </Grid>
+            <Grid container spacing={2} alignItems="center">
+              <Grid item xs>
+                <Typography id="baseStatTotal-slider">
+                  Base Stat Total
+                </Typography>
+              </Grid>
 
-          <Grid item xs={12}>
-            Maximum Base Stat Total: X
+              <Grid item xs>
+                <Slider
+                  value={[pool.minimumBaseStatTotal, pool.maximumBaseStatTotal]}
+                  onChange={(_, value) => {
+                    const totals = value as number[];
+
+                    onChange(pool => {
+                      pool.minimumBaseStatTotal = totals[0] ?? 0;
+                      pool.maximumBaseStatTotal = totals[1] ?? 0;
+                    });
+                  }}
+                  aria-labelledby="baseStatTotal-slider"
+                  valueLabelDisplay="auto"
+                  min={DEFAULT_MINIMUM_BASE_STAT_TOTAL}
+                  max={DEFAULT_MAXIMUM_BASE_STAT_TOTAL}
+                />
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </AccordionDetails>
