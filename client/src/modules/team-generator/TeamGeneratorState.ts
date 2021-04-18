@@ -71,12 +71,12 @@ export const getPoolOptionsDisplay = (pool: Pool): string => {
     options.push('M');
   }
 
-  if (hasMinBST && hasMaxBST) {
-    options.push(`${minBST}>=BST<=${maxBST}`);
-  } else if (hasMinBST) {
-    options.push(`BST>=${minBST}`);
-  } else if (hasMaxBST) {
-    options.push(`BST<=${maxBST}`);
+  if (hasMinBST) {
+    options.push(`min. ${minBST}BST`);
+  }
+
+  if (hasMaxBST) {
+    options.push(`max. ${maxBST}BST`);
   }
 
   return options.length > 0 ? options.join(', ') : 'None';

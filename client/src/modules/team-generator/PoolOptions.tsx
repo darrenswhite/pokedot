@@ -192,6 +192,7 @@ export const PoolOptions: React.FC<PoolOptionsProps> = ({
                   }}
                   aria-labelledby="baseStatTotal-slider"
                   valueLabelDisplay="auto"
+                  step={50}
                   min={DEFAULT_MINIMUM_BASE_STAT_TOTAL}
                   max={DEFAULT_MAXIMUM_BASE_STAT_TOTAL}
                 />

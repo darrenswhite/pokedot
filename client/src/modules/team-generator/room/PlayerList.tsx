@@ -24,14 +24,16 @@ const useStyles = makeStyles(() => ({
 export const PlayerList: React.FC = () => {
   const classes = useStyles();
   const {state} = useContext(TeamGeneratorContext);
-  const currentPool = state.currentPool;
   const players = Object.values(state.players);
 
   const isPlayerReady = (player: Player) => {
     let ready;
+    const currentPool = state.currentPool;
 
     if (currentPool !== -1) {
-      ready = player.team.length === currentPool + 1;
+      ready =
+        player.team.length === currentPool + 1 ||
+        currentPool === state.options.pools.length;
     } else {
       ready = player.ready;
     }

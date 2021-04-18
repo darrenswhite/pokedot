@@ -22,6 +22,17 @@ const isSubLegendary = (specie: Specie) =>
 
 const isFullyEvolved = (specie: Specie) => !specie.nfe;
 
+const hasBaseStatTotal = (predicate: (total: number) => boolean) => (
+  specie: Specie
+) => {
+  const total = Object.values(specie.baseStats).reduce(
+    (left, right) => left + right,
+    0
+  );
+
+  return predicate(total);
+};
+
 const not = (filter: (specie: Specie) => boolean) => (specie: Specie) =>
   !filter(specie);
 
@@ -84,7 +95,7 @@ export class GeneratePoolCommand extends TeamGeneratorCommand {
   }
 
   eligibleSpecies(species: Specie[], pool: Pool): Specie[] {
-    const eligibleSpecies = [];
+    let eligibleSpecies = [];
 
     if (pool.mythicals) {
       eligibleSpecies.push(...species.filter(isMythical));
@@ -121,6 +132,18 @@ export class GeneratePoolCommand extends TeamGeneratorCommand {
             not(isSubLegendary),
           ])
         )
+      );
+    }
+
+    if (pool.minimumBaseStatTotal) {
+      eligibleSpecies = eligibleSpecies.filter(
+        hasBaseStatTotal(total => total >= pool.minimumBaseStatTotal)
+      );
+    }
+
+    if (pool.maximumBaseStatTotal) {
+      eligibleSpecies = eligibleSpecies.filter(
+        hasBaseStatTotal(total => total <= pool.maximumBaseStatTotal)
       );
     }
 
