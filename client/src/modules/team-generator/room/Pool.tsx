@@ -8,7 +8,7 @@ import {RoomLayout} from './RoomLayout';
 
 export const Pool: React.FC = () => {
   const {room, state} = useContext(TeamGeneratorContext);
-  const {currentPool, currentPoolTime, options, players} = state;
+  const {currentPool, currentPoolTime, players} = state;
   const player = players[room.sessionId];
   const pool = player?.pool || [];
   const team = player?.team || [];
@@ -24,7 +24,7 @@ export const Pool: React.FC = () => {
       header={
         <>
           <Typography variant="h5" component="h2" align="center" gutterBottom>
-            Pool {currentPool + 1} / {options.pools.length}
+            Pool #{currentPool + 1}
           </Typography>
 
           <Typography variant="h5" component="h2" align="center" gutterBottom>

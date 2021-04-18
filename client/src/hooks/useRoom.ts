@@ -130,6 +130,10 @@ export const useJoinRoom = <S>(
           setIsLoading(false);
         });
     }
+
+    return () => {
+      leaveRoom(initialRoom, room, setRoom, initialState, setState);
+    };
   }, [initialRoom, room, client, roomId, setRoom, initialState, setState]);
 
   return {client, room, state, isLoading, error};
@@ -166,6 +170,7 @@ const leaveRoom = <S>(
 ) => {
   if (room !== initialRoom) {
     console.log(`Leaving current room ${room.id}.`);
+    room.removeAllListeners();
     room.leave();
   }
 

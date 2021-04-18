@@ -45,11 +45,11 @@ export const Summary: React.FC = () => {
   const matrix = GeneratedTeamsMatrix.forState(state);
 
   const columnFieldOverrides: Partial<PCol> = {
-    headerName: 'Pool',
-    renderCell: renderPoolCell,
+    headerName: 'Name',
   };
 
   const idFieldOverrides: Partial<PCol> = {
+    renderHeader: renderPoolCell,
     renderCell: renderSpeciesCell,
     mapValue: mapSpeciesValue,
   };
@@ -82,8 +82,8 @@ export const Summary: React.FC = () => {
         <Grid item xs={12} sm={12} md={8} lg={6} xl={4}>
           <PMatrixTable
             matrix={matrix}
-            columnField="pool"
-            idField="playerName"
+            columnField="playerName"
+            idField="pool"
             valueField="pokemon"
             columnFieldOverrides={columnFieldOverrides}
             idFieldOverrides={idFieldOverrides}

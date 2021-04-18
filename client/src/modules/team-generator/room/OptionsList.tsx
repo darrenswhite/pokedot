@@ -81,6 +81,8 @@ export const OptionsList: React.FC = () => {
           </ListItemText>
         </ListItem>
 
+        <Divider />
+
         {options.pools.map((pool, index) => (
           <ListItem key={index}>
             <ListItemText>
