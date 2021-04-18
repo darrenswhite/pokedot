@@ -64,7 +64,7 @@ const loadDex = async (): Promise<Dex> => {
 };
 
 const loadFormats = async (): Promise<Record<string, number[]>> => {
-  const latest = await axios.get(`${serverUrl}/stats/formats/latest`);
+  const latest = await axios.get(`${serverUrl}/formats/latest`);
 
   return latest.data as Record<string, number[]>;
 };
@@ -73,7 +73,7 @@ const loadStats = async (
   format: [string, number]
 ): Promise<UsageStatistics> => {
   const latest = await axios.get(
-    `${serverUrl}/stats/latest/${format[0]}?weight=${format[1]}`
+    `${serverUrl}/formats/${format[0]}/latest/stats?weight=${format[1]}`
   );
 
   return latest.data as UsageStatistics;
@@ -96,12 +96,12 @@ export const GenerationProvider: React.FC<GenerationProviderProps> = ({
     loadDex()
       .then(setDex)
       .catch(err => {
-        console.error('Failed to dex.', err);
+        console.error('Failed to load dex.', err);
       });
     loadFormats()
       .then(setFormats)
       .catch(err => {
-        console.error('Failed to formats.', err);
+        console.error('Failed to load formats.', err);
       });
   }, []);
 

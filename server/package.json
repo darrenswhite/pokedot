@@ -42,7 +42,8 @@
     "pino-debug": "^2.0.0",
     "reflect-metadata": "^0.1.13",
     "request": "^2.88.2",
-    "smogon": "^1.4.3"
+    "smogon": "^1.4.3",
+    "typescript-ioc": "^3.2.2"
   },
   "devDependencies": {
     "@types/config": "0.0.38",

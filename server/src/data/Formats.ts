@@ -1,21 +1,25 @@
 import axios from 'axios';
-import {Statistics} from 'smogon';
+import {Statistics, UsageStatistics} from 'smogon';
 
 export type FormatsData = Record<string, number[]>;
 
-export class Stats {
-  static FORMAT_WEIGHT_REGEX = />(\w+)-(\d+)\.(?:\w+)</g;
+const FORMAT_WEIGHT_REGEX = />(\w+)-(\d+)\.(?:\w+)</g;
 
-  static getLatestDate = async (): Promise<string> => {
+export class Formats {
+  getLatestDate = async (): Promise<string> => {
     const latestResponse = await axios(Statistics.URL);
 
     return Statistics.latest(latestResponse.data);
   };
 
-  static getFormats = async (date: string): Promise<FormatsData> => {
+  getLatestFormats = async (): Promise<FormatsData> => {
+    return this.getFormats(await this.getLatestDate());
+  };
+
+  getFormats = async (date: string): Promise<FormatsData> => {
     const formats: FormatsData = {};
     const response = await axios(`${Statistics.URL}/${date}/chaos`);
-    const regexp = new RegExp(Stats.FORMAT_WEIGHT_REGEX);
+    const regexp = new RegExp(FORMAT_WEIGHT_REGEX);
     let match;
 
     while ((match = regexp.exec(response.data)) !== null) {
@@ -37,5 +41,16 @@ export class Stats {
     }
 
     return formats;
+  };
+
+  getLatestStats = async (
+    format: string,
+    weight?: number | boolean
+  ): Promise<UsageStatistics> => {
+    const date = await this.getLatestDate();
+    const url = Statistics.url(date, format, weight);
+    const response = await axios.get(url);
+
+    return response.data as UsageStatistics;
   };
 }

@@ -10,12 +10,10 @@ import {Server} from 'colyseus';
 import config from 'config';
 import cors from 'cors';
 import express from 'express';
-import request from 'request';
-import {Statistics} from 'smogon';
 
-import {Stats} from './Stats';
+import {FormatsController} from './controller/FormatsController';
+import {Controllers} from './decorator/Controller';
 import {TeamGeneratorRoom} from './team-generator/TeamGeneratorRoom';
-import {asyncMiddleware} from './util/asyncMiddleware';
 
 Logger.info('Starting up...');
 
@@ -33,42 +31,7 @@ const gameServer = new Server({
 
 gameServer.define('team-generator', TeamGeneratorRoom);
 
-app.use(
-  '/stats/formats/latest',
-  asyncMiddleware(async (req, res) => {
-    const date = await Stats.getLatestDate();
-    const formats = await Stats.getFormats(date);
-
-    res.json(formats);
-  })
-);
-
-app.use(
-  '/stats/latest/:format',
-  asyncMiddleware(async (req, res) => {
-    const format = req.params.format;
-    const weightParam = req.query.weight;
-    let weight;
-
-    if (typeof weightParam === 'string') {
-      weight = parseInt(weightParam);
-    }
-
-    if (format) {
-      const date = await Stats.getLatestDate();
-
-      const url = Statistics.url(date, format, weight);
-
-      Logger.info({weight}, 'weight');
-      Logger.info(url);
-
-      request(url).pipe(res);
-    } else {
-      res.send(400);
-    }
-  })
-);
-
+app.use(Controllers([FormatsController]));
 app.use('/colyseus', monitor());
 
 gameServer

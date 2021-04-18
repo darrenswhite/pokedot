@@ -16,9 +16,6 @@
     "noImplicitReturns": true,
     "noUncheckedIndexedAccess": true,
     "outDir": "build",
-    "paths": {
-      "@/*": ["src/*"]
-    },
     "pretty": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
