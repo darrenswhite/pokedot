@@ -13,7 +13,16 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import {ExpandMore} from '@material-ui/icons';
-import React, {useContext, useState} from 'react';
+import axios from 'axios';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+
+import {serverUrl} from '../../util/constants';
 
 import {EligiblePokemonDialog} from './EligiblePokemonDialog';
 import {
@@ -21,7 +30,7 @@ import {
   DEFAULT_MINIMUM_BASE_STAT_TOTAL,
   TeamGeneratorContext,
 } from './TeamGeneratorProvider';
-import {Pool, getPoolOptionsDisplay} from './TeamGeneratorState';
+import {Pokemon, Pool, getPoolOptionsDisplay} from './TeamGeneratorState';
 
 const useStyles = makeStyles((theme: Theme) => ({
   heading: {
@@ -50,14 +59,52 @@ export const PoolOptions: React.FC<PoolOptionsProps> = ({
   const {gen} = state.options;
   const classes = useStyles();
   const [showEligiblePokemon, setShowEligiblePokemon] = useState(false);
+  const [isLoadingEligiblePokemon, setIsLoadingEligiblePokemon] = useState(
+    true
+  );
+  const [eligiblePokemonError, setEligiblePokemonError] = useState<
+    string | null
+  >(null);
+  const [eligiblePokemon, setEligiblePokemon] = useState<Pokemon[]>([]);
+  const eligiblePokemonTimeout = useRef<NodeJS.Timeout | undefined>();
+
+  const loadEligiblePokemon = useCallback(() => {
+    console.log('loadEligiblePokemon');
+    setIsLoadingEligiblePokemon(true);
+    setEligiblePokemonError(null);
+
+    axios
+      .post(`${serverUrl}/pools/eligiblePokemon/${gen}`, pool)
+      .then(res => {
+        setEligiblePokemon(res.data as Pokemon[]);
+        setIsLoadingEligiblePokemon(false);
+      })
+      .catch(err => {
+        console.log(`Failed to get eligible Pokémon for pool.`, err);
+        setIsLoadingEligiblePokemon(false);
+        setEligiblePokemonError('Failed to load list of eligible Pokémon.');
+      });
+  }, [gen, pool]);
+
+  useEffect(() => {
+    eligiblePokemonTimeout.current &&
+      clearTimeout(eligiblePokemonTimeout.current);
+
+    eligiblePokemonTimeout.current = setTimeout(loadEligiblePokemon, 1000);
+
+    return () =>
+      eligiblePokemonTimeout.current &&
+      clearTimeout(eligiblePokemonTimeout.current);
+  }, [loadEligiblePokemon]);
 
   return (
     <>
       <EligiblePokemonDialog
         open={showEligiblePokemon}
         onClose={() => setShowEligiblePokemon(false)}
-        gen={gen}
-        pool={pool}
+        isLoading={isLoadingEligiblePokemon}
+        error={eligiblePokemonError}
+        eligiblePokemon={eligiblePokemon}
       />
 
       <Accordion TransitionProps={{unmountOnExit: true}}>
