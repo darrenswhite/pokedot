@@ -172,10 +172,9 @@ const leaveRoom = <S>(
     console.log(`Leaving current room ${room.id}.`);
     room.removeAllListeners();
     room.leave();
+    setRoom(initialRoom);
+    setState(initialState());
   }
-
-  setRoom(initialRoom);
-  setState(initialState());
 };
 
 const createNewRoom = async <S>(
@@ -184,6 +183,8 @@ const createNewRoom = async <S>(
   options?: JoinOptions
 ): Promise<Room<S>> => {
   const room = await client.create<S>(roomName, options);
+
+  console.log(`Created new room ${roomName} ${room.id}.`);
 
   addRoomSessionCache(room);
 
@@ -221,6 +222,8 @@ const joinRoom = async <S>(
   roomId: string
 ): Promise<Room<S>> => {
   const room = await client.joinById<S>(roomId);
+
+  console.log(`Joined room ${room.id}`);
 
   addRoomSessionCache(room);
 

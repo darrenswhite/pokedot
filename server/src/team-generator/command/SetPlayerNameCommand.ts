@@ -11,8 +11,8 @@ export class SetPlayerNameCommand extends TeamGeneratorCommand<SetPlayerNameComm
 
     const player = this.state.players.get(sessionId);
 
-    if (player) {
-      player.name = name;
+    if (player && name.trim().length > 0) {
+      player.name = name.trim().toUpperCase();
     }
   }
 }

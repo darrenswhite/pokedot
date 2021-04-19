@@ -1,9 +1,21 @@
-import {Button, Grid, TextField} from '@material-ui/core';
+import {Button, Grid, TextField, makeStyles} from '@material-ui/core';
 import React, {useContext, useState} from 'react';
 
 import {TeamGeneratorContext} from '../TeamGeneratorProvider';
 
+const useStyles = makeStyles(() => ({
+  nameInput: {
+    '& input': {
+      textTransform: 'uppercase',
+      '&::placeholder': {
+        textTransform: 'none',
+      },
+    },
+  },
+}));
+
 export const SetPlayerName: React.FC = () => {
+  const classes = useStyles();
   const {room} = useContext(TeamGeneratorContext);
   const [name, setName] = useState<string>('');
   const [nameError, setNameError] = useState<string>('');
@@ -36,6 +48,7 @@ export const SetPlayerName: React.FC = () => {
               onChange={e => setName(e.target.value.trim())}
               onKeyUp={e => e.key === 'Enter' && submitName()}
               value={name}
+              className={classes.nameInput}
               helperText={nameError}
               error={!!nameError}
               fullWidth
