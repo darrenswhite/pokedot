@@ -1,7 +1,12 @@
-import {Tooltip, makeStyles} from '@material-ui/core';
-import {Icons, Sprites} from '@pkmn/img';
+import {CircularProgress, Tooltip, makeStyles} from '@material-ui/core';
 import clsx from 'clsx';
-import React, {useContext} from 'react';
+import React, {
+  ReactElement,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
 import {SpeciesContext} from './SpeciesProvider';
 
@@ -46,16 +51,17 @@ export const SpeciesImage: React.FC<SpeciesImageProps> = ({
   const classes = useStyle();
   const {setOpen, setSpecies} = useContext(SpeciesContext);
   const validName = name && name.length > 0;
-  let image;
+  const [image, setImage] = useState<ReactElement>(<CircularProgress />);
 
-  const showMoreInfo = () => {
+  const showMoreInfo = useCallback(() => {
     if (moreInfo && validName) {
       setSpecies(name);
       setOpen(true);
     }
-  };
+  }, [moreInfo, validName, name, setSpecies, setOpen]);
 
-  const renderSpeciesIcon = () => {
+  const renderSpeciesIcon = useCallback(async () => {
+    const {Icons} = await import('@pkmn/img');
     const icon = Icons.getPokemon(name);
 
     return (
@@ -67,9 +73,10 @@ export const SpeciesImage: React.FC<SpeciesImageProps> = ({
         onClick={showMoreInfo}
       />
     );
-  };
+  }, [classes.image, moreInfo, showMoreInfo, name, validName]);
 
-  const renderSpeciesSprite = () => {
+  const renderSpeciesSprite = useCallback(async () => {
+    const {Sprites} = await import('@pkmn/img');
     const sprite = Sprites.getDexPokemon(name);
 
     return (
@@ -90,15 +97,31 @@ export const SpeciesImage: React.FC<SpeciesImageProps> = ({
         />
       </div>
     );
-  };
+  }, [
+    classes.image,
+    classes.spriteContainer,
+    classes.pixelated,
+    moreInfo,
+    showMoreInfo,
+    name,
+    validName,
+  ]);
 
-  if (type === SpeciesImageType.ICON) {
-    image = renderSpeciesIcon();
-  } else if (type === SpeciesImageType.SPRITE) {
-    image = renderSpeciesSprite();
-  } else {
-    image = renderSpeciesIcon();
-  }
+  useEffect(() => {
+    if (type === SpeciesImageType.ICON) {
+      renderSpeciesIcon()
+        .then(setImage)
+        .catch(err => {
+          console.log(`Failed to render species icon ${name}.`, err);
+        });
+    } else if (type === SpeciesImageType.SPRITE) {
+      renderSpeciesSprite()
+        .then(setImage)
+        .catch(err => {
+          console.log(`Failed to render species icon ${name}.`, err);
+        });
+    }
+  }, [name, type, renderSpeciesIcon, renderSpeciesSprite]);
 
   return (
     <Tooltip title={showTooltip && validName ? name : ''}>{image}</Tooltip>
