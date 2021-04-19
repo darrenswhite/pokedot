@@ -33,13 +33,20 @@ import {
 import {Pokemon, Pool, getPoolOptionsDisplay} from './TeamGeneratorState';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  heading: {
+  poolHeading: {
     fontSize: theme.typography.pxToRem(15),
     flexBasis: '33.33%',
-    flexShrink: 0,
   },
-  secondaryHeading: {
+  poolEligiblePokemonHeading: {
     fontSize: theme.typography.pxToRem(15),
+    flexBasis: '33.33%',
+    color: theme.palette.text.secondary,
+    marginLeft: theme.spacing(0.5),
+    marginRight: theme.spacing(0.5),
+  },
+  poolOptionsHeading: {
+    fontSize: theme.typography.pxToRem(15),
+    flexBasis: '33.33%',
     color: theme.palette.text.secondary,
   },
 }));
@@ -109,11 +116,15 @@ export const PoolOptions: React.FC<PoolOptionsProps> = ({
 
       <Accordion TransitionProps={{unmountOnExit: true}}>
         <AccordionSummary expandIcon={<ExpandMore />}>
-          <Typography className={classes.heading}>
+          <Typography className={classes.poolHeading}>
             {`Pool #${index + 1}`}
           </Typography>
 
-          <Typography className={classes.secondaryHeading}>
+          <Typography className={classes.poolEligiblePokemonHeading}>
+            {`${eligiblePokemon.length} Eligible`}
+          </Typography>
+
+          <Typography className={classes.poolOptionsHeading}>
             {getPoolOptionsDisplay(pool)}
           </Typography>
         </AccordionSummary>
