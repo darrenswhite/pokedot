@@ -115,7 +115,9 @@ export const useJoinRoom = <S>(
       setError('Invalid room code format.');
       setIsLoading(false);
     } else if (room.id === roomId) {
+      console.log(`Already in room ${roomId}.`);
       setIsLoading(false);
+      setState(copyState(room.state));
     } else {
       leaveRoom(initialRoom, room, setRoom, initialState, setState);
 
@@ -151,7 +153,7 @@ export const useRoomListeners = <S>(context: Context<RoomContext<S>>): void => {
         console.error(`Room error (${code}): ${message ?? 'no reason'}.`);
       });
       room.onStateChange(state => {
-        setState(((state as unknown) as Schema).toJSON() as S);
+        setState(copyState(state));
       });
 
       return () => {
@@ -202,6 +204,8 @@ const rejoinOrJoinRoom = async <S>(
 
   if (existingRoomId && existingSessionId && existingRoomId === roomId) {
     try {
+      console.log(`Attempting to re-join room ${roomId}...`);
+
       room = await client.reconnect<S>(existingRoomId, existingSessionId);
 
       console.log(`Re-joined room ${room.id}.`);
@@ -221,6 +225,8 @@ const joinRoom = async <S>(
   client: Client,
   roomId: string
 ): Promise<Room<S>> => {
+  console.log(`Attempting to join room ${roomId}...`);
+
   const room = await client.joinById<S>(roomId);
 
   console.log(`Joined room ${room.id}`);
@@ -270,4 +276,8 @@ const getSessionIdCache = (): string | null => {
   }
 
   return sessionId;
+};
+
+const copyState = <S>(state: S): S => {
+  return ((state as unknown) as Schema).toJSON() as S;
 };
