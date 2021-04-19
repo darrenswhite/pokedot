@@ -10,12 +10,19 @@ import {
 import React, {useContext} from 'react';
 
 import {SpeciesImage, SpeciesImageType} from '../../species/SpeciesImage';
+import {SpeciesContext} from '../../species/SpeciesProvider';
 import {TeamGeneratorContext} from '../TeamGeneratorProvider';
 
 export const TeamList: React.FC = () => {
   const {room, state} = useContext(TeamGeneratorContext);
   const player = state.players[room.sessionId];
   const team = player?.team || [];
+  const {setOpen, setSpecies} = useContext(SpeciesContext);
+
+  const showMoreInfo = (name: string) => {
+    setSpecies(name);
+    setOpen(true);
+  };
 
   return (
     <Paper style={{height: '100%'}}>
@@ -26,13 +33,13 @@ export const TeamList: React.FC = () => {
         <Divider />
 
         {team.map(pokemon => (
-          <ListItem key={pokemon.num}>
+          <ListItem
+            key={pokemon.num}
+            button
+            onClick={() => showMoreInfo(pokemon.name)}
+          >
             <ListItemIcon>
-              <SpeciesImage
-                name={pokemon.name}
-                type={SpeciesImageType.ICON}
-                moreInfo
-              />
+              <SpeciesImage name={pokemon.name} type={SpeciesImageType.ICON} />
             </ListItemIcon>
 
             <ListItemText>{pokemon.name}</ListItemText>
