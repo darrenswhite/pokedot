@@ -40,7 +40,7 @@ export const Pool: React.FC = () => {
               const selected = team[currentPool]?.name === pokemon.name;
 
               return (
-                <Grid key={pokemon.name} item>
+                <Grid key={pokemon.name} item xs>
                   <PoolCard
                     pokemon={pokemon}
                     onSelect={() => selectFromPool(index)}

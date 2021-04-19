@@ -18,6 +18,7 @@ export const OptionsList: React.FC = () => {
   return (
     <Paper style={{height: '100%'}}>
       <List
+        dense
         aria-labelledby="options-subheader"
         subheader={
           <ListSubheader id="options-subheader">Options</ListSubheader>

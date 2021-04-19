@@ -3,6 +3,7 @@ import React from 'react';
 
 import {OptionsList} from './OptionsList';
 import {PlayerList} from './PlayerList';
+import {TeamList} from './TeamList';
 
 export interface RoomLayoutProps {
   children: NonNullable<React.ReactNode>;
@@ -26,6 +27,10 @@ export const RoomLayout: React.FC<RoomLayoutProps> = ({
       </Grid>
 
       <Grid container item xs={12} sm={4} md={2} direction="column" spacing={1}>
+        <Grid item xs>
+          <TeamList />
+        </Grid>
+
         <Grid item xs>
           <PlayerList />
         </Grid>

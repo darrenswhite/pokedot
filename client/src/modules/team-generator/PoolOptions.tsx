@@ -76,7 +76,6 @@ export const PoolOptions: React.FC<PoolOptionsProps> = ({
   const eligiblePokemonTimeout = useRef<NodeJS.Timeout | undefined>();
 
   const loadEligiblePokemon = useCallback(() => {
-    console.log('loadEligiblePokemon');
     setIsLoadingEligiblePokemon(true);
     setEligiblePokemonError(null);
 

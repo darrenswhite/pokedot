@@ -44,6 +44,7 @@ export const PlayerList: React.FC = () => {
   return (
     <Paper style={{height: '100%'}}>
       <List
+        dense
         aria-labelledby="players-subheader"
         subheader={
           <ListSubheader id="players-subheader">Players</ListSubheader>
