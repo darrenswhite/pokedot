@@ -39,6 +39,14 @@ const App: React.FC<AppProps> = (props: AppProps) => {
     }
   }, []);
 
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js').catch(err => {
+        console.error('Failed to register service worker.', err);
+      });
+    }
+  });
+
   return (
     <>
       <Head>
@@ -47,6 +55,7 @@ const App: React.FC<AppProps> = (props: AppProps) => {
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
+        <meta name="author" content="Darren S. White" />
         <meta
           name="description"
           content="Pokédot is a collection of Pokémon related apps."

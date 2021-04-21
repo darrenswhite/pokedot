@@ -14,14 +14,9 @@ import {
 } from '@material-ui/core';
 import {ExpandMore} from '@material-ui/icons';
 import axios from 'axios';
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, {useCallback, useContext, useState} from 'react';
 
+import {useTimeout} from '../../hooks/useTimeout';
 import {serverUrl} from '../../util/constants';
 
 import {EligiblePokemonDialog} from './EligiblePokemonDialog';
@@ -75,7 +70,6 @@ export const PoolOptions: React.FC<PoolOptionsProps> = ({
     string | null
   >(null);
   const [eligiblePokemon, setEligiblePokemon] = useState<Pokemon[]>([]);
-  const eligiblePokemonTimeout = useRef<NodeJS.Timeout | undefined>();
 
   const loadEligiblePokemon = useCallback(() => {
     setIsLoadingEligiblePokemon(true);
@@ -94,16 +88,7 @@ export const PoolOptions: React.FC<PoolOptionsProps> = ({
       });
   }, [gen, pool]);
 
-  useEffect(() => {
-    eligiblePokemonTimeout.current &&
-      clearTimeout(eligiblePokemonTimeout.current);
-
-    eligiblePokemonTimeout.current = setTimeout(loadEligiblePokemon, 1000);
-
-    return () =>
-      eligiblePokemonTimeout.current &&
-      clearTimeout(eligiblePokemonTimeout.current);
-  }, [loadEligiblePokemon]);
+  useTimeout(loadEligiblePokemon, 1000);
 
   return (
     <>

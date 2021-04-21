@@ -1,9 +1,10 @@
 import {Data, Dex, Generation} from '@pkmn/data';
 import axios from 'axios';
 import {noop} from 'lodash/fp';
-import React, {createContext, useEffect, useState} from 'react';
+import React, {createContext, useCallback, useEffect, useState} from 'react';
 import {UsageStatistics} from 'smogon';
 
+import {useTimeout} from '../../hooks/useTimeout';
 import {serverUrl} from '../../util/constants';
 
 const DEFAULT_EXISTS = (d: Data): boolean => {
@@ -57,19 +58,19 @@ export const GenerationContext = createContext<GenerationContextProps>(
   initialState()
 );
 
-const loadDex = async (): Promise<Dex> => {
+const importDex = async (): Promise<Dex> => {
   const {Dex} = await import('@pkmn/dex');
 
   return Dex;
 };
 
-const loadFormats = async (): Promise<Record<string, number[]>> => {
+const fetchFormats = async (): Promise<Record<string, number[]>> => {
   const latest = await axios.get(`${serverUrl}/formats/latest`);
 
   return latest.data as Record<string, number[]>;
 };
 
-const loadStats = async (
+const fetchStats = async (
   format: [string, number]
 ): Promise<UsageStatistics> => {
   const latest = await axios.get(
@@ -92,21 +93,24 @@ export const GenerationProvider: React.FC<GenerationProviderProps> = ({
   const [stats, setStats] = useState(initialState().stats);
   const [generation, setGeneration] = useState(initialState().generation);
 
-  useEffect(() => {
-    loadDex()
-      .then(setDex)
-      .catch(err => {
-        console.error('Failed to load dex.', err);
-      });
-    loadFormats()
+  const loadFormats = useCallback(() => {
+    fetchFormats()
       .then(setFormats)
       .catch(err => {
-        console.error('Failed to load formats.', err);
+        console.error('Failed to fetch formats.', err);
       });
   }, []);
 
-  useEffect(() => {
-    loadStats(format)
+  const loadDex = useCallback(() => {
+    importDex()
+      .then(setDex)
+      .catch(err => {
+        console.error('Failed to import dex.', err);
+      });
+  }, []);
+
+  const loadStats = useCallback(() => {
+    fetchStats(format)
       .then(setStats)
       .catch(err => {
         console.error(
@@ -115,6 +119,10 @@ export const GenerationProvider: React.FC<GenerationProviderProps> = ({
         );
       });
   }, [format]);
+
+  useTimeout(loadFormats, 2000);
+  useTimeout(loadDex, 2000);
+  useTimeout(loadStats, 2000);
 
   useEffect(() => {
     if (dex) {
