@@ -10,6 +10,7 @@ import {
   ListItemAvatar,
   ListItemText,
   Typography,
+  makeStyles,
 } from '@material-ui/core';
 import React, {useContext} from 'react';
 import {AutoSizer, List, ListRowProps} from 'react-virtualized';
@@ -18,6 +19,12 @@ import {SpeciesImage, SpeciesImageType} from '../species/SpeciesImage';
 import {SpeciesContext} from '../species/SpeciesProvider';
 
 import {Pokemon} from './TeamGeneratorState';
+
+const useStyles = makeStyles({
+  list: {
+    outline: 'none',
+  },
+});
 
 export interface EligiblePokemonDialogProps {
   open: boolean;
@@ -34,6 +41,7 @@ export const EligiblePokemonDialog: React.FC<EligiblePokemonDialogProps> = ({
   error,
   eligiblePokemon,
 }: EligiblePokemonDialogProps) => {
+  const classes = useStyles();
   const {setOpen, setSpecies} = useContext(SpeciesContext);
   const sortedEligiblePokemon = eligiblePokemon.sort(
     (left, right) => left.num - right.num
@@ -93,6 +101,7 @@ export const EligiblePokemonDialog: React.FC<EligiblePokemonDialogProps> = ({
             <AutoSizer>
               {({height, width}) => (
                 <List
+                  className={classes.list}
                   height={height}
                   width={width}
                   rowHeight={46}

@@ -6,19 +6,20 @@ import {Pool} from '../team-generator/Pool';
 
 const generations = new Generations(Dex);
 
-const isMythical = (specie: Specie) => MYTHICALS.includes(specie.baseSpecies);
+const isMythical = (specie: Specie): boolean =>
+  MYTHICALS.includes(specie.baseSpecies);
 
-const isRestrictedLegendary = (specie: Specie) =>
+const isRestrictedLegendary = (specie: Specie): boolean =>
   RESTRICTED_LEGENDS.includes(specie.baseSpecies);
 
-const isSubLegendary = (specie: Specie) =>
+const isSubLegendary = (specie: Specie): boolean =>
   SUB_LEGENDS.includes(specie.baseSpecies);
 
-const isFullyEvolved = (specie: Specie) => !specie.nfe;
+const isFullyEvolved = (specie: Specie): boolean => !specie.nfe;
 
 const hasBaseStatTotal = (predicate: (total: number) => boolean) => (
   specie: Specie
-) => {
+): boolean => {
   const total = Object.values(specie.baseStats).reduce(
     (left, right) => left + right,
     0
@@ -26,6 +27,11 @@ const hasBaseStatTotal = (predicate: (total: number) => boolean) => (
 
   return predicate(total);
 };
+
+const isBattleForm = (specie: Specie): boolean => !!specie.battleOnly;
+
+const isDisabled = (specie: Specie): boolean =>
+  DISABLED_SPECIES.includes(specie.name);
 
 const not = (filter: (specie: Specie) => boolean) => (specie: Specie) =>
   !filter(specie);
@@ -36,6 +42,7 @@ const every = (filters: ((specie: Specie) => boolean)[]) => (specie: Specie) =>
 export class PoolGenerator {
   eligiblePokemon(gen: GenerationNum, pool: Pool): Pokemon[] {
     const species = this.species(gen);
+
     return this.eligibleSpecies(species, pool).map(
       this.createPokemon.bind(this)
     );
@@ -93,6 +100,9 @@ export class PoolGenerator {
         hasBaseStatTotal(total => total <= pool.maximumBaseStatTotal)
       );
     }
+
+    eligibleSpecies = eligibleSpecies.filter(not(isBattleForm));
+    eligibleSpecies = eligibleSpecies.filter(not(isDisabled));
 
     return eligibleSpecies;
   }
@@ -207,4 +217,19 @@ const SUB_LEGENDS = [
   'Regidrago',
   'Glastrier',
   'Spectrier',
+];
+
+const DISABLED_SPECIES = [
+  'Pikachu-Original',
+  'Pikachu-Hoenn',
+  'Pikachu-Sinnoh',
+  'Pikachu-Unova',
+  'Pikachu-Kalos',
+  'Pikachu-Alola',
+  'Pikachu-Partner',
+  'Pikachu-World',
+  'Magearna-Original',
+  'Sinistea-Antique',
+  'Polteageist-Antique',
+  'Zarude-Dada',
 ];
