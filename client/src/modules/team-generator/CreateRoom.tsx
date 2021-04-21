@@ -86,7 +86,7 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
         >
           <Grid item container justify="center" spacing={1}>
             <Grid item container justify="center">
-              <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
+              <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
                 <Grid container spacing={2} alignItems="center">
                   <Grid item xs>
                     <Typography id="pools-slider">Pools</Typography>
@@ -104,14 +104,19 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
                     />
                   </Grid>
                 </Grid>
+
+                <Typography variant="caption">
+                  Set the total number of Pokémon to choose. This will be the
+                  team size.
+                </Typography>
               </Grid>
             </Grid>
 
             <Grid item container justify="center">
-              <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
+              <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
                 <Grid container spacing={2} alignItems="center">
                   <Grid item xs>
-                    <Typography id="poolSize-slider">Pool size</Typography>
+                    <Typography id="poolSize-slider">Pool Size</Typography>
                   </Grid>
 
                   <Grid item xs>
@@ -132,11 +137,15 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
                     />
                   </Grid>
                 </Grid>
+
+                <Typography variant="caption">
+                  Set the number of Pokémon to choose from for each pool.
+                </Typography>
               </Grid>
             </Grid>
 
             <Grid item container justify="center">
-              <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
+              <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
                 <Grid container spacing={2} alignItems="center">
                   <Grid item xs>
                     <Typography id="poolSelectionTime-slider">
@@ -164,11 +173,16 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
                     />
                   </Grid>
                 </Grid>
+
+                <Typography variant="caption">
+                  Set the duration for each pool. A random Pokémon will be
+                  selected if time runs out.
+                </Typography>
               </Grid>
             </Grid>
 
             <Grid item container justify="center">
-              <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
+              <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
                 <Grid container spacing={2} alignItems="center">
                   <Grid item xs>
                     <Typography id="exclusive-pools-switch">
@@ -191,12 +205,17 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
                     />
                   </Grid>
                 </Grid>
+
+                <Typography variant="caption">
+                  Exclusive pools will prevent the same Pokémon appearing in
+                  multiple pools.
+                </Typography>
               </Grid>
             </Grid>
 
             {error && (
               <Grid item container justify="center">
-                <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
+                <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
                   <Alert variant="outlined" severity="error">
                     {error}
                   </Alert>
@@ -213,7 +232,7 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
             )}
 
             <Grid item container justify="center">
-              <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
+              <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
                 <Button
                   onClick={() => setEditPools(true)}
                   variant="contained"
@@ -226,7 +245,7 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
             </Grid>
 
             <Grid item container justify="center">
-              <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
+              <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
                 <Button
                   onClick={handleCreateRoom}
                   variant="contained"
@@ -240,7 +259,7 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
             </Grid>
 
             <Grid item container justify="center">
-              <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
+              <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
                 <Button
                   onClick={onBack}
                   variant="contained"

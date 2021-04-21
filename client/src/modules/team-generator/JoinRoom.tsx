@@ -53,7 +53,7 @@ export const JoinRoom: React.FC<JoinRoomProps> = ({onBack}: JoinRoomProps) => {
     >
       <Grid item container justify="center" spacing={2}>
         <Grid item container justify="center">
-          <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
+          <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
             <TextField
               label="Room code"
               placeholder="Enter code..."
@@ -69,7 +69,7 @@ export const JoinRoom: React.FC<JoinRoomProps> = ({onBack}: JoinRoomProps) => {
 
         {error && (
           <Grid item container justify="center">
-            <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
+            <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
               <Alert variant="outlined" severity="error">
                 {error}
               </Alert>
@@ -86,7 +86,7 @@ export const JoinRoom: React.FC<JoinRoomProps> = ({onBack}: JoinRoomProps) => {
         )}
 
         <Grid item container justify="center">
-          <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
+          <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
             <Button
               onClick={joinRoom}
               variant="contained"
@@ -100,7 +100,7 @@ export const JoinRoom: React.FC<JoinRoomProps> = ({onBack}: JoinRoomProps) => {
         </Grid>
 
         <Grid item container justify="center">
-          <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
+          <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
             <Button
               onClick={onBack}
               variant="contained"

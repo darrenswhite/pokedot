@@ -40,7 +40,7 @@ export const EditPools: React.FC<EditPoolsProps> = ({
         </Grid>
 
         <Grid item container justify="center">
-          <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
+          <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
             <Button
               onClick={onBack}
               variant="contained"
