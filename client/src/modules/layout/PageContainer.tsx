@@ -10,44 +10,26 @@ import {TeamGeneratorProviderProps} from '../team-generator/TeamGeneratorProvide
 import {Footer} from './Footer';
 import {Header} from './Header';
 
-const SpeciesBottomDrawer = dynamic<unknown>(
-  () =>
-    import('../species/SpeciesBottomDrawer').then(m => m.SpeciesBottomDrawer),
-  {
-    ssr: false,
-  }
+const SpeciesBottomDrawer = dynamic<unknown>(() =>
+  import('../species/SpeciesBottomDrawer').then(m => m.SpeciesBottomDrawer)
 );
 
-const GenerationProvider = dynamic<GenerationProviderProps>(
-  () =>
-    import('../generation/GenerationProvider').then(m => m.GenerationProvider),
-  {
-    ssr: false,
-  }
+const GenerationProvider = dynamic<GenerationProviderProps>(() =>
+  import('../generation/GenerationProvider').then(m => m.GenerationProvider)
 );
 
-const SpeciesProvider = dynamic<SpeciesProviderProps>(
-  () => import('../species/SpeciesProvider').then(m => m.SpeciesProvider),
-  {
-    ssr: false,
-  }
+const SpeciesProvider = dynamic<SpeciesProviderProps>(() =>
+  import('../species/SpeciesProvider').then(m => m.SpeciesProvider)
 );
 
-const TeamProvider = dynamic<TeamProviderProps>(
-  () => import('../team-analysis/TeamProvider').then(m => m.TeamProvider),
-  {
-    ssr: false,
-  }
+const TeamProvider = dynamic<TeamProviderProps>(() =>
+  import('../team-analysis/TeamProvider').then(m => m.TeamProvider)
 );
 
-const TeamGeneratorProvider = dynamic<TeamGeneratorProviderProps>(
-  () =>
-    import('../team-generator/TeamGeneratorProvider').then(
-      m => m.TeamGeneratorProvider
-    ),
-  {
-    ssr: false,
-  }
+const TeamGeneratorProvider = dynamic<TeamGeneratorProviderProps>(() =>
+  import('../team-generator/TeamGeneratorProvider').then(
+    m => m.TeamGeneratorProvider
+  )
 );
 
 type PageContainerProps = {

@@ -13,38 +13,24 @@ import {SpeciesSearch} from './SpeciesSearch';
 import {TeamParser} from './TeamParser';
 import {TeamValidationDialogProps} from './TeamValidationDialog';
 
-const DefensiveTable = dynamic<DefensiveTableProps>(
-  () => import('../coverage/DefensiveTable').then(m => m.DefensiveTable),
-  {
-    ssr: false,
-  }
+const DefensiveTable = dynamic<DefensiveTableProps>(() =>
+  import('../coverage/DefensiveTable').then(m => m.DefensiveTable)
 );
 
-const OffensiveTable = dynamic<OffensiveTableProps>(
-  () => import('../coverage/OffensiveTable').then(m => m.OffensiveTable),
-  {
-    ssr: false,
-  }
+const OffensiveTable = dynamic<OffensiveTableProps>(() =>
+  import('../coverage/OffensiveTable').then(m => m.OffensiveTable)
 );
 
-const SummaryCard = dynamic<SummaryCardProps>(
-  () => import('../coverage/SummaryCard').then(m => m.SummaryCard),
-  {
-    ssr: false,
-  }
+const SummaryCard = dynamic<SummaryCardProps>(() =>
+  import('../coverage/SummaryCard').then(m => m.SummaryCard)
 );
 
-const PokemonCard = dynamic<PokemonCardProps>(
-  () => import('./PokemonCard').then(m => m.PokemonCard),
-  {
-    ssr: false,
-  }
+const PokemonCard = dynamic<PokemonCardProps>(() =>
+  import('./PokemonCard').then(m => m.PokemonCard)
 );
-const TeamValidationDialog = dynamic<TeamValidationDialogProps>(
-  () => import('./TeamValidationDialog').then(m => m.TeamValidationDialog),
-  {
-    ssr: false,
-  }
+
+const TeamValidationDialog = dynamic<TeamValidationDialogProps>(() =>
+  import('./TeamValidationDialog').then(m => m.TeamValidationDialog)
 );
 
 const TeamAnalysis: React.FC = () => {

@@ -6,29 +6,18 @@ import React from 'react';
 import {useJoinRoom, useRoomListeners} from '../../../hooks/useRoom';
 import {TeamGeneratorContext} from '../TeamGeneratorProvider';
 
-const SetPlayerName = dynamic<unknown>(
-  () => import('./SetPlayerName').then(m => m.SetPlayerName),
-  {
-    ssr: false,
-  }
+const SetPlayerName = dynamic<unknown>(() =>
+  import('./SetPlayerName').then(m => m.SetPlayerName)
 );
 
-const SetPlayerReady = dynamic<unknown>(
-  () => import('./SetPlayerReady').then(m => m.SetPlayerReady),
-  {
-    ssr: false,
-  }
+const SetPlayerReady = dynamic<unknown>(() =>
+  import('./SetPlayerReady').then(m => m.SetPlayerReady)
 );
 
-const Pool = dynamic<unknown>(() => import('./Pool').then(m => m.Pool), {
-  ssr: false,
-});
+const Pool = dynamic<unknown>(() => import('./Pool').then(m => m.Pool));
 
-const Summary = dynamic<unknown>(
-  () => import('./Summary').then(m => m.Summary),
-  {
-    ssr: false,
-  }
+const Summary = dynamic<unknown>(() =>
+  import('./Summary').then(m => m.Summary)
 );
 
 export const RoomPage: React.FC = () => {

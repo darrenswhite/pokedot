@@ -5,18 +5,12 @@ import React, {useState} from 'react';
 import {CreateRoomProps} from './CreateRoom';
 import {JoinRoomProps} from './JoinRoom';
 
-const CreateRoom = dynamic<CreateRoomProps>(
-  () => import('./CreateRoom').then(m => m.CreateRoom),
-  {
-    ssr: false,
-  }
+const CreateRoom = dynamic<CreateRoomProps>(() =>
+  import('./CreateRoom').then(m => m.CreateRoom)
 );
 
-const JoinRoom = dynamic<JoinRoomProps>(
-  () => import('./JoinRoom').then(m => m.JoinRoom),
-  {
-    ssr: false,
-  }
+const JoinRoom = dynamic<JoinRoomProps>(() =>
+  import('./JoinRoom').then(m => m.JoinRoom)
 );
 
 export const TeamGeneratorPage: React.FC = () => {
