@@ -54,16 +54,25 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
     _: React.ChangeEvent<unknown>,
     value: number | number[]
   ) => {
-    const pools = Array.from(Array(value as number).keys()).map(index => {
-      const curr = options.pools[index];
+    setOptions(
+      produce(options, draft => {
+        const indices = Array.from(Array(value as number).keys());
 
-      return curr ?? initialPoolState();
-    });
+        draft.pools = indices.map(index => {
+          const curr = draft.pools[index];
 
-    setOptions({
-      ...options,
-      pools,
-    });
+          return curr ?? initialPoolState();
+        });
+      })
+    );
+  };
+
+  const applyToAllPools = (pool: Pool) => {
+    setOptions(
+      produce(options, draft => {
+        draft.pools = draft.pools.map(() => pool);
+      })
+    );
   };
 
   return (
@@ -251,6 +260,7 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
           pools={options.pools}
           onBack={() => setEditPools(false)}
           onChange={updatePool}
+          applyToAll={applyToAllPools}
         />
       )}
     </>

@@ -8,12 +8,14 @@ export interface EditPoolsProps {
   pools: Pool[];
   onBack: () => void;
   onChange: (index: number, recipe: (pool: Pool) => void) => void;
+  applyToAll: (pool: Pool) => void;
 }
 
 export const EditPools: React.FC<EditPoolsProps> = ({
   pools,
   onBack,
   onChange,
+  applyToAll,
 }: EditPoolsProps) => {
   return (
     <Grid
@@ -31,6 +33,7 @@ export const EditPools: React.FC<EditPoolsProps> = ({
                 pool={pool}
                 onChange={recipe => onChange(index, recipe)}
                 index={index}
+                applyToAll={() => applyToAll(pool)}
               />
             ))}
           </Grid>

@@ -55,12 +55,14 @@ export interface PoolOptionsProps {
   pool: Pool;
   onChange: (recipe: (pool: Pool) => void) => void;
   index: number;
+  applyToAll: () => void;
 }
 
 export const PoolOptions: React.FC<PoolOptionsProps> = ({
   pool,
   onChange,
   index,
+  applyToAll,
 }: PoolOptionsProps) => {
   const {state} = useContext(TeamGeneratorContext);
   const {gen} = state.options;
@@ -282,6 +284,10 @@ export const PoolOptions: React.FC<PoolOptionsProps> = ({
         <Divider />
 
         <AccordionActions>
+          <Button size="small" color="primary" onClick={applyToAll}>
+            Apply To All
+          </Button>
+
           <Button
             size="small"
             color="primary"
