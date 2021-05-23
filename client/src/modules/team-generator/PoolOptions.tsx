@@ -63,12 +63,10 @@ export const PoolOptions: React.FC<PoolOptionsProps> = ({
   const {gen} = state.options;
   const classes = useStyles();
   const [showEligiblePokemon, setShowEligiblePokemon] = useState(false);
-  const [isLoadingEligiblePokemon, setIsLoadingEligiblePokemon] = useState(
-    true
-  );
-  const [eligiblePokemonError, setEligiblePokemonError] = useState<
-    string | null
-  >(null);
+  const [isLoadingEligiblePokemon, setIsLoadingEligiblePokemon] =
+    useState(true);
+  const [eligiblePokemonError, setEligiblePokemonError] =
+    useState<string | null>(null);
   const [eligiblePokemon, setEligiblePokemon] = useState<Pokemon[]>([]);
 
   const loadEligiblePokemon = useCallback(() => {

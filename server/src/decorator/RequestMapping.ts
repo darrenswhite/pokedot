@@ -46,14 +46,14 @@ export const RequestMapping = (
   };
 };
 
-const createMappingDecorator = (method: RequestMethod) => (
-  path?: string | string[]
-): MethodDecorator => {
-  return RequestMapping({
-    path,
-    method,
-  });
-};
+const createMappingDecorator =
+  (method: RequestMethod) =>
+  (path?: string | string[]): MethodDecorator => {
+    return RequestMapping({
+      path,
+      method,
+    });
+  };
 
 export const Post = createMappingDecorator(RequestMethod.POST);
 

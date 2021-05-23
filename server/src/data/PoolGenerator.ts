@@ -17,16 +17,16 @@ const isSubLegendary = (specie: Specie): boolean =>
 
 const isFullyEvolved = (specie: Specie): boolean => !specie.nfe;
 
-const hasBaseStatTotal = (predicate: (total: number) => boolean) => (
-  specie: Specie
-): boolean => {
-  const total = Object.values(specie.baseStats).reduce(
-    (left, right) => left + right,
-    0
-  );
+const hasBaseStatTotal =
+  (predicate: (total: number) => boolean) =>
+  (specie: Specie): boolean => {
+    const total = Object.values(specie.baseStats).reduce(
+      (left, right) => left + right,
+      0
+    );
 
-  return predicate(total);
-};
+    return predicate(total);
+  };
 
 const isBattleForm = (specie: Specie): boolean => !!specie.battleOnly;
 

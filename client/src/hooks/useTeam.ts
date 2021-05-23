@@ -24,14 +24,8 @@ export interface UseTeamProps {
 
 export const useTeam = (): UseTeamProps => {
   const {format} = useContext(GenerationContext);
-  const {
-    team,
-    setTeam,
-    changes,
-    setChanges,
-    currentChange,
-    setCurrentChange,
-  } = useContext(TeamContext);
+  const {team, setTeam, changes, setChanges, currentChange, setCurrentChange} =
+    useContext(TeamContext);
   const canUndo = !changes[currentChange];
   const canRedo = !changes[currentChange + 1];
 

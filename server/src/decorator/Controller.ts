@@ -101,12 +101,14 @@ const getRouterMethod = (
   }
 };
 
-const asyncMiddleware = (
-  fn: (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => void | PromiseLike<void>
-) => (req: Request, res: Response, next: NextFunction): void => {
-  Promise.resolve(fn(req, res, next)).catch(next);
-};
+const asyncMiddleware =
+  (
+    fn: (
+      req: Request,
+      res: Response,
+      next: NextFunction
+    ) => void | PromiseLike<void>
+  ) =>
+  (req: Request, res: Response, next: NextFunction): void => {
+    Promise.resolve(fn(req, res, next)).catch(next);
+  };

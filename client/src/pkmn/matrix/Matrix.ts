@@ -3,11 +3,8 @@ import {flow, groupBy, identity, mapValues} from 'lodash/fp';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type MatrixValue = Record<string, any>;
 
-export type GroupedMatrixValue<
-  T extends MatrixValue,
-  K extends keyof T,
-  R
-> = Record<T[K], R>;
+export type GroupedMatrixValue<T extends MatrixValue, K extends keyof T, R> =
+  Record<T[K], R>;
 
 export class Matrix<T extends MatrixValue> {
   values: T[];

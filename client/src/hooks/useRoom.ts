@@ -40,14 +40,8 @@ export interface UseJoinRoomReturnType<T> {
 export const useCreateRoom = <S>(
   context: Context<RoomContext<S>>
 ): UseCreateRoomReturnType<S> => {
-  const {
-    client,
-    initialRoom,
-    room,
-    setRoom,
-    initialState,
-    setState,
-  } = useContext(context);
+  const {client, initialRoom, room, setRoom, initialState, setState} =
+    useContext(context);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -94,15 +88,8 @@ export const useJoinRoom = <S>(
   context: Context<RoomContext<S>>,
   unnormalizedRoomId: string
 ): UseJoinRoomReturnType<S> => {
-  const {
-    client,
-    initialRoom,
-    room,
-    setRoom,
-    initialState,
-    state,
-    setState,
-  } = useContext(context);
+  const {client, initialRoom, room, setRoom, initialState, state, setState} =
+    useContext(context);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const roomId = normalizeRoomId(unnormalizedRoomId);
@@ -279,5 +266,5 @@ const getSessionIdCache = (): string | null => {
 };
 
 const copyState = <S>(state: S): S => {
-  return ((state as unknown) as Schema).toJSON() as S;
+  return (state as unknown as Schema).toJSON() as S;
 };

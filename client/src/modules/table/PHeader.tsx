@@ -30,9 +30,9 @@ export const PHeader: React.FC<PHeaderProps> = ({
   sortItem,
   onRequestSort,
 }: PHeaderProps) => {
-  const createSortHandler = (property: string) => (
-    event: React.MouseEvent<unknown>
-  ) => onRequestSort(event, property);
+  const createSortHandler =
+    (property: string) => (event: React.MouseEvent<unknown>) =>
+      onRequestSort(event, property);
 
   return (
     <TableHead>

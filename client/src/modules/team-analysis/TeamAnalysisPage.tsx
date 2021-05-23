@@ -46,12 +46,10 @@ const TeamAnalysis: React.FC = () => {
     canRedo,
     validate,
   } = useTeam();
-  const [validationDialogOpen, setValidationDialogOpen] = useState<boolean>(
-    false
-  );
-  const [validationProblems, setValidationProblems] = useState<string[] | null>(
-    null
-  );
+  const [validationDialogOpen, setValidationDialogOpen] =
+    useState<boolean>(false);
+  const [validationProblems, setValidationProblems] =
+    useState<string[] | null>(null);
 
   const validateTeam = async () => {
     setValidationProblems(await validate());
