@@ -4,6 +4,7 @@ import {
   AutocompleteRenderOptionState,
   createFilterOptions,
 } from '@material-ui/lab';
+import {Specie} from '@pkmn/data';
 import {findAll} from 'highlight-words-core';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 
@@ -11,25 +12,25 @@ import {GenerationContext} from '../generation/GenerationProvider';
 import {SpeciesImage, SpeciesImageType} from '../species/SpeciesImage';
 
 const renderOption = (
-  option: string,
+  option: Specie,
   {inputValue}: AutocompleteRenderOptionState
 ) => {
   const chunks = findAll({
     searchWords: [inputValue],
-    textToHighlight: option,
+    textToHighlight: option.baseSpecies,
   });
 
   return (
     <Grid container spacing={1} alignItems="center" justify="center">
       <Grid item>
-        <SpeciesImage name={option} type={SpeciesImageType.ICON} />
+        <SpeciesImage name={option.name} type={SpeciesImageType.ICON} />
       </Grid>
 
       <Grid item xs>
         <Typography noWrap>
           {chunks.map((chunk, index) => {
             const {end, highlight, start} = chunk;
-            const text = option.substr(start, end - start);
+            const text = option.baseSpecies.substr(start, end - start);
 
             return (
               <span key={index} style={{fontWeight: highlight ? 700 : 400}}>
@@ -37,6 +38,10 @@ const renderOption = (
               </span>
             );
           })}
+        </Typography>
+
+        <Typography noWrap variant="subtitle2">
+          {option.forme}
         </Typography>
       </Grid>
     </Grid>
@@ -51,16 +56,17 @@ export const SpeciesSearch: React.FC<PokemonSearchProps> = ({
   onChange,
 }: PokemonSearchProps) => {
   const {generation} = useContext(GenerationContext);
-  const [species, setSpecies] = useState<string[]>([]);
+  const [species, setSpecies] = useState<Specie[]>([]);
   const [text, setText] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
-  const filterOptions = createFilterOptions<string>({
+  const filterOptions = createFilterOptions<Specie>({
     limit: 5,
+    stringify: (option: Specie) => option.name,
   });
 
   useEffect(() => {
     if (generation) {
-      setSpecies(Array.from(generation.species).map(specie => specie.name));
+      setSpecies(Array.from(generation.species));
     }
   }, [generation]);
 
@@ -71,6 +77,7 @@ export const SpeciesSearch: React.FC<PokemonSearchProps> = ({
       inputValue={text}
       onInputChange={(_, value) => setText(value)}
       filterOptions={filterOptions}
+      getOptionLabel={(option: Specie) => option.name}
       size="small"
       renderInput={params => (
         <TextField
@@ -87,9 +94,9 @@ export const SpeciesSearch: React.FC<PokemonSearchProps> = ({
       onClose={() => {
         setText('');
       }}
-      onChange={(_, value: string | null) => {
+      onChange={(_, value: Specie | null) => {
         if (value) {
-          onChange(value);
+          onChange(value.name);
         }
       }}
       fullWidth
