@@ -25,25 +25,27 @@ module.exports = withBundleAnalyzer({
   future: {
     webpack5: true,
   },
-  webpack: config => {
-    config.plugins.push(
-      new GenerateSW({
-        cacheId: 'pokedot',
-        clientsClaim: true,
-        exclude: [
-          'react-loadable-manifest.json',
-          'build-manifest.json',
-          /\.map$/,
-        ],
-        inlineWorkboxRuntime: true,
-        modifyURLPrefix: {
-          'static/': '_next/static/',
-          'public/': '_next/public/',
-        },
-        skipWaiting: true,
-        swDest: 'service-worker.js',
-      })
-    );
+  webpack: (config, {dev}) => {
+    if (!dev) {
+      config.plugins.push(
+        new GenerateSW({
+          cacheId: 'pokedot',
+          clientsClaim: true,
+          exclude: [
+            'react-loadable-manifest.json',
+            'build-manifest.json',
+            /\.map$/,
+          ],
+          inlineWorkboxRuntime: true,
+          modifyURLPrefix: {
+            'static/': '_next/static/',
+            'public/': '_next/public/',
+          },
+          skipWaiting: true,
+          swDest: 'service-worker.js',
+        })
+      );
+    }
 
     return config;
   },
