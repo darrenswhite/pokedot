@@ -114,7 +114,12 @@ export class PoolGenerator {
   }
 
   createPokemon(specie: Specie): Pokemon {
-    return new Pokemon(specie.num, specie.name);
+    return new Pokemon(
+      specie.num,
+      specie.name,
+      specie.baseSpecies,
+      specie.forme
+    );
   }
 }
 

@@ -43,7 +43,7 @@ export const PoolCard: React.FC<PoolCardProps> = ({
         [classes.selected]: selected,
       })}
     >
-      <CardHeader title={pokemon.name} />
+      <CardHeader title={pokemon.baseSpecies} subheader={pokemon.form} />
 
       <CardActionArea>
         <CardMedia>

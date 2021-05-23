@@ -42,7 +42,10 @@ export const TeamList: React.FC = () => {
               <SpeciesImage name={pokemon.name} type={SpeciesImageType.ICON} />
             </ListItemIcon>
 
-            <ListItemText>{pokemon.name}</ListItemText>
+            <ListItemText
+              primary={pokemon.baseSpecies}
+              secondary={pokemon.form}
+            />
           </ListItem>
         ))}
       </List>

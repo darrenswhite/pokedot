@@ -14,11 +14,29 @@ export const SpeciesHeader: React.FC<SpeciesHeaderProps> = ({
 }: SpeciesHeaderProps) => {
   return (
     <>
+      <Grid container justify="center" spacing={1}>
+        <Grid item>
+          <Typography variant="h6" align="center">
+            #{specie.num}
+          </Typography>
+        </Grid>
+
+        <Grid item>
+          <Grid container direction="column" justify="center">
+            <Grid item xs>
+              <Typography variant="h5">{specie.baseSpecies}</Typography>
+            </Grid>
+
+            <Grid item xs>
+              <Typography variant="subtitle1">{specie.forme}</Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+
       <Grid container justify="center">
         <Grid item>
-          <Typography variant="h5">
-            #{specie?.num} {specie.name}
-          </Typography>
+          <SpeciesImage name={specie.name} type={SpeciesImageType.SPRITE} />
         </Grid>
       </Grid>
 
@@ -28,12 +46,6 @@ export const SpeciesHeader: React.FC<SpeciesHeaderProps> = ({
             <TypeImage type={type} />
           </Grid>
         ))}
-      </Grid>
-
-      <Grid container justify="center">
-        <Grid item>
-          <SpeciesImage name={specie.name} type={SpeciesImageType.SPRITE} />
-        </Grid>
       </Grid>
 
       <Grid container justify="center">

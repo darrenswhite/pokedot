@@ -66,7 +66,7 @@ export const EligiblePokemonDialog: React.FC<EligiblePokemonDialogProps> = ({
           <SpeciesImage name={pokemon.name} type={SpeciesImageType.ICON} />
         </ListItemAvatar>
 
-        <ListItemText primary={pokemon.name} />
+        <ListItemText primary={pokemon.baseSpecies} secondary={pokemon.form} />
       </ListItem>
     );
   };

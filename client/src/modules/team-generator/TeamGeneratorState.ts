@@ -32,6 +32,8 @@ export interface Player {
 export interface Pokemon {
   num: number;
   name: string;
+  baseSpecies: string;
+  form: string;
 }
 
 export interface Pool {
