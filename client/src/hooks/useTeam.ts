@@ -195,7 +195,7 @@ const createPokemon = (pokemon: PartialPokemonSet): PokemonSet => {
           spd: 31,
           spe: 31,
         },
-    level: pokemon.level ?? 50,
+    level: pokemon.level ?? 100,
     shiny: pokemon.shiny ?? false,
     happiness: pokemon.happiness ?? 255,
     pokeball: pokemon.pokeball ?? '',
