@@ -37,7 +37,7 @@ export const RoomPage: React.FC = () => {
     content = (
       <Grid
         container
-        justify="center"
+        justifyContent="center"
         alignContent="center"
         style={{height: '100%'}}
       >

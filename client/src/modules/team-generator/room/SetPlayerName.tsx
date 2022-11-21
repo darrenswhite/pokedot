@@ -35,12 +35,12 @@ export const SetPlayerName: React.FC = () => {
   return (
     <Grid
       container
-      justify="center"
+      justifyContent="center"
       alignItems="center"
       style={{height: '100%'}}
     >
-      <Grid item container justify="center" spacing={2}>
-        <Grid item container justify="center">
+      <Grid item container justifyContent="center" spacing={2}>
+        <Grid item container justifyContent="center">
           <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
             <TextField
               label="Nickname"
@@ -56,7 +56,7 @@ export const SetPlayerName: React.FC = () => {
           </Grid>
         </Grid>
 
-        <Grid item container justify="center">
+        <Grid item container justifyContent="center">
           <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
             <Button
               onClick={submitName}

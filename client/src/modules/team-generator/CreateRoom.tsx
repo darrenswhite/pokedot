@@ -80,12 +80,12 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
       {!editPools && (
         <Grid
           container
-          justify="center"
+          justifyContent="center"
           alignItems="center"
           style={{height: '100%'}}
         >
-          <Grid item container justify="center" spacing={1}>
-            <Grid item container justify="center">
+          <Grid item container justifyContent="center" spacing={1}>
+            <Grid item container justifyContent="center">
               <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
                 <Grid container spacing={2} alignItems="center">
                   <Grid item xs>
@@ -112,7 +112,7 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
               </Grid>
             </Grid>
 
-            <Grid item container justify="center">
+            <Grid item container justifyContent="center">
               <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
                 <Grid container spacing={2} alignItems="center">
                   <Grid item xs>
@@ -144,7 +144,7 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
               </Grid>
             </Grid>
 
-            <Grid item container justify="center">
+            <Grid item container justifyContent="center">
               <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
                 <Grid container spacing={2} alignItems="center">
                   <Grid item xs>
@@ -181,7 +181,7 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
               </Grid>
             </Grid>
 
-            <Grid item container justify="center">
+            <Grid item container justifyContent="center">
               <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
                 <Grid container spacing={2} alignItems="center">
                   <Grid item xs>
@@ -214,7 +214,7 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
             </Grid>
 
             {error && (
-              <Grid item container justify="center">
+              <Grid item container justifyContent="center">
                 <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
                   <Alert variant="outlined" severity="error">
                     {error}
@@ -224,14 +224,14 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
             )}
 
             {isLoading && (
-              <Grid item container justify="center">
+              <Grid item container justifyContent="center">
                 <Grid item>
                   <CircularProgress size={24} />
                 </Grid>
               </Grid>
             )}
 
-            <Grid item container justify="center">
+            <Grid item container justifyContent="center">
               <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
                 <Button
                   onClick={() => setEditPools(true)}
@@ -244,7 +244,7 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
               </Grid>
             </Grid>
 
-            <Grid item container justify="center">
+            <Grid item container justifyContent="center">
               <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
                 <Button
                   onClick={handleCreateRoom}
@@ -258,7 +258,7 @@ export const CreateRoom: React.FC<CreateRoomProps> = ({
               </Grid>
             </Grid>
 
-            <Grid item container justify="center">
+            <Grid item container justifyContent="center">
               <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
                 <Button
                   onClick={onBack}

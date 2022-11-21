@@ -20,12 +20,12 @@ export const EditPools: React.FC<EditPoolsProps> = ({
   return (
     <Grid
       container
-      justify="center"
+      justifyContent="center"
       alignItems="center"
       style={{height: '100%'}}
     >
-      <Grid item container justify="center" spacing={1}>
-        <Grid item container justify="center">
+      <Grid item container justifyContent="center" spacing={1}>
+        <Grid item container justifyContent="center">
           <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
             {pools.map((pool, index) => (
               <PoolOptions
@@ -39,7 +39,7 @@ export const EditPools: React.FC<EditPoolsProps> = ({
           </Grid>
         </Grid>
 
-        <Grid item container justify="center">
+        <Grid item container justifyContent="center">
           <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
             <Button
               onClick={onBack}

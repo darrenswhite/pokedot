@@ -28,7 +28,7 @@ export const SetPlayerReady: React.FC = () => {
         </Typography>
       }
     >
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         <Grid item xs={12} sm={8} md={5} lg={3} xl={2}>
           <Button
             onClick={setPlayerReady}

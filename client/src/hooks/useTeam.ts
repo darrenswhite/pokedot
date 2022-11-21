@@ -125,7 +125,7 @@ export const useTeam = (): UseTeamProps => {
   };
 
   const validate = async (): Promise<string[] | null> => {
-    const {TeamValidator} = await import('@pkmn/sim');
+    const {TeamValidator} = await import('@pkmn/sim/build/cjs/sim');
     const validator = new TeamValidator(format[0]);
 
     return validator.validateTeam(cloneDeep(team));

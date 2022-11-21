@@ -78,7 +78,7 @@ export const Summary: React.FC = () => {
         </Typography>
       }
     >
-      <Grid container justify="center" spacing={4}>
+      <Grid container justifyContent="center" spacing={4}>
         <Grid item style={{maxWidth: '100vw'}}>
           <PMatrixTable
             matrix={matrix}
@@ -90,7 +90,7 @@ export const Summary: React.FC = () => {
           />
         </Grid>
 
-        <Grid container item xs={12} justify="center">
+        <Grid container item xs={12} justifyContent="center">
           <Grid item>
             <Button variant="contained" onClick={viewTeam} color="primary">
               <BarChart />

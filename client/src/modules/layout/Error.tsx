@@ -59,7 +59,7 @@ export const Error: React.FC<ErrorProps> = ({
       justifyContent="center"
       flexDirection="column"
     >
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         <Grid item xs={12}>
           <Typography variant="h3" component="h1" align="center">
             {statusCode}

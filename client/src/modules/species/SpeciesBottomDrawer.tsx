@@ -14,7 +14,7 @@ export const SpeciesBottomDrawer: React.FC = () => {
   return (
     <Drawer anchor="bottom" open={open} onClose={() => setOpen(false)}>
       <Box p={4}>
-        <Grid container justify="center" spacing={2}>
+        <Grid container justifyContent="center" spacing={2}>
           {specie && (
             <>
               <Grid item>

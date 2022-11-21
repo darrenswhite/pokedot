@@ -159,7 +159,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
             </Grid>
 
             <Grid item xs>
-              <Grid container wrap="nowrap" justify="center">
+              <Grid container wrap="nowrap" justifyContent="center">
                 {Object.entries(STAT_COLORS).map(([stat, color]) => (
                   <Grid key={stat} item>
                     <PokemonStatInput

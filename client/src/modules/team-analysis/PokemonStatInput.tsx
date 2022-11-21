@@ -46,7 +46,7 @@ export const PokemonStatInput: React.FC<PokemonStatInputProps> = ({
       <Grid
         container
         alignItems="flex-start"
-        justify="flex-end"
+        justifyContent="flex-end"
         wrap="nowrap"
         direction="column"
       >

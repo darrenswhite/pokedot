@@ -81,7 +81,7 @@ export const EligiblePokemonDialog: React.FC<EligiblePokemonDialogProps> = ({
 
       <DialogContent>
         {isLoading && (
-          <Grid container justify="center">
+          <Grid container justifyContent="center">
             <Grid item>
               <CircularProgress />
             </Grid>
@@ -89,7 +89,7 @@ export const EligiblePokemonDialog: React.FC<EligiblePokemonDialogProps> = ({
         )}
 
         {!isLoading && error && (
-          <Grid container justify="center">
+          <Grid container justifyContent="center">
             <Grid item>
               <Typography>{error}</Typography>
             </Grid>

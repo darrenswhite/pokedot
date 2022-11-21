@@ -47,12 +47,12 @@ export const JoinRoom: React.FC<JoinRoomProps> = ({onBack}: JoinRoomProps) => {
   return (
     <Grid
       container
-      justify="center"
+      justifyContent="center"
       alignItems="center"
       style={{height: '100%'}}
     >
-      <Grid item container justify="center" spacing={2}>
-        <Grid item container justify="center">
+      <Grid item container justifyContent="center" spacing={2}>
+        <Grid item container justifyContent="center">
           <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
             <TextField
               label="Room code"
@@ -68,7 +68,7 @@ export const JoinRoom: React.FC<JoinRoomProps> = ({onBack}: JoinRoomProps) => {
         </Grid>
 
         {error && (
-          <Grid item container justify="center">
+          <Grid item container justifyContent="center">
             <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
               <Alert variant="outlined" severity="error">
                 {error}
@@ -78,14 +78,14 @@ export const JoinRoom: React.FC<JoinRoomProps> = ({onBack}: JoinRoomProps) => {
         )}
 
         {isLoading && (
-          <Grid item container justify="center">
+          <Grid item container justifyContent="center">
             <Grid item>
               <CircularProgress size={24} />
             </Grid>
           </Grid>
         )}
 
-        <Grid item container justify="center">
+        <Grid item container justifyContent="center">
           <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
             <Button
               onClick={joinRoom}
@@ -99,7 +99,7 @@ export const JoinRoom: React.FC<JoinRoomProps> = ({onBack}: JoinRoomProps) => {
           </Grid>
         </Grid>
 
-        <Grid item container justify="center">
+        <Grid item container justifyContent="center">
           <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
             <Button
               onClick={onBack}

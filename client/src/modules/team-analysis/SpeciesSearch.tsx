@@ -21,7 +21,7 @@ const renderOption = (
   });
 
   return (
-    <Grid container spacing={1} alignItems="center" justify="center">
+    <Grid container spacing={1} alignItems="center" justifyContent="center">
       <Grid item>
         <SpeciesImage name={option.name} type={SpeciesImageType.ICON} />
       </Grid>

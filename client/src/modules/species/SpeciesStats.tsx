@@ -87,13 +87,13 @@ export const SpeciesStats: React.FC<SpeciesStatsProps> = ({
 
   return (
     <>
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         <Grid item>
           <Typography variant="subtitle1">Base Stats</Typography>
         </Grid>
       </Grid>
 
-      <Grid container justify="center" spacing={1}>
+      <Grid container justifyContent="center" spacing={1}>
         <Grid item>
           {Object.keys(specie.baseStats).map(stat => (
             <React.Fragment key={stat}>
