@@ -1,7 +1,7 @@
 import {Client} from 'colyseus';
 
-import {StartGeneratorCommand} from './StartGeneratorCommand';
-import {TeamGeneratorCommand} from './TeamGeneratorCommand';
+import {StartGeneratorCommand} from './StartGeneratorCommand.js';
+import {TeamGeneratorCommand} from './TeamGeneratorCommand.js';
 
 export interface OnLeaveCommandPayload {
   client: Client;

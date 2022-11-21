@@ -1,20 +1,21 @@
 // pino-debug must be required at the entry point of your node process, before any other modules have been loaded
 // see https://github.com/pinojs/pino-debug
 // eslint-disable-next-line import/order
-import {Logger} from './util/Logger';
+import {Logger} from './util/Logger.js';
 
 import {createServer} from 'http';
 
 import {monitor} from '@colyseus/monitor';
+import {WebSocketTransport} from '@colyseus/ws-transport';
 import {Server} from 'colyseus';
 import config from 'config';
 import cors from 'cors';
-import express from 'express';
+import express, {json} from 'express';
 
-import {FormatController} from './controller/FormatController';
-import {PoolController} from './controller/PoolController';
-import {Controllers} from './decorator/Controller';
-import {TeamGeneratorRoom} from './team-generator/TeamGeneratorRoom';
+import {FormatController} from './controller/FormatController.js';
+import {PoolController} from './controller/PoolController.js';
+import {Controllers} from './decorator/Controller.js';
+import {TeamGeneratorRoom} from './team-generator/TeamGeneratorRoom.js';
 
 Logger.info('Starting up...');
 
@@ -23,11 +24,13 @@ const app = express();
 const port = config.get<number>('server.port');
 
 app.use(cors());
-app.use(express.json());
-app.use(Logger.express);
+app.use(json() as express.RequestHandler);
+app.use(Logger.express as express.RequestHandler);
 
 const gameServer = new Server({
-  server: createServer(app),
+  transport: new WebSocketTransport({
+    server: createServer(app),
+  }),
 });
 
 gameServer.define('team-generator', TeamGeneratorRoom);

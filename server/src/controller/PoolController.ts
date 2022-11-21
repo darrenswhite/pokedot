@@ -2,9 +2,10 @@ import {GenerationNum} from '@pkmn/data';
 import {Request, Response} from 'express';
 import {Inject} from 'typescript-ioc';
 
-import {PoolGenerator} from '../data/PoolGenerator';
-import {Controller, Post} from '../decorator';
-import {Pool} from '../team-generator/Pool';
+import {PoolGenerator} from '../data/PoolGenerator.js';
+import {Controller} from '../decorator/Controller.js';
+import {Post} from '../decorator/RequestMapping.js';
+import {Pool} from '../team-generator/Pool.js';
 
 @Controller('/pools')
 export class PoolController {

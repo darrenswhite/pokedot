@@ -7,7 +7,7 @@ const FORMAT_WEIGHT_REGEX = />(\w+)-(\d+)\.(?:\w+)</g;
 
 export class Formats {
   getLatestDate = async (): Promise<string> => {
-    const latestResponse = await axios(Statistics.URL);
+    const latestResponse = await axios<string>(Statistics.URL);
 
     return Statistics.latest(latestResponse.data);
   };
@@ -18,7 +18,7 @@ export class Formats {
 
   getFormats = async (date: string): Promise<FormatsData> => {
     const formats: FormatsData = {};
-    const response = await axios(`${Statistics.URL}/${date}/chaos`);
+    const response = await axios<string>(`${Statistics.URL}/${date}/chaos`);
     const regexp = new RegExp(FORMAT_WEIGHT_REGEX);
     let match;
 

@@ -1,6 +1,6 @@
-import {Player} from '../Player';
+import {Player} from '../Player.js';
 
-import {TeamGeneratorCommand} from './TeamGeneratorCommand';
+import {TeamGeneratorCommand} from './TeamGeneratorCommand.js';
 
 export interface OnJoinCommandPayload {
   sessionId: string;

@@ -1,7 +1,7 @@
-import {Logger} from '../util/Logger';
+import {Logger} from '../util/Logger.js';
 
-import {RequestMethod} from './RequestMethod';
-import {Route} from './Route';
+import {RequestMethod} from './RequestMethod.js';
+import {Route} from './Route.js';
 
 export interface RequestMappingMetadata {
   path?: string | string[];

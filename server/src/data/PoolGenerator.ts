@@ -1,8 +1,8 @@
 import {GenerationNum, Generations, Specie} from '@pkmn/data';
 import {Dex} from '@pkmn/dex';
 
-import {Pokemon} from '../team-generator/Pokemon';
-import {Pool} from '../team-generator/Pool';
+import {Pokemon} from '../team-generator/Pokemon.js';
+import {Pool} from '../team-generator/Pool.js';
 
 const generations = new Generations(Dex);
 

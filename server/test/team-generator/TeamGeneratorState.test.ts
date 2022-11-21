@@ -1,9 +1,9 @@
 import {ArraySchema, MapSchema} from '@colyseus/schema';
 
-import {Options} from '../../src/team-generator/Options';
-import {Player} from '../../src/team-generator/Player';
-import {Pool} from '../../src/team-generator/Pool';
-import {TeamGeneratorState} from '../../src/team-generator/TeamGeneratorState';
+import {Options} from '../../src/team-generator/Options.js';
+import {Player} from '../../src/team-generator/Player.js';
+import {Pool} from '../../src/team-generator/Pool.js';
+import {TeamGeneratorState} from '../../src/team-generator/TeamGeneratorState.js';
 
 describe('TeamGeneratorState', () => {
   describe('#constructor()', () => {

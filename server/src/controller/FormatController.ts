@@ -1,9 +1,10 @@
 import {Request, Response} from 'express';
 import {Inject} from 'typescript-ioc';
 
-import {Formats} from '../data/Formats';
-import {Controller, Get} from '../decorator';
-import {Logger} from '../util/Logger';
+import {Formats} from '../data/Formats.js';
+import {Controller} from '../decorator/Controller.js';
+import {Get} from '../decorator/RequestMapping.js';
+import {Logger} from '../util/Logger.js';
 
 @Controller('/formats')
 export class FormatController {

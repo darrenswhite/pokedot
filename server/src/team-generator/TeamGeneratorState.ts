@@ -1,7 +1,7 @@
 import {MapSchema, Schema, type} from '@colyseus/schema';
 
-import {Options} from './Options';
-import {Player} from './Player';
+import {Options} from './Options.js';
+import {Player} from './Player.js';
 
 export class TeamGeneratorState extends Schema {
   @type(Options)

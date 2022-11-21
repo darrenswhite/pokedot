@@ -1,6 +1,6 @@
-import {DefaultMessagePayload} from './OnMessageCommand';
-import {StartGeneratorCommand} from './StartGeneratorCommand';
-import {TeamGeneratorCommand} from './TeamGeneratorCommand';
+import {DefaultMessagePayload} from './OnMessageCommand.js';
+import {StartGeneratorCommand} from './StartGeneratorCommand.js';
+import {TeamGeneratorCommand} from './TeamGeneratorCommand.js';
 
 export class SetPlayerReadyCommand extends TeamGeneratorCommand<DefaultMessagePayload> {
   execute({sessionId} = this.payload): TeamGeneratorCommand[] {

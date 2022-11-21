@@ -1,14 +1,13 @@
 import {ArraySchema} from '@colyseus/schema';
-import {filter, sampleSize} from 'lodash/fp';
 import {Inject} from 'typescript-ioc';
 
-import {PoolGenerator} from '../../data/PoolGenerator';
-import {Player} from '../Player';
-import {Pokemon} from '../Pokemon';
-import {Pool} from '../Pool';
+import {PoolGenerator} from '../../data/PoolGenerator.js';
+import {Player} from '../Player.js';
+import {Pokemon} from '../Pokemon.js';
+import {Pool} from '../Pool.js';
 
-import {StartPoolSelectionTimerCommand} from './StartPoolSelectionTimerCommand';
-import {TeamGeneratorCommand} from './TeamGeneratorCommand';
+import {StartPoolSelectionTimerCommand} from './StartPoolSelectionTimerCommand.js';
+import {TeamGeneratorCommand} from './TeamGeneratorCommand.js';
 
 export class GeneratePoolCommand extends TeamGeneratorCommand {
   @Inject
@@ -48,20 +47,27 @@ export class GeneratePoolCommand extends TeamGeneratorCommand {
   ): ArraySchema<Pokemon> {
     const {poolSize, exclusivePools, gen} = this.state.options;
     const teamFilter = (pokemon: Pokemon) =>
-      filter((member: Pokemon) => member.num === pokemon.num)(team).length ===
-      0;
+      Array.from(team.values()).filter(
+        (member: Pokemon) => member.num === pokemon.num
+      ).length === 0;
     const exclusiveFilter = (pokemon: Pokemon) =>
       !exclusivePools ||
-      filter((member: Pokemon) => member.name === pokemon.name)(previousPools)
-        .length === 0;
+      Array.from(previousPools.values()).filter(
+        (member: Pokemon) => member.name === pokemon.name
+      ).length === 0;
 
     const eligiblePokemon = this.generator.eligiblePokemon(gen, pool);
 
     const pokemonPool = eligiblePokemon
       .filter(teamFilter)
       .filter(exclusiveFilter);
-    const poolSample = sampleSize(poolSize, pokemonPool);
+    const poolSample = this.sampleSize(pokemonPool, poolSize);
 
     return new ArraySchema<Pokemon>(...poolSample);
+  }
+
+  sampleSize<T>(arr: T[], n: number): T[] {
+    const shuffled = Array.from(arr).sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, n);
   }
 }

@@ -2,19 +2,19 @@ import {Dispatcher} from '@colyseus/command';
 import {ArraySchema} from '@colyseus/schema';
 import {Client, Room} from 'colyseus';
 
-import {IdGenerator} from '../util/IdGenerator';
-import {Logger} from '../util/Logger';
+import {IdGenerator} from '../util/IdGenerator.js';
+import {Logger} from '../util/Logger.js';
 
-import {OnJoinCommand} from './command/OnJoinCommand';
-import {OnLeaveCommand} from './command/OnLeaveCommand';
-import {OnMessageCommand} from './command/OnMessageCommand';
-import {Options} from './Options';
-import {Pool} from './Pool';
-import {TeamGeneratorState} from './TeamGeneratorState';
+import {OnJoinCommand} from './command/OnJoinCommand.js';
+import {OnLeaveCommand} from './command/OnLeaveCommand.js';
+import {OnMessageCommand} from './command/OnMessageCommand.js';
+import {Options} from './Options.js';
+import {Pool} from './Pool.js';
+import {TeamGeneratorState} from './TeamGeneratorState.js';
 
 export class TeamGeneratorRoom extends Room<TeamGeneratorState> {
   logger = Logger.child({});
-  dispatcher: Dispatcher = new Dispatcher(this);
+  dispatcher: Dispatcher<TeamGeneratorRoom> = new Dispatcher(this);
 
   onCreate(options: Options): void {
     // TODO check id is unique

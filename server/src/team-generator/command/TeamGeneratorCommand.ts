@@ -1,11 +1,11 @@
 import {Command} from '@colyseus/command';
 import {Logger as PinoLogger} from 'pino';
 
-import {Logger} from '../../util/Logger';
-import {TeamGeneratorState} from '../TeamGeneratorState';
+import {Logger} from '../../util/Logger.js';
+import {TeamGeneratorRoom} from '../TeamGeneratorRoom.js';
 
 export abstract class TeamGeneratorCommand<P = unknown> extends Command<
-  TeamGeneratorState,
+  TeamGeneratorRoom,
   P
 > {
   private _logger?: PinoLogger;

@@ -8,10 +8,10 @@ import {
 } from 'express';
 import {Container} from 'typescript-ioc';
 
-import {Logger} from '../util/Logger';
+import {Logger} from '../util/Logger.js';
 
-import {RequestMethod} from './RequestMethod';
-import {Route} from './Route';
+import {RequestMethod} from './RequestMethod.js';
+import {Route} from './Route.js';
 
 interface Controller {
   [key: string]: RequestHandler;

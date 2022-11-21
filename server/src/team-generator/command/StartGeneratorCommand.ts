@@ -1,13 +1,13 @@
-import {every} from 'lodash/fp';
-
-import {GeneratePoolCommand} from './GeneratePoolCommand';
-import {ResetPoolsCommand} from './ResetPoolsCommand';
-import {TeamGeneratorCommand} from './TeamGeneratorCommand';
+import {GeneratePoolCommand} from './GeneratePoolCommand.js';
+import {ResetPoolsCommand} from './ResetPoolsCommand.js';
+import {TeamGeneratorCommand} from './TeamGeneratorCommand.js';
 
 export class StartGeneratorCommand extends TeamGeneratorCommand {
   validate(): boolean {
+    const players = Array.from(this.state.players.values());
+
     return (
-      every(player => player.ready, Array.from(this.state.players.values())) &&
+      players.filter(player => player.ready).length === players.length &&
       this.state.currentPool === -1
     );
   }

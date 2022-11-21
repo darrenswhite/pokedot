@@ -1,18 +1,22 @@
 import config from 'config';
-import expressPino from 'express-pino-logger';
-import pino from 'pino';
+import {pinoHttp} from 'express-pino-logger';
+import {pino} from 'pino';
 import pinoDebug from 'pino-debug';
+import pinoPretty from 'pino-pretty';
 
-const root = pino({
-  level: config.get<string>('log.level'),
-  prettyPrint: config.get<boolean>('env.dev')
-    ? {
-        colorize: true,
-        ignore: 'pid,hostname',
-        translateTime: true,
-      }
-    : false,
+const stream = pinoPretty.default({
+  colorize: true,
+  ignore: 'pid,hostname',
+  translateTime: true,
 });
+
+const options = {
+  level: config.get<string>('log.level'),
+};
+
+const root = config.get<boolean>('env.dev')
+  ? pino(options, stream)
+  : pino(options);
 
 pinoDebug(root, {
   map: {
@@ -21,7 +25,7 @@ pinoDebug(root, {
 });
 
 export class Logger {
-  static express = expressPino({
+  static express = pinoHttp({
     logger: root,
   });
 

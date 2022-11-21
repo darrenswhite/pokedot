@@ -1,5 +1,5 @@
-import {DefaultMessagePayload} from './OnMessageCommand';
-import {TeamGeneratorCommand} from './TeamGeneratorCommand';
+import {DefaultMessagePayload} from './OnMessageCommand.js';
+import {TeamGeneratorCommand} from './TeamGeneratorCommand.js';
 
 export interface SetPlayerPoolSelectionCommandPayload
   extends DefaultMessagePayload {

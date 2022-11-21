@@ -1,8 +1,8 @@
-import {DefaultMessagePayload} from './OnMessageCommand';
-import {SetPlayerNameCommand} from './SetPlayerNameCommand';
-import {SetPlayerPoolSelectionCommand} from './SetPlayerPoolSelectionCommand';
-import {SetPlayerReadyCommand} from './SetPlayerReadyCommand';
-import {TeamGeneratorCommand} from './TeamGeneratorCommand';
+import {DefaultMessagePayload} from './OnMessageCommand.js';
+import {SetPlayerNameCommand} from './SetPlayerNameCommand.js';
+import {SetPlayerPoolSelectionCommand} from './SetPlayerPoolSelectionCommand.js';
+import {SetPlayerReadyCommand} from './SetPlayerReadyCommand.js';
+import {TeamGeneratorCommand} from './TeamGeneratorCommand.js';
 
 export enum MessageType {
   SET_PLAYER_NAME = 'SET_PLAYER_NAME',
@@ -17,11 +17,12 @@ const messageCommands = {
 };
 
 export class MessageCommandFactory {
-  static getMessageCommand(
-    type: MessageType,
-    payload: DefaultMessagePayload
-  ): TeamGeneratorCommand {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return new messageCommands[type](payload as any);
+  static getMessageCommand<
+    P extends DefaultMessagePayload,
+    C extends TeamGeneratorCommand<P>
+  >(type: MessageType, payload: P): TeamGeneratorCommand {
+    const command = messageCommands[type] as unknown as new (payload: P) => C;
+
+    return new command(payload);
   }
 }

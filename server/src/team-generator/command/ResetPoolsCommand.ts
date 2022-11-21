@@ -1,4 +1,4 @@
-import {TeamGeneratorCommand} from './TeamGeneratorCommand';
+import {TeamGeneratorCommand} from './TeamGeneratorCommand.js';
 
 export class ResetPoolsCommand extends TeamGeneratorCommand {
   execute(): void {

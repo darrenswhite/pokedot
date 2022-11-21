@@ -1,6 +1,6 @@
 import {ArraySchema, Schema, type} from '@colyseus/schema';
 
-import {Pokemon} from './Pokemon';
+import {Pokemon} from './Pokemon.js';
 
 export class Player extends Schema {
   @type('string')

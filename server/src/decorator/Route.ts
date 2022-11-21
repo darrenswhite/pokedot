@@ -1,4 +1,4 @@
-import {RequestMethod} from './RequestMethod';
+import {RequestMethod} from './RequestMethod.js';
 
 export interface Route {
   path: string;

@@ -1,5 +1,5 @@
-import {MessageCommandFactory, MessageType} from './MessageCommandFactory';
-import {TeamGeneratorCommand} from './TeamGeneratorCommand';
+import {MessageCommandFactory, MessageType} from './MessageCommandFactory.js';
+import {TeamGeneratorCommand} from './TeamGeneratorCommand.js';
 
 export interface OnMessageCommandPayload {
   type: string | number;

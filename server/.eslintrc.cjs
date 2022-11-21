@@ -15,16 +15,16 @@ module.exports = {
     project: ['./tsconfig.json'],
     tsconfigRootDir: __dirname,
     sourceType: 'module',
-    ecmaVersion: 2020,
   },
   env: {
+    es2022: true,
     node: true,
   },
   ignorePatterns: [
-    '.eslintrc.js',
-    'config/**/*.js',
-    'jest.config.js',
-    'prettier.config.js',
+    '.eslintrc.cjs',
+    'config/**/*.cjs',
+    'jest.config.cjs',
+    'prettier.config.cjs',
   ],
   plugins: ['@typescript-eslint', 'prettier'],
   rules: {
@@ -58,4 +58,9 @@ module.exports = {
       },
     },
   ],
+  settings: {
+    'import/resolver': {
+      typescript: {}
+    },
+  },
 };

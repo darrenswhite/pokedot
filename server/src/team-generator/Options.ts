@@ -1,7 +1,7 @@
 import {ArraySchema, Schema, type} from '@colyseus/schema';
 import {GenerationNum} from '@pkmn/types';
 
-import {Pool} from './Pool';
+import {Pool} from './Pool.js';
 
 export class Options extends Schema {
   @type([Pool])
