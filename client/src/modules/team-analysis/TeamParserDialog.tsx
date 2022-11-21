@@ -30,7 +30,7 @@ export const TeamParserDialog: React.FC<TeamParserDialogProps> = ({
 
   useEffect(() => {
     if (open) {
-      setTeam(new Team(value as Readonly<PokemonSet[]>).toString());
+      setTeam(new Team(value as PokemonSet[]).toString());
     }
   }, [value, open]);
 

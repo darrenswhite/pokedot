@@ -30,7 +30,7 @@ const initialState = (): TeamGeneratorState => ({
     poolSize: 5,
     poolSelectionTime: 30000,
     exclusivePools: false,
-    gen: 8,
+    gen: 9,
   },
   players: {},
   currentPool: -1,
