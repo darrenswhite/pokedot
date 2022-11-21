@@ -140,6 +140,7 @@ export const useRoomListeners = <S>(context: Context<RoomContext<S>>): void => {
         console.error(`Room error (${code}): ${message ?? 'no reason'}.`);
       });
       room.onStateChange(state => {
+        console.log(state);
         setState(copyState(state));
       });
 
