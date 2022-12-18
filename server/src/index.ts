@@ -23,8 +23,8 @@ const app = express();
 const port = config.get<number>('server.port');
 
 app.use(cors());
-app.use(express.json());
-app.use(Logger.express);
+app.use(express.json() as express.RequestHandler);
+app.use(Logger.express as express.RequestHandler);
 
 const gameServer = new Server({
   server: createServer(app),
