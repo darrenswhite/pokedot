@@ -9,9 +9,7 @@ const copyFile = promisify(fs.copyFile);
 
 module.exports = withBundleAnalyzer({
   // reactStrictMode: true, // https://github.com/mui-org/material-ui/issues/18018
-  experimental: {
-    optimizeFonts: true,
-  },
+  distDir: 'build',
   exportPathMap: async function (defaultPathMap, {dev, _, outDir, distDir}) {
     if (!dev) {
       await copyFile(
@@ -22,9 +20,7 @@ module.exports = withBundleAnalyzer({
 
     return defaultPathMap;
   },
-  future: {
-    webpack5: true,
-  },
+  output: 'export',
   webpack: (config, {dev}) => {
     if (!dev) {
       config.plugins.push(

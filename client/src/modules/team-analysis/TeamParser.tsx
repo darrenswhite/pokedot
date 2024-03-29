@@ -1,5 +1,5 @@
-import {Button} from '@material-ui/core';
-import {ImportExport} from '@material-ui/icons';
+import {ImportExport} from '@mui/icons-material';
+import {Button} from '@mui/material';
 import dynamic from 'next/dynamic';
 import React, {useState} from 'react';
 

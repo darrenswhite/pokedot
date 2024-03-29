@@ -9,7 +9,7 @@ export class Formats {
   getLatestDate = async (): Promise<string> => {
     const latestResponse = await axios(Statistics.URL);
 
-    return Statistics.latest(latestResponse.data);
+    return Statistics.latest(latestResponse.data as string);
   };
 
   getLatestFormats = async (): Promise<FormatsData> => {
@@ -22,7 +22,7 @@ export class Formats {
     const regexp = new RegExp(FORMAT_WEIGHT_REGEX);
     let match;
 
-    while ((match = regexp.exec(response.data)) !== null) {
+    while ((match = regexp.exec(response.data as string)) !== null) {
       const format = match[1];
       const weight = match[2];
 

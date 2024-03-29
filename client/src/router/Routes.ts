@@ -1,4 +1,4 @@
-import {BarChart, Casino, Home} from '@material-ui/icons';
+import {BarChart, Casino, Home} from '@mui/icons-material';
 import {findLast, flow, values} from 'lodash/fp';
 import {NextRouter} from 'next/router';
 

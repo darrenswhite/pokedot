@@ -1,12 +1,11 @@
+import {Email, GitHub, MonetizationOn} from '@mui/icons-material';
 import {
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
   SwipeableDrawer,
-  makeStyles,
-} from '@material-ui/core';
-import {Email, GitHub, MonetizationOn} from '@material-ui/icons';
+} from '@mui/material';
 import React from 'react';
 
 const GITHUB_URL = 'https://github.com/darrenswhite/pokedot';
@@ -22,16 +21,6 @@ const items = [
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles(() => ({
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-  },
-  drawerPaper: {
-    width: drawerWidth,
-  },
-}));
-
 export interface DrawerProps {
   open: boolean;
   onClose: React.ReactEventHandler<unknown>;
@@ -43,17 +32,17 @@ export const Drawer: React.FC<DrawerProps> = ({
   onClose,
   onOpen,
 }: DrawerProps) => {
-  const classes = useStyles();
-
   return (
     <SwipeableDrawer
       open={open}
       onClose={onClose}
       onOpen={onOpen}
-      className={classes.drawer}
-      classes={{
-        paper: classes.drawerPaper,
-      }}
+      sx={{width: drawerWidth, flexShrink: 0}}
+      classes={
+        {
+          //paper: classes.drawerPaper,
+        }
+      }
     >
       <List dense>
         {items.map(item => (

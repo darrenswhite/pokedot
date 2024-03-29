@@ -1,13 +1,14 @@
+import {Menu} from '@mui/icons-material';
 import {
   AppBar,
+  Box,
   IconButton,
   Tab,
   Tabs,
   Toolbar,
   Typography,
-  makeStyles,
-} from '@material-ui/core';
-import {Menu} from '@material-ui/icons';
+  useTheme,
+} from '@mui/material';
 import {flow, map, values} from 'lodash/fp';
 import dynamic from 'next/dynamic';
 import {useRouter} from 'next/router';
@@ -21,52 +22,38 @@ const Drawer = dynamic<DrawerProps>(() =>
   import('./Drawer').then(m => m.Drawer)
 );
 
-const useStyles = makeStyles(theme => ({
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  tabContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  tabIcon: {
-    marginRight: theme.spacing(2),
-  },
-}));
-
 export const Header: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const toggleDrawer = () => setDrawerOpen(!drawerOpen);
-  const classes = useStyles();
   const router = useRouter();
   const currentRoute = getCurrentRoute(router);
   const currentTab = currentRoute?.path ?? false;
+  const theme = useTheme();
 
-  const handleTabChange = (_: React.ChangeEvent<unknown>, value: string) =>
-    router.push(value);
+  const handleTabChange = (_: React.ChangeEvent<unknown>, value: string) => {
+    router.push(value).catch(e => {
+      console.error('Failed to change tab.', e);
+    });
+  };
 
   const renderRouteLabel = (route: Route): ReactElement => {
     return (
-      <div className={classes.tabContainer}>
-        {<route.icon className={classes.tabIcon} />}
+      <Box display={'flex'} flexDirection={'row'} alignItems={'center'}>
+        {<route.icon style={{marginRight: 2}} />}
         {route.displayName}
-      </div>
+      </Box>
     );
   };
 
   return (
     <>
-      <AppBar color="inherit" className={classes.appBar}>
+      <AppBar color="inherit" sx={{zIndex: theme.zIndex.drawer + 1}}>
         <Toolbar variant="dense">
           <IconButton
             aria-label="Open drawer"
             edge="start"
             onClick={toggleDrawer}
-            className={classes.menuButton}
+            sx={{marginRight: 2}}
           >
             <Menu />
           </IconButton>

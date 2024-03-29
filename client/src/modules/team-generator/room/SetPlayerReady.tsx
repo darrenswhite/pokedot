@@ -1,19 +1,12 @@
-import {Button, Grid, Typography, makeStyles} from '@material-ui/core';
+import {Box, Button, Grid, Typography} from '@mui/material';
 import React, {useContext} from 'react';
 
 import {TeamGeneratorContext} from '../TeamGeneratorProvider';
 
 import {RoomLayout} from './RoomLayout';
 
-const useStyles = makeStyles(() => ({
-  roomId: {
-    fontFamily: 'Roboto Mono,monospace',
-  },
-}));
-
 export const SetPlayerReady: React.FC = () => {
   const {room, state} = useContext(TeamGeneratorContext);
-  const classes = useStyles();
   const ready = state.players[room.sessionId]?.ready;
 
   const setPlayerReady = () => {
@@ -24,11 +17,14 @@ export const SetPlayerReady: React.FC = () => {
     <RoomLayout
       header={
         <Typography variant="h5" component="h2" align="center" gutterBottom>
-          Room code: <span className={classes.roomId}>{room.id}</span>
+          Room code:{' '}
+          <Box component={'span'} fontFamily={'Roboto Mono,monospace'}>
+            {room.id}
+          </Box>
         </Typography>
       }
     >
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         <Grid item xs={12} sm={8} md={5} lg={3} xl={2}>
           <Button
             onClick={setPlayerReady}

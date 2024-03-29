@@ -1,9 +1,12 @@
-import {Grid, TextField, Typography} from '@material-ui/core';
 import {
   Autocomplete,
   AutocompleteRenderOptionState,
+  Box,
+  Grid,
+  TextField,
+  Typography,
   createFilterOptions,
-} from '@material-ui/lab';
+} from '@mui/material';
 import {Specie} from '@pkmn/data';
 import {findAll} from 'highlight-words-core';
 import React, {useContext, useEffect, useRef, useState} from 'react';
@@ -12,6 +15,7 @@ import {GenerationContext} from '../generation/GenerationProvider';
 import {SpeciesImage, SpeciesImageType} from '../species/SpeciesImage';
 
 const renderOption = (
+  props: React.HTMLAttributes<HTMLLIElement>,
   option: Specie,
   {inputValue}: AutocompleteRenderOptionState
 ) => {
@@ -21,30 +25,32 @@ const renderOption = (
   });
 
   return (
-    <Grid container spacing={1} alignItems="center" justify="center">
-      <Grid item>
-        <SpeciesImage name={option.name} type={SpeciesImageType.ICON} />
+    <Box component="li" {...props}>
+      <Grid container spacing={1} alignItems="center" justifyContent="center">
+        <Grid item>
+          <SpeciesImage name={option.name} type={SpeciesImageType.ICON} />
+        </Grid>
+
+        <Grid item xs>
+          <Typography noWrap>
+            {chunks.map((chunk, index) => {
+              const {end, highlight, start} = chunk;
+              const text = option.baseSpecies.substr(start, end - start);
+
+              return (
+                <span key={index} style={{fontWeight: highlight ? 700 : 400}}>
+                  {text}
+                </span>
+              );
+            })}
+          </Typography>
+
+          <Typography noWrap variant="subtitle2">
+            {option.forme}
+          </Typography>
+        </Grid>
       </Grid>
-
-      <Grid item xs>
-        <Typography noWrap>
-          {chunks.map((chunk, index) => {
-            const {end, highlight, start} = chunk;
-            const text = option.baseSpecies.substr(start, end - start);
-
-            return (
-              <span key={index} style={{fontWeight: highlight ? 700 : 400}}>
-                {text}
-              </span>
-            );
-          })}
-        </Typography>
-
-        <Typography noWrap variant="subtitle2">
-          {option.forme}
-        </Typography>
-      </Grid>
-    </Grid>
+    </Box>
   );
 };
 

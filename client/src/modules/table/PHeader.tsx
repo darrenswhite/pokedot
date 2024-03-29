@@ -1,4 +1,4 @@
-import {TableHead, TableRow, TableSortLabel} from '@material-ui/core';
+import {TableHead, TableRow, TableSortLabel} from '@mui/material';
 import React, {ReactElement} from 'react';
 
 import {PCol} from './model/PCol';

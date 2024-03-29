@@ -1,4 +1,4 @@
-import {Button, Grid, Typography} from '@material-ui/core';
+import {Button, Grid, Typography} from '@mui/material';
 import {Specie} from '@pkmn/data';
 import React from 'react';
 
@@ -14,7 +14,7 @@ export const SpeciesHeader: React.FC<SpeciesHeaderProps> = ({
 }: SpeciesHeaderProps) => {
   return (
     <>
-      <Grid container justify="center" spacing={1}>
+      <Grid container justifyContent="center" spacing={1}>
         <Grid item>
           <Typography variant="h6" align="center">
             #{specie.num}
@@ -22,7 +22,7 @@ export const SpeciesHeader: React.FC<SpeciesHeaderProps> = ({
         </Grid>
 
         <Grid item>
-          <Grid container direction="column" justify="center">
+          <Grid container direction="column" justifyContent="center">
             <Grid item xs>
               <Typography variant="h5">{specie.baseSpecies}</Typography>
             </Grid>
@@ -34,13 +34,13 @@ export const SpeciesHeader: React.FC<SpeciesHeaderProps> = ({
         </Grid>
       </Grid>
 
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         <Grid item>
           <SpeciesImage name={specie.name} type={SpeciesImageType.SPRITE} />
         </Grid>
       </Grid>
 
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         {specie.types.map(type => (
           <Grid item key={type}>
             <TypeImage type={type} />
@@ -48,7 +48,7 @@ export const SpeciesHeader: React.FC<SpeciesHeaderProps> = ({
         ))}
       </Grid>
 
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         <Grid item>
           <Button
             component="a"

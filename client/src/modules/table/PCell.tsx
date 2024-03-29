@@ -1,5 +1,4 @@
-import {TableCell, makeStyles} from '@material-ui/core';
-import clsx from 'clsx';
+import {TableCell, useTheme} from '@mui/material';
 import React from 'react';
 
 import {PSortDirection} from './model/PSort';
@@ -11,36 +10,26 @@ export interface PCellProps {
   variant?: 'head' | 'body' | 'footer';
 }
 
-const useStyle = makeStyles(theme => ({
-  fixed: {
-    position: 'sticky',
-    left: 0,
-    right: 0,
-    zIndex: 2,
-    background: theme.palette.background.default,
-  },
-  fixedHeader: {
-    zIndex: 3,
-  },
-}));
-
 export const PCell: React.FC<PCellProps> = ({
   children,
   fixed,
   sortDirection,
   variant,
 }: PCellProps) => {
-  const classes = useStyle();
+  const theme = useTheme();
   const fixedHeader = fixed && variant === 'head';
 
   return (
     <TableCell
-      className={clsx({
-        [classes.fixed]: fixed,
-        [classes.fixedHeader]: fixedHeader,
-      })}
       sortDirection={sortDirection}
       variant={variant}
+      sx={{
+        position: fixed ? 'sticky' : undefined,
+        left: fixed ? 0 : undefined,
+        right: fixed ? 0 : undefined,
+        zIndex: fixedHeader ? 3 : fixed ? 2 : undefined,
+        background: fixed ? theme.palette.background.default : undefined,
+      }}
     >
       {children}
     </TableCell>

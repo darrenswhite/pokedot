@@ -1,5 +1,5 @@
-import {Button, Card, CardContent, CardHeader, Grid} from '@material-ui/core';
-import {ArrowBack, ArrowForward, Check} from '@material-ui/icons';
+import {ArrowBack, ArrowForward, Check} from '@mui/icons-material';
+import {Button, Card, CardContent, CardHeader, Grid} from '@mui/material';
 import dynamic from 'next/dynamic';
 import React, {useState} from 'react';
 
@@ -48,19 +48,26 @@ const TeamAnalysis: React.FC = () => {
   } = useTeam();
   const [validationDialogOpen, setValidationDialogOpen] =
     useState<boolean>(false);
-  const [validationProblems, setValidationProblems] =
-    useState<string[] | null>(null);
+  const [validationProblems, setValidationProblems] = useState<string[] | null>(
+    null
+  );
 
-  const validateTeam = async () => {
-    setValidationProblems(await validate());
-    openValidationDialog();
+  const validateTeam = () => {
+    validate()
+      .then(result => {
+        setValidationProblems(result);
+        openValidationDialog();
+      })
+      .catch(e => {
+        console.error('Failed to validate team.', e);
+      });
   };
 
   const openValidationDialog = () => setValidationDialogOpen(true);
   const closeValidationDialog = () => setValidationDialogOpen(false);
 
   return (
-    <Grid container justify="center" spacing={2}>
+    <Grid container justifyContent="center" spacing={2}>
       <Grid item>
         <Grid container wrap="nowrap" spacing={1}>
           <Grid item>
@@ -105,7 +112,7 @@ const TeamAnalysis: React.FC = () => {
         </Button>
       </Grid>
 
-      <Grid container item justify="center">
+      <Grid container item justifyContent="center">
         <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
           <SpeciesSearch onChange={addPokemon} />
         </Grid>
@@ -118,7 +125,7 @@ const TeamAnalysis: React.FC = () => {
       />
 
       {team.length === 0 && (
-        <Grid container item justify="center">
+        <Grid container item justifyContent="center">
           <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
             <Card>
               <CardHeader title="No Pokémon added." />
@@ -133,7 +140,7 @@ const TeamAnalysis: React.FC = () => {
       )}
 
       {team.length > 0 && (
-        <Grid container item justify="center" spacing={2}>
+        <Grid container item justifyContent="center" spacing={2}>
           {team.map((pokemon, index) => (
             <Grid key={index} item>
               <PokemonCard
@@ -155,7 +162,7 @@ const TeamAnalysis: React.FC = () => {
           md={8}
           lg={6}
           xl={4}
-          justify="center"
+          justifyContent="center"
           spacing={4}
         >
           <Grid item xs={12}>

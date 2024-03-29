@@ -1,3 +1,4 @@
+import {Check, Clear} from '@mui/icons-material';
 import {
   Divider,
   List,
@@ -6,23 +7,13 @@ import {
   ListItemText,
   ListSubheader,
   Paper,
-  makeStyles,
-} from '@material-ui/core';
-import {Check, Clear} from '@material-ui/icons';
-import clsx from 'clsx';
+} from '@mui/material';
 import React, {useContext} from 'react';
 
 import {TeamGeneratorContext} from '../TeamGeneratorProvider';
 import {Player} from '../TeamGeneratorState';
 
-const useStyles = makeStyles(() => ({
-  disconnected: {
-    textDecoration: 'line-through',
-  },
-}));
-
 export const PlayerList: React.FC = () => {
-  const classes = useStyles();
   const {state} = useContext(TeamGeneratorContext);
   const players = Object.values(state.players);
 
@@ -59,7 +50,9 @@ export const PlayerList: React.FC = () => {
             </ListItemIcon>
 
             <ListItemText
-              className={clsx({[classes.disconnected]: !player.connected})}
+              sx={{
+                textDecoration: 'line-through',
+              }}
             >
               {player.name}
             </ListItemText>

@@ -1,4 +1,4 @@
-import {Tooltip} from '@material-ui/core';
+import {Tooltip} from '@mui/material';
 import {Icons} from '@pkmn/img';
 import {TypeName} from '@pkmn/types';
 import React from 'react';

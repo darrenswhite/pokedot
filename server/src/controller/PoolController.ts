@@ -16,7 +16,6 @@ export class PoolController {
 
   @Post('/eligiblePokemon/:gen')
   getEligiblePokemon(req: Request, res: Response): void {
-    console.log('getEligiblePokemon');
     const pool = req.body as Pool;
     const genParam = req.params.gen;
     const gen =

@@ -5,7 +5,7 @@ import {
   CardHeader,
   Grid,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import {TypeName} from '@pkmn/types';
 import {filter, flow, map, reduce, reject} from 'lodash/fp';
 import React, {ReactElement, useContext, useEffect, useState} from 'react';

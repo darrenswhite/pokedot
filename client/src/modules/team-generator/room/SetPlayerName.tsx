@@ -1,21 +1,9 @@
-import {Button, Grid, TextField, makeStyles} from '@material-ui/core';
+import {Button, Grid, TextField} from '@mui/material';
 import React, {useContext, useState} from 'react';
 
 import {TeamGeneratorContext} from '../TeamGeneratorProvider';
 
-const useStyles = makeStyles(() => ({
-  nameInput: {
-    '& input': {
-      textTransform: 'uppercase',
-      '&::placeholder': {
-        textTransform: 'none',
-      },
-    },
-  },
-}));
-
 export const SetPlayerName: React.FC = () => {
-  const classes = useStyles();
   const {room} = useContext(TeamGeneratorContext);
   const [name, setName] = useState<string>('');
   const [nameError, setNameError] = useState<string>('');
@@ -35,12 +23,12 @@ export const SetPlayerName: React.FC = () => {
   return (
     <Grid
       container
-      justify="center"
+      justifyContent="center"
       alignItems="center"
       style={{height: '100%'}}
     >
-      <Grid item container justify="center" spacing={2}>
-        <Grid item container justify="center">
+      <Grid item container justifyContent="center" spacing={2}>
+        <Grid item container justifyContent="center">
           <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
             <TextField
               label="Nickname"
@@ -48,15 +36,22 @@ export const SetPlayerName: React.FC = () => {
               onChange={e => setName(e.target.value.trim())}
               onKeyUp={e => e.key === 'Enter' && submitName()}
               value={name}
-              className={classes.nameInput}
               helperText={nameError}
               error={!!nameError}
               fullWidth
+              sx={{
+                '& input': {
+                  textTransform: 'uppercase',
+                  '&::placeholder': {
+                    textTransform: 'none',
+                  },
+                },
+              }}
             />
           </Grid>
         </Grid>
 
-        <Grid item container justify="center">
+        <Grid item container justifyContent="center">
           <Grid item xs={12} sm={4} md={3} lg={2} xl={2}>
             <Button
               onClick={submitName}

@@ -1,4 +1,4 @@
-FROM node:14-alpine AS deps
+FROM node:20-alpine AS deps
 
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
@@ -8,14 +8,14 @@ WORKDIR /pokedot
 COPY package.json package-lock.json ./
 RUN npm ci
 
-FROM node:14-alpine AS proddeps
+FROM node:20-alpine AS proddeps
 
 WORKDIR /pokedot
 
 COPY package.json package-lock.json ./
 RUN npm ci --only=production
 
-FROM node:14-alpine AS builder
+FROM node:20-alpine AS builder
 
 WORKDIR /pokedot
 
@@ -23,7 +23,7 @@ COPY . .
 COPY --from=deps /pokedot/node_modules ./node_modules
 RUN npm run build
 
-FROM node:14-alpine AS runner
+FROM node:20-alpine AS runner
 
 WORKDIR /pokedot
 

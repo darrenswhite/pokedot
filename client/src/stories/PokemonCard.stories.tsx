@@ -1,4 +1,4 @@
-import {Story} from '@storybook/react';
+import {StoryFn} from '@storybook/react';
 import React from 'react';
 
 import {
@@ -44,7 +44,7 @@ export default {
   },
 };
 
-const ThePokemonCard: Story<PokemonCardProps> = args => {
+const ThePokemonCard: StoryFn<PokemonCardProps> = args => {
   return <PokemonCard {...args} />;
 };
 

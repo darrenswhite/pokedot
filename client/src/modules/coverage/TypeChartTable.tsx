@@ -1,4 +1,4 @@
-import {Grid, makeStyles} from '@material-ui/core';
+import {Grid} from '@mui/material';
 import {Generation} from '@pkmn/data';
 import {TypeName} from '@pkmn/types';
 import React, {ReactElement, useContext, useEffect, useState} from 'react';
@@ -98,12 +98,6 @@ const renderType = (value: PValue): ReactElement => {
   return <TypeImage type={value as TypeName} />;
 };
 
-const useStyles = makeStyles(() => ({
-  table: {
-    maxHeight: 600,
-  },
-}));
-
 export type TypeChartMatrixConstructor = (
   generation: Generation,
   pokemonSets: PartialPokemonSet[]
@@ -125,7 +119,6 @@ export const TypeChartTable: React.FC<TypeChartTableProps> = ({
   matrixConstructor,
 }: TypeChartTableProps) => {
   const {generation} = useContext(GenerationContext);
-  const classes = useStyles();
   const [matrix, setMatrix] = useState<Matrix<TypeChartMatrixProps>>(
     new Matrix<TypeChartMatrixProps>([])
   );
@@ -155,7 +148,6 @@ export const TypeChartTable: React.FC<TypeChartTableProps> = ({
       valueField={valueField}
       columnFieldOverrides={columnFieldOverrides}
       idFieldOverrides={idFieldOverrides}
-      className={classes.table}
     />
   );
 };

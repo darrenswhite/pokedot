@@ -1,28 +1,20 @@
-import {Grid, Paper, Typography, makeStyles} from '@material-ui/core';
+import {Grid, Paper, Typography} from '@mui/material';
 import React, {FC} from 'react';
 
-const useStyles = makeStyles(theme => ({
-  footer: {
-    alignItems: 'center',
-    display: 'flex',
-    flex: '0 1 auto',
-    flexWrap: 'wrap',
-    position: 'relative',
-  },
-  paper: {
-    padding: theme.spacing(1),
-    textAlign: 'center',
-  },
-}));
-
 export const Footer: FC = () => {
-  const classes = useStyles();
-
   return (
-    <footer className={classes.footer}>
+    <footer
+      style={{
+        alignItems: 'center',
+        display: 'flex',
+        flex: '0 1 auto',
+        flexWrap: 'wrap',
+        position: 'relative',
+      }}
+    >
       <Grid container>
         <Grid item xs={12}>
-          <Paper elevation={0} className={classes.paper} square>
+          <Paper elevation={0} square sx={{padding: 1, textAlign: 'center'}}>
             <Typography>
               {new Date().getFullYear()} — <strong>Pokédot</strong> created by
               Darren S. White

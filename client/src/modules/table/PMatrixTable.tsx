@@ -1,3 +1,5 @@
+import {Theme} from '@emotion/react';
+import {SxProps} from '@mui/material';
 import {flow, map, toLower, toString, upperFirst} from 'lodash/fp';
 import React, {ReactElement} from 'react';
 
@@ -7,7 +9,7 @@ import {PCol} from './model/PCol';
 import {PRow, PValue} from './model/PRow';
 import {PTable} from './PTable';
 
-const sentanceCase = flow(toString, toLower, upperFirst);
+const sentenceCase = flow(toString, toLower, upperFirst);
 
 const getColumns = <
   T extends MatrixValue,
@@ -24,14 +26,14 @@ const getColumns = <
 ): PCol[] => {
   const columnColumn = {
     field: toString(columnField),
-    headerName: sentanceCase(columnField),
+    headerName: sentenceCase(columnField),
     fixed: true,
     ...columnFieldOverrides,
   };
   const columnKeys = Object.keys(matrix.groupBy(idField));
   const rowColumns: PCol[] = columnKeys.sort().map(key => ({
     field: key,
-    headerName: sentanceCase(key),
+    headerName: sentenceCase(key),
     mapValue: value => map((val: T) => val[valueField] as V)(value as T[]),
     ...idFieldOverrides,
   }));
@@ -62,8 +64,7 @@ export interface PMatrixTableProps<T extends MatrixValue> {
   valueField: keyof T;
   columnFieldOverrides?: Partial<PCol>;
   idFieldOverrides?: Partial<PCol>;
-  className?: string;
-  style?: React.CSSProperties;
+  sx?: SxProps<Theme>;
 }
 
 export function PMatrixTable<T extends MatrixValue>({
@@ -73,8 +74,7 @@ export function PMatrixTable<T extends MatrixValue>({
   valueField,
   columnFieldOverrides,
   idFieldOverrides,
-  className,
-  style,
+  sx,
 }: PMatrixTableProps<T>): ReactElement {
   const actualMatrix =
     matrix instanceof Matrix ? matrix : new Matrix<T>(matrix);
@@ -88,7 +88,5 @@ export function PMatrixTable<T extends MatrixValue>({
   );
   const rows = getRows(actualMatrix, columnField, idField);
 
-  return (
-    <PTable rows={rows} columns={columns} className={className} style={style} />
-  );
+  return <PTable rows={rows} columns={columns} sx={sx} />;
 }

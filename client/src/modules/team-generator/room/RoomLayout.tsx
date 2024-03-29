@@ -1,4 +1,4 @@
-import {Grid} from '@material-ui/core';
+import {Grid} from '@mui/material';
 import React from 'react';
 
 import {OptionsList} from './OptionsList';
@@ -15,8 +15,13 @@ export const RoomLayout: React.FC<RoomLayoutProps> = ({
   header,
 }: RoomLayoutProps) => {
   return (
-    <Grid container justify="center" spacing={1} style={{height: '100%'}}>
-      <Grid container item xs={12} sm={8} md={10} justify="center">
+    <Grid
+      container
+      justifyContent="center"
+      spacing={1}
+      style={{height: '100%'}}
+    >
+      <Grid container item xs={12} sm={8} md={10} justifyContent="center">
         <Grid item xs={12}>
           {header}
         </Grid>

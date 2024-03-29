@@ -1,5 +1,4 @@
-import {Popper, TextField, Typography} from '@material-ui/core';
-import {Autocomplete} from '@material-ui/lab';
+import {Autocomplete, Box, Popper, TextField, Typography} from '@mui/material';
 import {PokemonSet} from '@pkmn/data';
 import React, {useContext, useEffect, useState} from 'react';
 
@@ -57,9 +56,11 @@ export const PokemonItemInput: React.FC<PokemonItemInputProps> = ({
           placeholder="Select an item"
           size="small"
           fullWidth
+          variant={'standard'}
+          margin={'dense'}
         />
       )}
-      renderOption={option => {
+      renderOption={(props, option) => {
         let text = option;
         const percent = items[option];
 
@@ -67,7 +68,11 @@ export const PokemonItemInput: React.FC<PokemonItemInputProps> = ({
           text += ` (${percent.toFixed(2)}%)`;
         }
 
-        return <Typography noWrap>{text}</Typography>;
+        return (
+          <Box component={'li'} {...props}>
+            <Typography noWrap>{text}</Typography>
+          </Box>
+        );
       }}
       onChange={(_, value) => {
         onChange(pokemon => {

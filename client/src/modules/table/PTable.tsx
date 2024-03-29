@@ -1,4 +1,11 @@
-import {Table, TableBody, TableContainer, TableRow} from '@material-ui/core';
+import {
+  SxProps,
+  Table,
+  TableBody,
+  TableContainer,
+  TableRow,
+  Theme,
+} from '@mui/material';
 import React, {ReactElement, useState} from 'react';
 
 import {PCol} from './model/PCol';
@@ -16,7 +23,7 @@ const getCellValue = (col: PCol, row: PRow): ReactElement => {
   if (col.renderCell) {
     result = col.renderCell(value);
   } else {
-    result = <span>{value}</span>;
+    result = <span>{String(value)}</span>;
   }
 
   return result;
@@ -47,15 +54,13 @@ const getNextSortForItem = (
 export interface PTableProps {
   columns: PCol[];
   rows: PRow[];
-  className?: string;
-  style?: React.CSSProperties;
+  sx?: SxProps<Theme>;
 }
 
 export const PTable: React.FC<PTableProps> = ({
   columns,
   rows,
-  className,
-  style,
+  sx,
 }: PTableProps) => {
   const [sortItem, setSortItem] = useState<PSortItem | undefined>();
 
@@ -69,7 +74,7 @@ export const PTable: React.FC<PTableProps> = ({
   };
 
   return (
-    <TableContainer className={className} style={style}>
+    <TableContainer sx={sx}>
       <Table size="small" stickyHeader style={{borderCollapse: 'collapse'}}>
         <PHeader
           columns={columns}

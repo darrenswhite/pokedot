@@ -1,4 +1,4 @@
-import {Grid, Typography, colors, makeStyles} from '@material-ui/core';
+import {Box, Grid, Typography, colors} from '@mui/material';
 import {Specie, StatID, StatsTable} from '@pkmn/data';
 import React, {useContext} from 'react';
 
@@ -16,24 +16,6 @@ const STAT_COLORS: StatsTable<Record<number, string>> = {
 };
 const STAT_TOTAL_COLOR = colors.brown;
 
-const useStyles = makeStyles(theme => ({
-  stat: {
-    height: theme.spacing(3),
-  },
-  statName: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  statBarContainer: {
-    display: 'flex',
-    width: theme.spacing(20),
-  },
-  statValue: {
-    marginLeft: theme.spacing(1),
-  },
-}));
-
 export interface SpeciesStatsProps {
   specie: Specie;
 }
@@ -42,7 +24,6 @@ export const SpeciesStats: React.FC<SpeciesStatsProps> = ({
   specie,
 }: SpeciesStatsProps) => {
   const {generation} = useContext(GenerationContext);
-  const classes = useStyles();
   const baseStatTotal = Object.values(specie.baseStats).reduce(
     (left, right) => left + right,
     0
@@ -50,9 +31,14 @@ export const SpeciesStats: React.FC<SpeciesStatsProps> = ({
 
   const renderStatName = (name: string) => {
     return (
-      <div className={`${classes.stat} ${classes.statName}`}>
+      <Box
+        display={'flex'}
+        justifyContent={'flex-end'}
+        alignItems={'center'}
+        sx={{height: theme => theme.spacing(3)}}
+      >
         <Typography variant="caption">{name}</Typography>
-      </div>
+      </Box>
     );
   };
 
@@ -67,8 +53,12 @@ export const SpeciesStats: React.FC<SpeciesStatsProps> = ({
       <Grid container alignItems="center" wrap="nowrap">
         <Grid
           item
-          className={`${classes.stat} ${classes.statBarContainer}`}
-          style={{backgroundColor: color[300]}}
+          display={'flex'}
+          sx={{
+            backgroundColor: color[300],
+            height: theme => theme.spacing(3),
+            width: theme => theme.spacing(20),
+          }}
         >
           <div
             style={{
@@ -78,7 +68,7 @@ export const SpeciesStats: React.FC<SpeciesStatsProps> = ({
           />
         </Grid>
 
-        <Grid item className={classes.statValue}>
+        <Grid item marginLeft={1}>
           <Typography variant="caption">{value}</Typography>
         </Grid>
       </Grid>
@@ -87,13 +77,13 @@ export const SpeciesStats: React.FC<SpeciesStatsProps> = ({
 
   return (
     <>
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         <Grid item>
           <Typography variant="subtitle1">Base Stats</Typography>
         </Grid>
       </Grid>
 
-      <Grid container justify="center" spacing={1}>
+      <Grid container justifyContent="center" spacing={1}>
         <Grid item>
           {Object.keys(specie.baseStats).map(stat => (
             <React.Fragment key={stat}>

@@ -1,4 +1,4 @@
-import {TextField} from '@material-ui/core';
+import {TextField} from '@mui/material';
 import {PokemonSet} from '@pkmn/data';
 import React from 'react';
 
@@ -27,6 +27,8 @@ export const PokemonLevelInput: React.FC<PokemonLevelInputProps> = ({
         });
       }}
       fullWidth
+      variant={'standard'}
+      margin={'dense'}
     />
   );
 };

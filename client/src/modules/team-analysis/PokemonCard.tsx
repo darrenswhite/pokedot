@@ -1,3 +1,4 @@
+import {DeleteOutline, ExpandMore} from '@mui/icons-material';
 import {
   Card,
   CardActions,
@@ -8,11 +9,9 @@ import {
   Grid,
   IconButton,
   colors,
-  makeStyles,
-} from '@material-ui/core';
-import {DeleteOutline, ExpandMore} from '@material-ui/icons';
+  useTheme,
+} from '@mui/material';
 import {PokemonSet, StatID, StatsTable} from '@pkmn/data';
-import clsx from 'clsx';
 import React, {useState} from 'react';
 
 import {SpeciesImage, SpeciesImageType} from '../species/SpeciesImage';
@@ -33,21 +32,6 @@ const STAT_COLORS: StatsTable<Record<number, string>> = {
   spe: colors.purple,
 };
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    width: 332,
-  },
-  expand: {
-    transform: 'rotate(0deg)',
-    transition: theme.transitions.create('all', {
-      duration: theme.transitions.duration.shortest,
-    }),
-  },
-  expandOpen: {
-    transform: 'rotate(180deg)',
-  },
-}));
-
 export interface PokemonCardProps {
   pokemon: PokemonSet;
   onChange: (recipe: (pokemon: PokemonSet) => void) => void;
@@ -59,13 +43,13 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
   onChange,
   onRemove,
 }: PokemonCardProps) => {
-  const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
+  const theme = useTheme();
 
   const handleExpandClick = () => setExpanded(!expanded);
 
   return (
-    <Card className={classes.root} raised>
+    <Card sx={{width: 332}}>
       <CardHeader
         title={pokemon.name.length > 0 ? pokemon.name : pokemon.species}
         avatar={
@@ -82,12 +66,15 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
             </IconButton>
 
             <IconButton
-              className={clsx(classes.expand, {
-                [classes.expandOpen]: expanded,
-              })}
               onClick={handleExpandClick}
               aria-expanded={expanded}
               aria-label="show more"
+              sx={{
+                transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                transition: theme.transitions.create('all', {
+                  duration: theme.transitions.duration.shortest,
+                }),
+              }}
             >
               <ExpandMore />
             </IconButton>
@@ -159,7 +146,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
             </Grid>
 
             <Grid item xs>
-              <Grid container wrap="nowrap" justify="center">
+              <Grid container wrap="nowrap" justifyContent="center">
                 {Object.entries(STAT_COLORS).map(([stat, color]) => (
                   <Grid key={stat} item>
                     <PokemonStatInput

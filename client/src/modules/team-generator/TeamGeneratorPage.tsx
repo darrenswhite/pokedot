@@ -1,4 +1,4 @@
-import {Button, Grid} from '@material-ui/core';
+import {Button, Grid} from '@mui/material';
 import dynamic from 'next/dynamic';
 import React, {useState} from 'react';
 
@@ -41,12 +41,12 @@ export const TeamGeneratorPage: React.FC = () => {
       {!join && !create && (
         <Grid
           container
-          justify="center"
+          justifyContent="center"
           alignItems="center"
           style={{height: '100%'}}
         >
-          <Grid item container xs={12} justify="center" spacing={2}>
-            <Grid item container justify="center">
+          <Grid item container xs={12} justifyContent="center" spacing={2}>
+            <Grid item container justifyContent="center">
               <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
                 <Button
                   onClick={showCreate}
@@ -59,7 +59,7 @@ export const TeamGeneratorPage: React.FC = () => {
               </Grid>
             </Grid>
 
-            <Grid item container justify="center">
+            <Grid item container justifyContent="center">
               <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
                 <Button
                   onClick={showJoin}

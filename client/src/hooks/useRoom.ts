@@ -22,7 +22,7 @@ export interface UseCreateRoomReturnType<S> {
     roomName: string,
     options: JoinOptions,
     cb: (room: Room<S>) => Promise<unknown>
-  ) => void;
+  ) => Promise<void>;
   client: Client;
   room: Room<S>;
   isLoading: boolean;
@@ -45,34 +45,35 @@ export const useCreateRoom = <S>(
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const createRoom = (
+  const createRoom = async (
     roomName: string,
     options: JoinOptions,
     cb: (room: Room<S>) => Promise<unknown>
-  ) => {
+  ): Promise<void> => {
     setError(null);
     setIsLoading(true);
 
-    leaveRoom(initialRoom, room, setRoom, initialState, setState);
+    return leaveRoom(initialRoom, room, setRoom, initialState, setState).then(
+      async () => {
+        try {
+          const room = await createNewRoom<S>(client, roomName, options);
+          setRoom(room);
+          setIsLoading(false);
 
-    createNewRoom<S>(client, roomName, options)
-      .then(room => {
-        setRoom(room);
-        setIsLoading(false);
-
-        cb(room).catch(e => {
-          console.error(
-            `Failed to invoke create room callback ${roomName} ${room.id}.`,
-            e
-          );
+          cb(room).catch(e => {
+            console.error(
+              `Failed to invoke create room callback ${roomName} ${room.id}.`,
+              e
+            );
+            setError('Failed to create room.');
+          });
+        } catch (e) {
+          console.error(`Failed to create room.`, e);
           setError('Failed to create room.');
-        });
-      })
-      .catch(e => {
-        console.error(`Failed to create room.`, e);
-        setError('Failed to create room.');
-        setIsLoading(false);
-      });
+          setIsLoading(false);
+        }
+      }
+    );
   };
 
   return {
@@ -106,22 +107,30 @@ export const useJoinRoom = <S>(
       setIsLoading(false);
       setState(copyState(room.state));
     } else {
-      leaveRoom(initialRoom, room, setRoom, initialState, setState);
-
-      rejoinOrJoinRoom<S>(client, roomId)
-        .then(room => {
-          setRoom(room);
-          setIsLoading(false);
+      leaveRoom(initialRoom, room, setRoom, initialState, setState)
+        .then(() => {
+          rejoinOrJoinRoom<S>(client, roomId)
+            .then(room => {
+              setRoom(room);
+              setIsLoading(false);
+            })
+            .catch(e => {
+              console.error(`Failed to join room ${roomId}.`, e);
+              setError(`Failed to join room ${roomId}.`);
+              setIsLoading(false);
+            });
         })
         .catch(e => {
-          console.error(`Failed to join room ${roomId}.`, e);
-          setError(`Failed to join room ${roomId}.`);
+          console.error(`Failed to leave room ${room.id}.`, e);
+          setError(`Failed to leave room ${room.id}.`);
           setIsLoading(false);
         });
     }
 
     return () => {
-      leaveRoom(initialRoom, room, setRoom, initialState, setState);
+      leaveRoom(initialRoom, room, setRoom, initialState, setState).catch(e => {
+        console.error(`Failed to leave room ${room.id}.`, e);
+      });
     };
   }, [initialRoom, room, client, roomId, setRoom, initialState, setState]);
 
@@ -150,17 +159,17 @@ export const useRoomListeners = <S>(context: Context<RoomContext<S>>): void => {
   }, [room, setState]);
 };
 
-const leaveRoom = <S>(
+const leaveRoom = async <S>(
   initialRoom: Room<S>,
   room: Room<S>,
   setRoom: (room: Room<S>) => void,
   initialState: () => S,
   setState: (state: S) => void
-) => {
+): Promise<void> => {
   if (room !== initialRoom) {
     console.log(`Leaving current room ${room.id}.`);
     room.removeAllListeners();
-    room.leave();
+    await room.leave();
     setRoom(initialRoom);
     setState(initialState());
   }

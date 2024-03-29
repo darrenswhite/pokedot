@@ -17,7 +17,7 @@ module.exports = {
     project: ['./tsconfig.json'],
     tsconfigRootDir: __dirname,
     sourceType: 'module',
-    ecmaVersion: 2020,
+    ecmaVersion: 'esnext',
     ecmaFeatures: {
       jsx: true,
     },
@@ -60,6 +60,12 @@ module.exports = {
   settings: {
     react: {
       version: 'detect',
+    },
+    'import/resolver': {
+      node: {
+        extensions: ['.ts', '.tsx', '.d.ts'],
+        moduleDirectory: ['src', 'node_modules'],
+      },
     },
   },
 };

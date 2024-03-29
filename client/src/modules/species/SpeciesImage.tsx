@@ -1,5 +1,4 @@
-import {CircularProgress, Tooltip, makeStyles} from '@material-ui/core';
-import clsx from 'clsx';
+import {Box, CircularProgress, Tooltip} from '@mui/material';
 import React, {
   ReactElement,
   useCallback,
@@ -9,26 +8,6 @@ import React, {
 } from 'react';
 
 import {SpeciesContext} from './SpeciesProvider';
-
-const useStyle = makeStyles(() => ({
-  image: {
-    '&:hover': {
-      cursor: 'pointer',
-    },
-  },
-  pixelated: {
-    imageRendering: 'pixelated',
-  },
-  spriteContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    minWidth: '150px',
-    minHeight: '150px',
-    width: '100%',
-    height: '100%',
-  },
-}));
 
 export enum SpeciesImageType {
   ICON,
@@ -48,7 +27,6 @@ export const SpeciesImage: React.FC<SpeciesImageProps> = ({
   moreInfo,
   showTooltip,
 }: SpeciesImageProps) => {
-  const classes = useStyle();
   const {setOpen, setSpecies} = useContext(SpeciesContext);
   const validName = name && name.length > 0;
   const [image, setImage] = useState<ReactElement>(<CircularProgress />);
@@ -65,47 +43,50 @@ export const SpeciesImage: React.FC<SpeciesImageProps> = ({
     const icon = Icons.getPokemon(name);
 
     return (
-      <span
+      <Box
+        component={'span'}
         style={icon.css}
-        className={clsx({
-          [classes.image]: moreInfo && validName,
-        })}
+        sx={{
+          '&:hover': {
+            cursor: moreInfo && validName ? 'pointer' : '',
+          },
+        }}
         onClick={showMoreInfo}
       />
     );
-  }, [classes.image, moreInfo, showMoreInfo, name, validName]);
+  }, [moreInfo, showMoreInfo, name, validName]);
 
   const renderSpeciesSprite = useCallback(async () => {
     const {Sprites} = await import('@pkmn/img');
     const sprite = Sprites.getDexPokemon(name);
 
     return (
-      <div
-        className={clsx({
-          [classes.image]: moreInfo && validName,
-          [classes.spriteContainer]: true,
-        })}
+      <Box
         onClick={showMoreInfo}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        minWidth="150px"
+        minHeight="150px"
+        width="100%"
+        height="100%"
+        sx={{
+          '&:hover': {
+            cursor: moreInfo && validName ? 'pointer' : '',
+          },
+        }}
       >
         <img
           src={sprite.url}
           width={sprite.w}
           height={sprite.h}
-          className={clsx({
-            [classes.pixelated]: sprite.pixelated,
-          })}
+          style={{
+            imageRendering: sprite.pixelated ? 'pixelated' : undefined,
+          }}
         />
-      </div>
+      </Box>
     );
-  }, [
-    classes.image,
-    classes.spriteContainer,
-    classes.pixelated,
-    moreInfo,
-    showMoreInfo,
-    name,
-    validName,
-  ]);
+  }, [moreInfo, showMoreInfo, name, validName]);
 
   useEffect(() => {
     if (type === SpeciesImageType.ICON) {

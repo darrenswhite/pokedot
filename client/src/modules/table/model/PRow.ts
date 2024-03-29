@@ -5,8 +5,8 @@ export type PValue =
   | Date
   | null
   | undefined
-  // eslint-disable-next-line @typescript-eslint/ban-types
   | object;
+
 export type PRowId = string | number;
 
 export type PRow = {

@@ -8,18 +8,18 @@ module.exports = {
       statements: 80,
     },
   },
-  globals: {
-    'ts-jest': {
-      babelConfig: false,
-      diagnostics: false,
-      tsconfig: './tsconfig.json',
-    },
-  },
   moduleDirectories: ['node_modules'],
   moduleFileExtensions: ['js', 'ts'],
   testMatch: ['<rootDir>/test/**/*.test.ts'],
   transform: {
-    '^.+\\.(j|t)s$': 'ts-jest',
+    '^.+\\.(j|t)s$': [
+      'ts-jest',
+      {
+        babelConfig: false,
+        diagnostics: false,
+        tsconfig: './tsconfig.json',
+      },
+    ],
   },
   transformIgnorePatterns: ['node_modules/'],
   verbose: false,

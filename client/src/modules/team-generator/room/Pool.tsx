@@ -1,4 +1,4 @@
-import {Grid, Typography} from '@material-ui/core';
+import {Grid, Typography} from '@mui/material';
 import React, {useContext} from 'react';
 
 import {TeamGeneratorContext} from '../TeamGeneratorProvider';
@@ -33,9 +33,9 @@ export const Pool: React.FC = () => {
         </>
       }
     >
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         <Grid item xs={12} sm={12} md={12} lg={10} xl={5}>
-          <Grid container justify="center" spacing={2} wrap="wrap">
+          <Grid container justifyContent="center" spacing={2} wrap="wrap">
             {pool.map((pokemon, index) => {
               const selected = team[currentPool]?.name === pokemon.name;
 

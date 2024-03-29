@@ -1,5 +1,4 @@
-import {Popper, TextField, Typography} from '@material-ui/core';
-import {Autocomplete} from '@material-ui/lab';
+import {Autocomplete, Box, Popper, TextField, Typography} from '@mui/material';
 import {Generation, Move, PokemonSet, Specie} from '@pkmn/data';
 import React, {useContext, useEffect, useState} from 'react';
 import {UsageStatistics} from 'smogon';
@@ -74,9 +73,11 @@ export const PokemonMoveInput: React.FC<PokemonMoveInputProps> = ({
           placeholder="Select a move"
           size="small"
           fullWidth
+          variant={'standard'}
+          margin={'dense'}
         />
       )}
-      renderOption={option => {
+      renderOption={(props, option) => {
         let text = option;
         const percent = moves[option];
 
@@ -84,7 +85,11 @@ export const PokemonMoveInput: React.FC<PokemonMoveInputProps> = ({
           text += ` (${percent.toFixed(2)}%)`;
         }
 
-        return <Typography noWrap>{text}</Typography>;
+        return (
+          <Box component={'li'} {...props}>
+            <Typography noWrap>{text}</Typography>
+          </Box>
+        );
       }}
       onChange={(_, value) =>
         onChange(pokemon => {

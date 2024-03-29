@@ -21,7 +21,7 @@ export class MessageCommandFactory {
     type: MessageType,
     payload: DefaultMessagePayload
   ): TeamGeneratorCommand {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
     return new messageCommands[type](payload as any);
   }
 }

@@ -1,4 +1,4 @@
-import {Box, Grid, TextField, Typography} from '@material-ui/core';
+import {Box, Grid, TextField, Typography} from '@mui/material';
 import {PokemonSet, StatID} from '@pkmn/data';
 import React, {useContext} from 'react';
 
@@ -46,7 +46,7 @@ export const PokemonStatInput: React.FC<PokemonStatInputProps> = ({
       <Grid
         container
         alignItems="flex-start"
-        justify="flex-end"
+        justifyContent="flex-end"
         wrap="nowrap"
         direction="column"
       >
@@ -81,6 +81,7 @@ export const PokemonStatInput: React.FC<PokemonStatInputProps> = ({
               });
             }}
             fullWidth
+            variant={'standard'}
           />
         </Grid>
 
@@ -103,6 +104,7 @@ export const PokemonStatInput: React.FC<PokemonStatInputProps> = ({
               })
             }
             fullWidth
+            variant={'standard'}
           />
         </Grid>
 

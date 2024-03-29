@@ -1,8 +1,9 @@
-import {colors, createMuiTheme} from '@material-ui/core';
+import {colors} from '@mui/material';
+import {createTheme} from '@mui/material/styles';
 
-export const Theme = createMuiTheme({
+export const Theme = createTheme({
   palette: {
-    type: 'dark',
+    mode: 'dark',
     primary: {
       main: colors.amber[700],
     },

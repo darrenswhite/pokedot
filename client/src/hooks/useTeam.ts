@@ -125,8 +125,7 @@ export const useTeam = (): UseTeamProps => {
   };
 
   const validate = async (): Promise<string[] | null> => {
-    // this module uses ESM by default - let's import the CJS module directly instead
-    const {TeamValidator} = await import('@pkmn/sim/build/cjs/sim');
+    const {TeamValidator} = await import('@pkmn/sim');
     const validator = new TeamValidator(format[0]);
 
     return validator.validateTeam(cloneDeep(team));

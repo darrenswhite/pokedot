@@ -6,7 +6,7 @@ import {
   ListItemText,
   ListSubheader,
   Paper,
-} from '@material-ui/core';
+} from '@mui/material';
 import React, {useContext} from 'react';
 
 import {SpeciesImage, SpeciesImageType} from '../../species/SpeciesImage';

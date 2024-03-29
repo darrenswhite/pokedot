@@ -1,4 +1,4 @@
-import {Story} from '@storybook/react';
+import {StoryFn} from '@storybook/react';
 import React from 'react';
 
 import {
@@ -62,7 +62,7 @@ export default {
   },
 };
 
-const TheOffensiveTable: Story<OffensiveTableProps> = args => {
+const TheOffensiveTable: StoryFn<OffensiveTableProps> = args => {
   return <OffensiveTable {...args} />;
 };
 

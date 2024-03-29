@@ -1,33 +1,14 @@
-import {
-  Button,
-  CircularProgress,
-  Grid,
-  TextField,
-  makeStyles,
-} from '@material-ui/core';
-import {Alert} from '@material-ui/lab';
+import {Alert, Button, CircularProgress, Grid, TextField} from '@mui/material';
 import {useRouter} from 'next/router';
 import React, {useState} from 'react';
 
 import {ROOM_ID_LENGTH} from '../../hooks/useRoom';
-
-const useStyles = makeStyles(() => ({
-  roomInput: {
-    '& input': {
-      textTransform: 'uppercase',
-      '&::placeholder': {
-        textTransform: 'none',
-      },
-    },
-  },
-}));
 
 export interface JoinRoomProps {
   onBack: () => void;
 }
 
 export const JoinRoom: React.FC<JoinRoomProps> = ({onBack}: JoinRoomProps) => {
-  const classes = useStyles();
   const router = useRouter();
   const [roomId, setRoomId] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
@@ -47,12 +28,12 @@ export const JoinRoom: React.FC<JoinRoomProps> = ({onBack}: JoinRoomProps) => {
   return (
     <Grid
       container
-      justify="center"
+      justifyContent="center"
       alignItems="center"
       style={{height: '100%'}}
     >
-      <Grid item container justify="center" spacing={2}>
-        <Grid item container justify="center">
+      <Grid item container justifyContent="center" spacing={2}>
+        <Grid item container justifyContent="center">
           <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
             <TextField
               label="Room code"
@@ -60,15 +41,22 @@ export const JoinRoom: React.FC<JoinRoomProps> = ({onBack}: JoinRoomProps) => {
               onChange={e => setRoomId(e.target.value)}
               onKeyUp={e => e.key === 'Enter' && joinRoom()}
               value={roomId}
-              className={classes.roomInput}
               inputProps={{maxLength: ROOM_ID_LENGTH}}
               fullWidth
+              sx={{
+                '& input': {
+                  textTransform: 'uppercase',
+                  '&::placeholder': {
+                    textTransform: 'none',
+                  },
+                },
+              }}
             />
           </Grid>
         </Grid>
 
         {error && (
-          <Grid item container justify="center">
+          <Grid item container justifyContent="center">
             <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
               <Alert variant="outlined" severity="error">
                 {error}
@@ -78,14 +66,14 @@ export const JoinRoom: React.FC<JoinRoomProps> = ({onBack}: JoinRoomProps) => {
         )}
 
         {isLoading && (
-          <Grid item container justify="center">
+          <Grid item container justifyContent="center">
             <Grid item>
               <CircularProgress size={24} />
             </Grid>
           </Grid>
         )}
 
-        <Grid item container justify="center">
+        <Grid item container justifyContent="center">
           <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
             <Button
               onClick={joinRoom}
@@ -99,7 +87,7 @@ export const JoinRoom: React.FC<JoinRoomProps> = ({onBack}: JoinRoomProps) => {
           </Grid>
         </Grid>
 
-        <Grid item container justify="center">
+        <Grid item container justifyContent="center">
           <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
             <Button
               onClick={onBack}

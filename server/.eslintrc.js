@@ -58,4 +58,12 @@ module.exports = {
       },
     },
   ],
+  settings: {
+    'import/resolver': {
+      node: {
+        extensions: ['.ts', '.tsx', '.d.ts'],
+        moduleDirectory: ['src', 'node_modules'],
+      },
+    },
+  },
 };

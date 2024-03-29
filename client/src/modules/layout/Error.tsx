@@ -1,13 +1,6 @@
-import {Box, Grid, Typography, makeStyles} from '@material-ui/core';
+import {Box, Grid, Typography} from '@mui/material';
 import {sample} from 'lodash/fp';
 import React, {useEffect, useState} from 'react';
-
-const useStyles = makeStyles(theme => ({
-  avatar: {
-    marginBottom: theme.spacing(2),
-    marginTop: theme.spacing(12),
-  },
-}));
 
 const RandomMessage: React.FC<{messages: string[]}> = ({
   messages,
@@ -38,7 +31,6 @@ export const Error: React.FC<ErrorProps> = ({
   avatarName,
   messages,
 }: ErrorProps) => {
-  const classes = useStyles();
   const [avatar, setAvatar] = useState('');
 
   useEffect(() => {
@@ -59,14 +51,14 @@ export const Error: React.FC<ErrorProps> = ({
       justifyContent="center"
       flexDirection="column"
     >
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         <Grid item xs={12}>
           <Typography variant="h3" component="h1" align="center">
             {statusCode}
           </Typography>
         </Grid>
 
-        <Grid item className={classes.avatar}>
+        <Grid item marginTop={12} marginBottom={2}>
           <img src={avatar} />
         </Grid>
 

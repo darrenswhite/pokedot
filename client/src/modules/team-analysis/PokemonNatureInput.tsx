@@ -1,5 +1,4 @@
-import {Popper, TextField} from '@material-ui/core';
-import {Autocomplete} from '@material-ui/lab';
+import {Autocomplete, Popper, TextField} from '@mui/material';
 import {Nature, PokemonSet} from '@pkmn/data';
 import React, {useContext, useEffect, useState} from 'react';
 
@@ -40,6 +39,8 @@ export const PokemonNatureInput: React.FC<PokemonNatureInputProps> = ({
           placeholder="Select a nature"
           size="small"
           fullWidth
+          variant={'standard'}
+          margin={'dense'}
         />
       )}
       getOptionLabel={option => {

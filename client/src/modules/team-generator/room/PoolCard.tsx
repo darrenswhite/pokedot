@@ -5,22 +5,11 @@ import {
   CardActions,
   CardHeader,
   CardMedia,
-  makeStyles,
-} from '@material-ui/core';
-import clsx from 'clsx';
+} from '@mui/material';
 import React from 'react';
 
 import {SpeciesImage, SpeciesImageType} from '../../species/SpeciesImage';
 import {Pokemon} from '../TeamGeneratorState';
-
-const useStyles = makeStyles(theme => ({
-  unselected: {
-    border: `1px solid ${theme.palette.divider}`,
-  },
-  selected: {
-    border: `1px solid ${theme.palette.primary.main}`,
-  },
-}));
 
 export interface PoolCardProps {
   pokemon: Pokemon;
@@ -33,15 +22,14 @@ export const PoolCard: React.FC<PoolCardProps> = ({
   onSelect,
   selected,
 }: PoolCardProps) => {
-  const classes = useStyles();
-
   return (
     <Card
-      raised
-      className={clsx({
-        [classes.unselected]: !selected,
-        [classes.selected]: selected,
-      })}
+      sx={{
+        borderWidth: '1px',
+        borderStyle: 'solid',
+        borderColor: theme =>
+          selected ? theme.palette.primary.main : theme.palette.divider,
+      }}
     >
       <CardHeader title={pokemon.baseSpecies} subheader={pokemon.form} />
 

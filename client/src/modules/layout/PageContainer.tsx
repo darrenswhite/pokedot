@@ -1,4 +1,4 @@
-import {Container, makeStyles} from '@material-ui/core';
+import {Box, Container} from '@mui/material';
 import dynamic from 'next/dynamic';
 import React from 'react';
 
@@ -10,7 +10,7 @@ import {TeamGeneratorProviderProps} from '../team-generator/TeamGeneratorProvide
 import {Footer} from './Footer';
 import {Header} from './Header';
 
-const SpeciesBottomDrawer = dynamic<unknown>(() =>
+const SpeciesBottomDrawer = dynamic<object>(() =>
   import('../species/SpeciesBottomDrawer').then(m => m.SpeciesBottomDrawer)
 );
 
@@ -36,50 +36,38 @@ type PageContainerProps = {
   children: NonNullable<React.ReactNode>;
 };
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    display: 'flex',
-  },
-  wrapper: {
-    flex: '1 1 auto',
-    backfaceVisibility: 'hidden',
-    WebkitBackfaceVisibility: 'hidden',
-    display: 'flex',
-    flexDirection: 'column',
-    minHeight: '100vh',
-    maxWidth: '100%',
-    position: 'relative',
-  },
-  main: {
-    display: 'flex',
-    flex: '1 0 auto',
-    maxWidth: '100%',
-    paddingTop: theme.spacing(12),
-  },
-  container: {
-    padding: theme.spacing(2),
-  },
-}));
-
 export const PageContainer: React.FC<PageContainerProps> = ({
   children,
 }: PageContainerProps) => {
-  const classes = useStyles();
-
   return (
-    <div className={classes.root}>
-      <div className={classes.wrapper}>
+    <Box display={'flex'}>
+      <Box
+        display={'flex'}
+        flex={'1 1 auto'}
+        flexDirection={'column'}
+        minHeight={'100vh'}
+        maxWidth={'100%'}
+        position={'relative'}
+        sx={{backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden'}}
+      >
         <Header />
 
         <TeamGeneratorProvider>
           <GenerationProvider>
             <SpeciesProvider>
               <TeamProvider>
-                <main role="main" className={classes.main}>
-                  <Container maxWidth={false} className={classes.container}>
+                <Box
+                  component={'main'}
+                  role="main"
+                  display={'flex'}
+                  flex={'1 0 auto'}
+                  maxWidth={'100%'}
+                  paddingTop={12}
+                >
+                  <Container maxWidth={false} sx={{padding: 2}}>
                     {children}
                   </Container>
-                </main>
+                </Box>
 
                 <SpeciesBottomDrawer />
               </TeamProvider>
@@ -88,7 +76,7 @@ export const PageContainer: React.FC<PageContainerProps> = ({
         </TeamGeneratorProvider>
 
         <Footer />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };

@@ -1,3 +1,4 @@
+import {ExpandMore} from '@mui/icons-material';
 import {
   Accordion,
   AccordionActions,
@@ -8,11 +9,8 @@ import {
   Grid,
   Slider,
   Switch,
-  Theme,
   Typography,
-  makeStyles,
-} from '@material-ui/core';
-import {ExpandMore} from '@material-ui/icons';
+} from '@mui/material';
 import axios from 'axios';
 import React, {useCallback, useContext, useState} from 'react';
 
@@ -26,25 +24,6 @@ import {
   TeamGeneratorContext,
 } from './TeamGeneratorProvider';
 import {Pokemon, Pool, getPoolOptionsDisplay} from './TeamGeneratorState';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  poolHeading: {
-    fontSize: theme.typography.pxToRem(15),
-    flexBasis: '33.33%',
-  },
-  poolEligiblePokemonHeading: {
-    fontSize: theme.typography.pxToRem(15),
-    flexBasis: '33.33%',
-    color: theme.palette.text.secondary,
-    marginLeft: theme.spacing(0.5),
-    marginRight: theme.spacing(0.5),
-  },
-  poolOptionsHeading: {
-    fontSize: theme.typography.pxToRem(15),
-    flexBasis: '33.33%',
-    color: theme.palette.text.secondary,
-  },
-}));
 
 export interface PoolOptionsProps {
   pool: Pool;
@@ -61,12 +40,12 @@ export const PoolOptions: React.FC<PoolOptionsProps> = ({
 }: PoolOptionsProps) => {
   const {state} = useContext(TeamGeneratorContext);
   const {gen} = state.options;
-  const classes = useStyles();
   const [showEligiblePokemon, setShowEligiblePokemon] = useState(false);
   const [isLoadingEligiblePokemon, setIsLoadingEligiblePokemon] =
     useState(true);
-  const [eligiblePokemonError, setEligiblePokemonError] =
-    useState<string | null>(null);
+  const [eligiblePokemonError, setEligiblePokemonError] = useState<
+    string | null
+  >(null);
   const [eligiblePokemon, setEligiblePokemon] = useState<Pokemon[]>([]);
 
   const loadEligiblePokemon = useCallback(() => {
@@ -100,15 +79,34 @@ export const PoolOptions: React.FC<PoolOptionsProps> = ({
 
       <Accordion TransitionProps={{unmountOnExit: true}}>
         <AccordionSummary expandIcon={<ExpandMore />}>
-          <Typography className={classes.poolHeading}>
+          <Typography
+            sx={{
+              fontSize: theme => theme.typography.pxToRem(15),
+              flexBasis: '33.33%',
+            }}
+          >
             {`Pool #${index + 1}`}
           </Typography>
 
-          <Typography className={classes.poolEligiblePokemonHeading}>
+          <Typography
+            sx={{
+              fontSize: theme => theme.typography.pxToRem(15),
+              flexBasis: '33.33%',
+              color: theme => theme.palette.text.secondary,
+              marginLeft: theme => theme.spacing(0.5),
+              marginRight: theme => theme.spacing(0.5),
+            }}
+          >
             {`${eligiblePokemon.length} Eligible`}
           </Typography>
 
-          <Typography className={classes.poolOptionsHeading}>
+          <Typography
+            sx={{
+              fontSize: theme => theme.typography.pxToRem(15),
+              flexBasis: '33.33%',
+              color: theme => theme.palette.text.secondary,
+            }}
+          >
             {getPoolOptionsDisplay(pool)}
           </Typography>
         </AccordionSummary>
