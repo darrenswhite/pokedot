@@ -31,7 +31,7 @@ export const initialState = (): GenerationContextProps => ({
   dex: null,
   generation: null,
   formats: {},
-  format: ['gen9vgc2024regf', 1760],
+  format: ['gen9vgc2024regg', 1760],
   setFormat: noop,
   stats: {
     info: {
