@@ -27,7 +27,7 @@
     "@colyseus/monitor": "^0.14.3",
     "@pkmn/data": "^0.9.0",
     "@pkmn/dex": "^0.9.0",
-    "axios": "^0.21.1",
+    "axios": "^1.8.2",
     "colyseus": "^0.14.13",
     "config": "^3.3.6",
     "cors": "^2.8.5",
